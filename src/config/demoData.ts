@@ -225,6 +225,24 @@ export const INITIAL_PRODUCTS: Product[] = [
     created_at: '2026-08-15 14:00:00',
     updated_at: '2026-08-30 09:30:00',
     created_by: 'Aarav Singhania'
+  },
+  {
+    product_id: 'PRD0009',
+    category: 'Miscelatore lavabo alto',
+    product_name: 'FLO Miscelatore lavabo alto',
+    model_number: 'F3801/HCR',
+    description: 'FLO tall basin mixer with an elegant profile, available in multiple premium finishes like Cromo, Oro, and Bronzo Spazzolato.',
+    base_price: 25500,
+    gst_percentage: 18,
+    hsn_code: '84818020',
+    unit: 'PCS',
+    main_image_url: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?w=800&auto=format&fit=crop&q=80',
+    status: 'ACTIVE',
+    customizable: 'YES',
+    image_mode: 'COMBINATION_IMAGE',
+    created_at: '2026-09-02 10:00:00',
+    updated_at: '2026-09-02 10:00:00',
+    created_by: 'Admin'
   }
 ];
 
@@ -340,10 +358,66 @@ export const INITIAL_FINISHES: Finish[] = [
     status: 'Active',
     created_at: '2026-08-01 10:00:00',
     updated_at: '2026-08-20 10:00:00'
+  },
+  {
+    finish_id: 'FIN0002',
+    finish_name: 'Vibrant Brushed Moderne Brass (2MB)',
+    finish_code: '2MB',
+    finish_image_url: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?w=200&auto=format&fit=crop&q=80',
+    finish_type: 'PVD',
+    color_hex: '#D0A055',
+    texture_css: 'linear-gradient(135deg, #e6b86a 0%, #d0a055 50%, #ad7c37 100%)',
+    additional_price: 2400,
+    description: 'Vibrant Brushed Moderne Brass.',
+    status: 'Active',
+    created_at: '2026-08-01 10:00:00',
+    updated_at: '2026-08-20 10:00:00'
+  },
+  {
+    finish_id: 'FIN0004',
+    finish_name: 'Vibrant French Gold (AF)',
+    finish_code: 'AF',
+    finish_image_url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=200&auto=format&fit=crop&q=80',
+    finish_type: 'PVD',
+    color_hex: '#D4AF37',
+    texture_css: 'linear-gradient(135deg, #f7df8d 0%, #d4af37 50%, #b8860b 100%)',
+    additional_price: 2800,
+    description: 'Vibrant French Gold.',
+    status: 'Active',
+    created_at: '2026-08-01 10:00:00',
+    updated_at: '2026-08-20 10:00:00'
+  },
+  {
+    finish_id: 'FIN0005',
+    finish_name: 'Vibrant Titanium (TT)',
+    finish_code: 'TT',
+    finish_image_url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=200&auto=format&fit=crop&q=80',
+    finish_type: 'PVD',
+    color_hex: '#5C5D61',
+    texture_css: 'linear-gradient(135deg, #7c7d81 0%, #5c5d61 50%, #3a3b3e 100%)',
+    additional_price: 2400,
+    description: 'Vibrant Titanium.',
+    status: 'Active',
+    created_at: '2026-08-01 10:00:00',
+    updated_at: '2026-08-20 10:00:00'
   }
 ];
 
 export const INITIAL_HANDLES: Handle[] = [
+  {
+    handle_id: 'HDL0001',
+    handle_model: 'K-77981IN',
+    handle_name: 'Oyl Precision Knob Handle',
+    material: 'Metal',
+    texture_image_url: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?w=200&auto=format&fit=crop&q=80',
+    preview_image_url: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?w=400&auto=format&fit=crop&q=80',
+    color_hex: '#A0A0A0',
+    additional_price: 1500,
+    description: 'Oyl precision knob.',
+    status: 'Active',
+    created_at: '2026-08-01 10:00:00',
+    updated_at: '2026-08-20 10:00:00'
+  },
   {
     handle_id: 'HDL_MATCH',
     handle_model: 'F1420-MET',

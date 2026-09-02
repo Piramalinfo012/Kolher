@@ -328,10 +328,6 @@ export class PdfGeneratorService {
     `;
   }
 
-  /**
-   * Direct PDF File Generation & Download via jsPDF + html2canvas
-   * Directly downloads a .pdf file to the user's computer/device
-   */
   public static async downloadDirectPdf(quotation: Quotation, settings: CompanySettings): Promise<void> {
     const cleanNumber = (quotation.quotation_number || 'Quote').replace(/[^a-zA-Z0-9_-]/g, '_');
     const fileName = `Kohler_Quotation_${cleanNumber}.pdf`;
@@ -364,44 +360,38 @@ export class PdfGeneratorService {
         )
       );
 
-      // Target the print root inside container
       const printRoot = (container.querySelector('#quotation-print-root') as HTMLElement) || container;
+      // Add page-break properties to avoid cutting important blocks
+      const summaryTable = printRoot.querySelector('.summary-table') as HTMLElement;
+      if (summaryTable) summaryTable.style.pageBreakInside = 'avoid';
+      const footerSection = printRoot.querySelector('.footer-section') as HTMLElement;
+      if (footerSection) footerSection.style.pageBreakInside = 'avoid';
+      const itemRows = printRoot.querySelectorAll('.item-row');
+      itemRows.forEach(row => { (row as HTMLElement).style.pageBreakInside = 'avoid'; });
 
-      const canvas = await html2canvas(printRoot, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: false
+      const pdf = new jsPDF('p', 'pt', 'a4');
+      
+      await pdf.html(printRoot, {
+        callback: function (doc) {
+          doc.save(fileName);
+        },
+        x: 0,
+        y: 0,
+        html2canvas: {
+          scale: 0.74, // Scale to fit A4 width (595.28 / 800)
+          useCORS: true,
+          logging: false
+        },
+        autoPaging: 'text' // Better page breaks for text
       });
-
-      const imgData = canvas.toDataURL('image/png', 1.0);
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pageWidth = 210; // A4 width in mm
-      const pageHeight = 297; // A4 height in mm
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-      heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-        heightLeft -= pageHeight;
-      }
-
-      pdf.save(fileName);
 
       // Update status & log
       await api.updateQuotation(quotation.quotation_id, {
         status: quotation.status === 'DRAFT' ? 'SENT' : quotation.status
       });
       api.logActivity('DOWNLOAD_PDF', 'PDF_SERVICE', quotation.quotation_number, `Downloaded PDF for ${quotation.party_name}`);
+    } catch (err) {
+      console.error('Error generating PDF', err);
     } finally {
       document.body.removeChild(container);
     }

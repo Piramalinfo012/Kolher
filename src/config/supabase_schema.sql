@@ -113,10 +113,12 @@ CREATE TABLE IF NOT EXISTS combinations (
 CREATE TABLE IF NOT EXISTS product_assets (
     asset_id TEXT PRIMARY KEY,
     product_id TEXT REFERENCES products(product_id) ON DELETE CASCADE,
-    layer_name TEXT NOT NULL,
-    file_id TEXT,
+    asset_name TEXT NOT NULL,
+    asset_type TEXT DEFAULT 'PRODUCT',
+    drive_file_id TEXT,
     drive_url TEXT,
     direct_url TEXT,
+    layer_type TEXT DEFAULT 'NONE',
     z_index NUMERIC DEFAULT 1,
     status TEXT NOT NULL DEFAULT 'Active',
     created_at TEXT NOT NULL DEFAULT NOW()::TEXT

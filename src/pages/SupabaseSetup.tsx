@@ -462,59 +462,19 @@ export const SupabaseSetup: React.FC = () => {
             </div>
 
             <form onSubmit={handleTestAndSave} className="space-y-4">
-              <div>
-                <label className="block text-[11px] font-bold text-neutral-700 uppercase tracking-wide mb-1.5 font-mono">
-                  Project URL (VITE_SUPABASE_URL)
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400">
-                    <Globe className="w-4 h-4" />
+              <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-emerald-100 rounded-lg">
+                    <ShieldCheck className="w-5 h-5 text-emerald-600" />
                   </div>
-                  <input
-                    type="url"
-                    required
-                    value={supabaseUrl}
-                    onChange={e => setSupabaseUrl(e.target.value)}
-                    placeholder="https://your-project-id.supabase.co"
-                    className="w-full pl-9 pr-4 py-2.5 text-xs font-mono rounded-xl border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-[#9A6A38]/30 focus:border-[#9A6A38] bg-white text-neutral-900"
-                  />
+                  <div>
+                    <h4 className="text-sm font-bold text-emerald-800">Credentials Loaded securely</h4>
+                    <p className="text-xs text-emerald-600 mt-0.5">Your Supabase Project URL and Anon API Key are successfully loaded from your .env file.</p>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[11px] font-bold text-neutral-700 uppercase tracking-wide mb-1.5 font-mono">
-                  Anon / Public API Key (VITE_SUPABASE_ANON_KEY)
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400">
-                    <Key className="w-4 h-4" />
-                  </div>
-                  <input
-                    type="password"
-                    required
-                    value={supabaseAnonKey}
-                    onChange={e => setSupabaseAnonKey(e.target.value)}
-                    placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    className="w-full pl-9 pr-4 py-2.5 text-xs font-mono rounded-xl border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-[#9A6A38]/30 focus:border-[#9A6A38] bg-white text-neutral-900"
-                  />
-                </div>
-                <p className="text-[10px] text-neutral-500 mt-1">
-                  Safe for client browser use. Row-Level Security (RLS) protects your data.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-neutral-100">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSupabaseUrl('https://demo-kohler-app.supabase.co');
-                    setSupabaseAnonKey('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo-anon-key');
-                  }}
-                  className="text-xs text-neutral-500 hover:text-neutral-800 underline"
-                >
-                  Fill Sample Format
-                </button>
-
+              <div className="flex flex-wrap items-center justify-end gap-3 pt-3 border-t border-neutral-100">
                 <div className="flex items-center gap-2">
                   <button
                     type="submit"
