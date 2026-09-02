@@ -1,25 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
   Sparkles,
-  Check,
-  Sliders,
-  Plus,
-  Minus,
   Heart,
   ArrowRight,
-  Eye,
-  Layers,
-  RotateCcw,
-  CheckCircle2,
-  Share2,
-  FileText
+  Plus,
+  Minus
 } from 'lucide-react';
-import { Product, Finish, Handle, Combination, QuotationItem, CustomizationJSON } from '../types';
-import { api } from '../services/api';
+import { Product, QuotationItem, CustomizationJSON, CustomizationOption } from '../types';
 import { useToast } from '../context/ToastContext';
-import { InteractiveVisualizer, getVisualizerDataUrl } from '../components/InteractiveVisualizer';
+import { Product3DViewer } from '../components/Product3DViewer';
 
 interface ProductCustomizerModalProps {
   isOpen: boolean;
@@ -29,6 +20,28 @@ interface ProductCustomizerModalProps {
   onAddToQuotation: (customizedItem: QuotationItem) => void;
 }
 
+const DEFAULT_CUSTOM_PARTS: CustomizationCategory[] = [
+  {
+    id: 'cat_finishes',
+    name: 'FINISHES',
+    options: [
+      { id: 'opt_chrome', name: 'Chrome / INOX', price_modifier: 0 },
+      { id: 'opt_gold', name: 'Brushed Gold', price_modifier: 2500 },
+      { id: 'opt_black', name: 'Brushed Black Chrome', price_modifier: 2000 },
+      { id: 'opt_rose_gold', name: 'Rose Gold PVD', price_modifier: 3000 }
+    ]
+  },
+  {
+    id: 'cat_handle',
+    name: 'HANDLE',
+    options: [
+      { id: 'opt_h_match', name: 'Matching Finish', price_modifier: 0 },
+      { id: 'opt_h_white_marble', name: 'White Marble Calacatta', price_modifier: 4000 },
+      { id: 'opt_h_black_marble', name: 'Black Marble Marquina', price_modifier: 4500 }
+    ]
+  }
+];
+
 export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
   isOpen,
   onClose,
@@ -37,102 +50,49 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
   onAddToQuotation
 }) => {
   const { success, warning } = useToast();
-  const [finishes, setFinishes] = useState<Finish[]>([]);
-  const [handles, setHandles] = useState<Handle[]>([]);
-  const [combinations, setCombinations] = useState<Combination[]>([]);
+  
+  // Dynamic Parts state: Mapping Category ID to selected Option
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, CustomizationOption>>({});
 
-  // Selection states
-  const [selectedFinish, setSelectedFinish] = useState<Finish | null>(null);
-  const [selectedHandle, setSelectedHandle] = useState<Handle | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [discountAmount, setDiscountAmount] = useState<number>(0);
   const [itemNotes, setItemNotes] = useState<string>('');
   const [gstIncluded, setGstIncluded] = useState<boolean>(false);
   const [isFavorited, setIsFavorited] = useState<boolean>(false);
-  const [viewMode, setViewMode] = useState<'INTERACTIVE' | 'PHOTO'>('INTERACTIVE');
+  const [viewMode, setViewMode] = useState<'PHOTO' | '3D'>('PHOTO');
+
+  const effectiveParts = useMemo(() => {
+    if (product?.custom_parts && product.custom_parts.length > 0) {
+      return product.custom_parts;
+    }
+    return DEFAULT_CUSTOM_PARTS;
+  }, [product]);
 
   useEffect(() => {
     if (!isOpen || !product) return;
 
-    const hasInteractive = product.product_name.toUpperCase().includes('SLIDE') || 
-      product.product_name.toUpperCase().includes('FLO') ||
-      product.product_name.toUpperCase().includes('EXP') ||
-      product.product_name.toUpperCase().includes('EXPOSED') ||
-      product.product_name.toUpperCase().includes('3804');
-    setViewMode(hasInteractive ? 'INTERACTIVE' : 'PHOTO');
-
-    const loadMasterData = async () => {
-      const [fData, spareParts, cData] = await Promise.all([
-        api.getFinishes(),
-        api.getSparePartsByProduct(product.product_id),
-        api.getCombinations()
-      ]);
-
-      const activeFinishes = fData.filter(f => f.status === 'Active');
-      
-      // Map Spare Parts to the Handle interface for backward compatibility
-      const activeHandles: Handle[] = spareParts
-        .filter(sp => sp.status === 'ACTIVE')
-        .map(sp => ({
-          handle_id: sp.part_id,
-          handle_name: sp.part_name,
-          handle_code: sp.part_model,
-          base_price: sp.price,
-          category: 'Spare Part',
-          preview_image_url: sp.image_url,
-          status: 'Active',
-          created_at: sp.created_at
-        }));
-      
-      setFinishes(activeFinishes);
-      setHandles(activeHandles);
-      setCombinations(cData);
-
-      // Set initial finish & handle
-      if (initialCustomization) {
-        const initF = activeFinishes.find(f => f.finish_id === initialCustomization.finish_id) || activeFinishes[0];
-        const initH = activeHandles.find(h => h.handle_id === initialCustomization.handle_id) || activeHandles[0];
-        setSelectedFinish(initF);
-        setSelectedHandle(initH);
-        setQuantity(initialCustomization.quantity || 1);
-        setDiscountAmount(initialCustomization.discount || 0);
-        setItemNotes(initialCustomization.customization_json?.notes || '');
-      } else {
-        // Defaults: Brushed Inox / Gold & Calacatta / Matching Finish
-        const defaultFinish = activeFinishes.find(f => f.finish_code === 'INOX' || f.finish_code === 'OS') || activeFinishes[0];
-        const defaultHandle = activeHandles.find(h => h.handle_name.includes('CALACATTA') || h.handle_name.includes('MATCH')) || activeHandles[0];
-        setSelectedFinish(defaultFinish || null);
-        setSelectedHandle(defaultHandle || null);
-        setQuantity(1);
-        setDiscountAmount(0);
-        setItemNotes('');
+    // Initialize selections with the first option of each category
+    const initialSelections: Record<string, CustomizationOption> = {};
+    effectiveParts.forEach(part => {
+      if (part.options && part.options.length > 0) {
+        initialSelections[part.id] = part.options[0];
       }
-    };
-
-    loadMasterData();
-  }, [isOpen, product, initialCustomization]);
-
-  // Derived Dynamic Model Code (e.g. F5801 + INOX + MQ -> F5801INOXMQ)
-  const dynamicModelCode = useMemo(() => {
-    if (!product) return '';
-    const baseCode = product.model_number || 'F5801';
-    const finishCode = selectedFinish?.finish_code || '';
-    const handleCode = selectedHandle?.handle_model || selectedHandle?.handle_code || '';
+    });
     
-    let result = baseCode.replace(/-[0-9A-Z]+$/, '');
-    
-    if (finishCode && !result.toUpperCase().endsWith(finishCode.toUpperCase())) {
-      result += finishCode;
+    setSelectedOptions(initialSelections);
+
+    if (initialCustomization) {
+      setQuantity(initialCustomization.quantity || 1);
+      setDiscountAmount(initialCustomization.discount || 0);
+      setItemNotes(initialCustomization.customization_json?.notes || '');
+    } else {
+      setQuantity(1);
+      setDiscountAmount(0);
+      setItemNotes('');
     }
-    
-    if (handleCode && handleCode !== 'MATCH' && !result.toUpperCase().endsWith(handleCode.toUpperCase())) {
-      result += handleCode;
-    }
-    
-    return result;
-  }, [product, selectedFinish, selectedHandle]);
+  }, [isOpen, product, initialCustomization, effectiveParts]);
 
-  const hasInteractive = product ? (
+  const has3D = product ? (
     product.product_name.toUpperCase().includes('SLIDE') || 
     product.product_name.toUpperCase().includes('FLO') ||
     product.product_name.toUpperCase().includes('EXP') ||
@@ -142,27 +102,28 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
 
   if (!isOpen || !product) return null;
 
-  // Combination resolution
-  const matchedCombination = combinations.find(
-    c =>
-      c.product_id === product.product_id &&
-      c.finish_id === selectedFinish?.finish_id &&
-      c.handle_id === selectedHandle?.handle_id &&
-      c.status === 'Active'
-  );
+  // Determine current image based on selected combo
+  let photoImageUrl = product.main_image_url;
+  
+  const options = Object.values(selectedOptions) as CustomizationOption[];
+  const comboKey = options
+    .map(opt => opt.id)
+    .sort()
+    .join('|');
+    
+  if (product.combo_images && product.combo_images[comboKey]) {
+    photoImageUrl = product.combo_images[comboKey];
+  }
 
-  const photoImageUrl =
-    matchedCombination?.combination_image_url ||
-    selectedHandle?.preview_image_url ||
-    product.main_image_url;
-
-  // Pricing Engine Calculations
+  // Pricing Calculation
   const basePrice = Number(product.base_price) || 0;
-  const finishPrice = Number(selectedFinish?.additional_price) || 0;
-  const handlePrice = Number(selectedHandle?.additional_price) || 0;
-  const comboPrice = Number(matchedCombination?.additional_price) || 0;
+  let dynamicPartsPrice = 0;
+  const optionsList = Object.values(selectedOptions) as CustomizationOption[];
+  optionsList.forEach(opt => {
+    dynamicPartsPrice += Number(opt.price_modifier) || 0;
+  });
 
-  const unitFinalPrice = basePrice + finishPrice + handlePrice + comboPrice;
+  const unitFinalPrice = basePrice + dynamicPartsPrice;
   const grossSubtotal = unitFinalPrice * quantity;
   const taxableAmount = Math.max(0, grossSubtotal - discountAmount);
   const gstRate = Number(product.gst_percentage) || 18;
@@ -170,36 +131,23 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
   const grandTotal = gstIncluded ? taxableAmount : taxableAmount + gstAmount;
 
   const handleConfirm = () => {
-    if (!selectedFinish) {
-      warning('Incomplete Selection', 'Please choose a metallic finish.');
-      return;
-    }
+    const entries = Object.entries(selectedOptions) as [string, CustomizationOption][];
+    const selectedNames = entries.map(([catId, opt]) => {
+      const cat = effectiveParts.find(c => c.id === catId);
+      return `${cat?.name}: ${opt.name}`;
+    }).join(', ');
 
-    if (handles.length > 0 && !selectedHandle) {
-      warning('Incomplete Selection', 'Please choose a handle/knob design.');
-      return;
-    }
+    const finishSummary = optionsList.map(o => o.name).join(' + ');
 
-    const customizationData: CustomizationJSON = {
-      finish: selectedFinish.finish_name,
-      finish_code: selectedFinish.finish_code,
-      finish_price: finishPrice,
-      handle: selectedHandle?.handle_name || 'Standard',
-      handle_model: selectedHandle?.handle_model || '',
-      handle_price: handlePrice,
-      combo_price: comboPrice,
+    const customizationData: CustomizationJSON & { dynamic_parts_summary: string } = {
       quantity,
-      notes: itemNotes
+      notes: itemNotes,
+      dynamic_parts_summary: selectedNames
     };
 
     const finalUnitMrp = unitFinalPrice;
     const existingClp = initialCustomization?.clp;
     const rateToUse = existingClp !== undefined && existingClp > 0 ? existingClp : finalUnitMrp;
-
-    const visualizerImageUrl = getVisualizerDataUrl(selectedFinish, selectedHandle, {
-      model: dynamicModelCode || product.model_number,
-      productName: product.product_name
-    });
 
     const customizedItem: QuotationItem = {
       quotation_item_id: initialCustomization?.quotation_item_id || `QITM_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
@@ -208,21 +156,21 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
       section_name: initialCustomization?.section_name || '',
       product_id: product.product_id,
       product_name: product.product_name,
-      model_number: dynamicModelCode,
-      finish_id: selectedFinish.finish_id,
-      finish_name: selectedFinish.finish_name,
-      handle_id: selectedHandle?.handle_id || '',
-      handle_name: selectedHandle?.handle_name || 'Standard',
-      combination_id: matchedCombination?.combination_id || '',
-      product_image_url: visualizerImageUrl || photoImageUrl,
+      model_number: product.model_number,
+      finish_id: comboKey,
+      finish_name: finishSummary,
+      handle_id: '',
+      handle_name: '',
+      combination_id: comboKey,
+      product_image_url: photoImageUrl,
       quantity,
       unit: product.unit || 'PCS',
       base_price: basePrice,
       mrp: finalUnitMrp,
       clp: existingClp,
-      finish_price: finishPrice,
-      handle_price: handlePrice,
-      additional_price: comboPrice,
+      finish_price: dynamicPartsPrice,
+      handle_price: 0,
+      additional_price: 0,
       discount: discountAmount,
       gst: gstRate,
       unit_final_price: finalUnitMrp,
@@ -233,7 +181,7 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
     onAddToQuotation(customizedItem);
     success(
       initialCustomization ? 'Item Updated' : 'Added to Quotation',
-      `${product.product_name} (${selectedFinish.finish_name} + ${selectedHandle?.handle_name || 'Standard'}) configured.`
+      `${product.product_name} configured successfully.`
     );
     onClose();
   };
@@ -247,26 +195,25 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
           exit={{ opacity: 0, scale: 0.98, y: 10 }}
           transition={{ duration: 0.2 }}
           className="bg-[#FAFAFA] rounded-3xl shadow-2xl max-w-6xl w-full border border-neutral-200 overflow-hidden flex flex-col max-h-[94vh]"
-          id="italian-product-customizer-dialog"
+          id="dynamic-product-customizer-dialog"
         >
           {/* ================= TOP HEADER BAR ================= */}
           <div className="px-6 py-4 bg-white border-b border-neutral-200/80 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-4">
               <div>
                 <span className="font-mono text-xs font-bold text-neutral-500 uppercase tracking-wider block">
-                  {dynamicModelCode}
+                  {product.model_number}
                 </span>
                 <h1 className="text-xl sm:text-2xl font-serif text-neutral-900 font-bold tracking-tight">
-                  {product.product_name.toUpperCase().includes('SLIDE') ? 'SLIDE' : product.product_name}
+                  {product.product_name}
                 </h1>
                 <p className="text-xs text-neutral-500 font-light italic">
-                  {product.category || 'Miscelatore lavabo'}
+                  {product.category || 'Luxury Sanitaryware'}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Wishlist Heart */}
               <button
                 type="button"
                 onClick={() => setIsFavorited(!isFavorited)}
@@ -275,17 +222,13 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
                     ? 'border-rose-300 bg-rose-50 text-rose-600'
                     : 'border-neutral-200 hover:border-neutral-300 bg-white text-neutral-400 hover:text-rose-500'
                 }`}
-                title="Save to Favorites"
               >
                 <Heart className={`w-4 h-4 ${isFavorited ? 'fill-rose-500' : ''}`} />
               </button>
-
-              {/* Close Button */}
               <button
                 type="button"
                 onClick={onClose}
                 className="p-2.5 rounded-full border border-neutral-200 hover:border-neutral-300 bg-white text-neutral-500 hover:text-neutral-900 transition-colors"
-                aria-label="Close"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -294,224 +237,136 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
 
           {/* ================= MAIN 2-COLUMN VIEWPORT ================= */}
           <div className="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-12 min-h-0">
-            {/* LEFT COLUMN: SWATCH SELECTORS (FINITURE + MANOPOLA F1420) */}
-            <div className="lg:col-span-6 p-6 space-y-8 overflow-y-auto bg-white border-r border-neutral-200/80">
-              {/* SECTION 1: FINITURE (FINISHES) */}
-              <div className="space-y-3.5">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900 font-sans">
-                    FINITURE
-                  </h3>
-                  {selectedFinish && (
-                    <span className="text-[11px] font-medium text-red-900 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
-                      {selectedFinish.finish_name} {selectedFinish.additional_price > 0 ? `(+₹${selectedFinish.additional_price.toLocaleString('en-IN')})` : ''}
-                    </span>
-                  )}
-                </div>
+            {/* LEFT COLUMN: DYNAMIC SWATCH SELECTORS */}
+            <div className="lg:col-span-5 xl:col-span-4 p-6 space-y-8 overflow-y-auto bg-white border-r border-neutral-200/80">
+              
+              {effectiveParts.map((part, index) => (
+                <div key={part.id} className="space-y-3.5">
+                  {index !== 0 && <hr className="border-neutral-200" />}
+                  
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900 font-sans">
+                      {part.name}
+                    </h3>
+                    {selectedOptions[part.id] && (
+                      <span className="text-[11px] font-medium text-red-900 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
+                        {selectedOptions[part.id].name} {selectedOptions[part.id].price_modifier > 0 ? `(+₹${selectedOptions[part.id].price_modifier.toLocaleString('en-IN')})` : ''}
+                      </span>
+                    )}
+                  </div>
 
-                {/* Circular Swatches Grid for Finishes */}
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 pt-1">
-                  {finishes.map(finish => {
-                    const isSelected = selectedFinish?.finish_id === finish.finish_id;
-                    return (
-                      <button
-                        type="button"
-                        key={finish.finish_id}
-                        onClick={() => setSelectedFinish(finish)}
-                        className={`group flex flex-col items-center text-center transition-all cursor-pointer`}
-                      >
-                        {/* Circular Swatch */}
-                        <div
-                          className={`w-14 h-14 rounded-full transition-all relative flex items-center justify-center shadow-sm overflow-hidden border border-neutral-100 ${
-                            isSelected ? 'ring-1 ring-neutral-300 scale-105' : 'hover:scale-105 hover:shadow-md'
-                          }`}
-                          style={{
-                            background: finish.texture_css || finish.color_hex || '#C8C8C8'
-                          }}
+                  <div className="grid grid-cols-4 sm:grid-cols-5 gap-3 pt-1">
+                    {part.options.map(opt => {
+                      const isSelected = selectedOptions[part.id]?.id === opt.id;
+                      return (
+                        <button
+                          type="button"
+                          key={opt.id}
+                          onClick={() => setSelectedOptions(prev => ({ ...prev, [part.id]: opt }))}
+                          className="group flex flex-col items-center text-center transition-all cursor-pointer"
                         >
-                          <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/20 pointer-events-none" />
-                        </div>
-
-                        {/* Finish Label */}
-                        <span className={`mt-2 text-[10px] font-medium tracking-wide uppercase leading-tight max-w-[85px] line-clamp-3 ${isSelected ? 'text-[#0B2545] font-bold' : 'text-neutral-500'}`}>
-                          {finish.finish_name.replace(/\s*\(.*?\)\s*/g, '')}
-                        </span>
-                      </button>
-                    );
-                  })}
+                          <div
+                            className={`w-12 h-12 rounded-full transition-all relative flex items-center justify-center shadow-sm overflow-hidden border border-neutral-100 ${
+                              isSelected ? 'ring-1 ring-neutral-300 scale-105' : 'hover:scale-105 hover:shadow-md'
+                            }`}
+                            style={{ background: opt.image_url ? `url(${opt.image_url}) center/cover` : '#E5E5E5' }}
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/20 pointer-events-none" />
+                          </div>
+                          <span className={`mt-2 text-[9px] font-medium tracking-wide uppercase leading-tight max-w-[75px] line-clamp-3 ${isSelected ? 'text-[#0B2545] font-bold' : 'text-neutral-500'}`}>
+                            {opt.name}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              ))}
 
-              {/* DIVIDER */}
-              <hr className="border-neutral-200" />
-
-              {/* SECTION 2: MANOPOLA (HANDLES / KNOBS) */}
-              {hasInteractive && !product.product_name.toUpperCase().includes('EXPOSED') && !product.product_name.toUpperCase().includes('3804') && (
-                <>
-                  <div className="space-y-3.5">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900 font-sans">
-                        {product.model_number === 'F5801' ? 'HANDLE F1420' : 'MANOPOLA'}
-                      </h3>
-                      {selectedHandle && (
-                        <span className="text-[11px] font-medium text-red-900 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
-                          {selectedHandle.handle_name} {selectedHandle.additional_price > 0 ? `(+₹${selectedHandle.additional_price.toLocaleString('en-IN')})` : ''}
-                        </span>
-                      )}
-                    </div>
-
-                {/* Circular Swatches Grid for Handles */}
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 pt-1">
-                  {handles.map(handle => {
-                    const isSelected = selectedHandle?.handle_id === handle.handle_id;
-                    const isMatch = handle.handle_name.toUpperCase().includes('MATCH') || handle.material === 'Metal';
-
-                    return (
-                      <button
-                        type="button"
-                        key={handle.handle_id}
-                        onClick={() => setSelectedHandle(handle)}
-                        className={`group flex flex-col items-center text-center transition-all cursor-pointer`}
-                      >
-                        {/* Circular Handle Swatch */}
-                        <div
-                          className={`w-14 h-14 rounded-full transition-all relative flex items-center justify-center shadow-sm overflow-hidden border border-neutral-100 ${
-                            isSelected ? 'ring-1 ring-neutral-300 scale-105' : 'hover:scale-105 hover:shadow-md'
-                          }`}
-                          style={{
-                            background: isMatch
-                              ? selectedFinish?.texture_css || selectedFinish?.color_hex || '#C8C8C8'
-                              : handle.color_hex || '#2B2B2B'
-                          }}
-                        >
-                          {/* Tactile Texture Background */}
-                          {!isMatch && handle.texture_image_url && (
-                            <img
-                              src={handle.texture_image_url}
-                              alt={handle.handle_name}
-                              className="w-full h-full object-cover"
-                              referrerPolicy="no-referrer"
-                            />
-                          )}
-
-                          <div className="absolute inset-0 bg-gradient-to-tr from-black/15 via-transparent to-white/20 pointer-events-none" />
-                        </div>
-
-                        {/* Handle Label */}
-                        <span className={`mt-2 text-[10px] font-medium tracking-wide uppercase leading-tight max-w-[85px] line-clamp-3 ${isSelected ? 'text-[#0B2545] font-bold' : 'text-neutral-500'}`}>
-                          {isMatch ? `${selectedFinish?.finish_name || 'MATCH'} FINISH` : handle.handle_name.replace(/\s*\(.*?\)\s*/g, '')}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              </>
-            )}
-
-            {/* SECTION 3: NOTES & SPECIFICATIONS */}
-              <div className="pt-2">
+              {/* SECTION: NOTES */}
+              <div className="pt-6 border-t border-neutral-200">
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 mb-1">
-                  Customization Instructions / Room Location
+                  Customization Instructions
                 </label>
                 <input
                   type="text"
                   value={itemNotes}
                   onChange={e => setItemNotes(e.target.value)}
-                  placeholder="e.g., Master Bathroom Suite, Level 2 Vanity, Gold pop-up waste match..."
+                  placeholder="e.g., Master Bathroom Suite..."
                   className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500"
                 />
               </div>
             </div>
 
-            {/* RIGHT COLUMN: HIGH-DEFINITION INTERACTIVE VISUALIZER STAGE */}
-            <div className="lg:col-span-6 bg-gradient-to-b from-[#FAF8F5] via-[#F4F3EF] to-[#ECEAE4] p-6 flex flex-col justify-between relative">
-              {/* Studio Canvas Status Badges */}
+            {/* RIGHT COLUMN: VISUALIZER STAGE */}
+            <div className="lg:col-span-7 xl:col-span-8 bg-gradient-to-b from-[#FAF8F5] via-[#F4F3EF] to-[#ECEAE4] p-6 flex flex-col justify-between relative">
               <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-neutral-600 bg-white/80 border border-neutral-200/80 px-2.5 py-1 rounded-full backdrop-blur-xs flex items-center gap-1.5 shadow-2xs">
-                    <Sparkles className="w-3 h-3 text-red-600" />
-                    Bespoke Real-Time Render
-                  </span>
-                </div>
-
+                <span className="text-[10px] uppercase font-bold tracking-widest text-neutral-600 bg-white/80 border border-neutral-200/80 px-2.5 py-1 rounded-full backdrop-blur-xs flex items-center gap-1.5 shadow-2xs">
+                  <Sparkles className="w-3 h-3 text-red-600" />
+                  Bespoke Configuration
+                </span>
                 <div className="flex items-center gap-1.5 bg-white/80 border border-neutral-200/80 p-0.5 rounded-xl shadow-2xs">
-                  {hasInteractive && (
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('PHOTO')}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                      viewMode === 'PHOTO' ? 'bg-neutral-900 text-white shadow-2xs' : 'text-neutral-500 hover:text-neutral-900'
+                    }`}
+                  >
+                    Photo Studio
+                  </button>
+                  {has3D && (
                     <button
                       type="button"
-                      onClick={() => setViewMode('INTERACTIVE')}
-                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
-                        viewMode === 'INTERACTIVE'
-                          ? 'bg-neutral-900 text-white shadow-2xs'
-                          : 'text-neutral-500 hover:text-neutral-900'
+                      onClick={() => setViewMode('3D')}
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        viewMode === '3D' ? 'bg-neutral-900 text-white shadow-2xs' : 'text-neutral-500 hover:text-neutral-900'
                       }`}
                     >
-                      Studio 3D Vector
+                      3D Model
                     </button>
                   )}
                 </div>
               </div>
 
-              {/* Interactive Faucet Stage */}
-              <div className="relative w-full aspect-4/3 max-h-[440px] flex items-center justify-center my-auto">
-                {viewMode === 'INTERACTIVE' ? (
-                  <InteractiveVisualizer
-                    finish={selectedFinish}
-                    handle={selectedHandle}
-                    productName={product.product_name}
-                    modelNumber={dynamicModelCode || product.model_number}
-                    className="w-full h-full"
+              <div className="relative w-full aspect-square max-h-[500px] flex items-center justify-center my-auto">
+                {viewMode === '3D' ? (
+                  <Product3DViewer 
+                    modelUrl={`/products/${product.model_number.toLowerCase().replace(/[/\\ ]/g, '-')}.glb`} 
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center p-4">
-                    <img
-                      src={photoImageUrl}
-                      alt={product.product_name}
-                      className="max-h-full max-w-full object-contain drop-shadow-2xl"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
+                  <img
+                    src={photoImageUrl}
+                    alt="Configured Product"
+                    className="max-h-full max-w-full object-contain drop-shadow-2xl transition-all duration-500"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = product.main_image_url;
+                    }}
+                  />
                 )}
-
-                {/* Floating Active Material Chips */}
-                <div className="absolute bottom-1 left-2 right-2 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-                  <div className="flex items-center gap-1.5 pointer-events-auto">
-                    {selectedFinish && (
-                      <span className="bg-white/90 backdrop-blur-md border border-neutral-200/80 text-neutral-800 text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-xs flex items-center gap-1.5">
-                        <span
-                          className="w-2.5 h-2.5 rounded-full border border-black/10"
-                          style={{ background: selectedFinish.color_hex || '#C8C8C8' }}
-                        />
-                        {selectedFinish.finish_name}
-                      </span>
-                    )}
-                    {selectedHandle && (
-                      <span className="bg-white/90 backdrop-blur-md border border-neutral-200/80 text-neutral-800 text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-xs">
-                        {selectedHandle.handle_name}
-                      </span>
-                    )}
-                  </div>
-                </div>
               </div>
 
-              {/* Price Calculation Box */}
               <div className="bg-white/90 backdrop-blur-md rounded-2xl p-4 border border-neutral-200/80 shadow-xs space-y-2 mt-2">
                 <div className="flex items-center justify-between text-xs text-neutral-500 font-medium">
                   <span>Base Catalog Price:</span>
                   <span className="font-mono text-neutral-800">₹{basePrice.toLocaleString('en-IN')}</span>
                 </div>
-                {finishPrice > 0 && (
-                  <div className="flex items-center justify-between text-xs text-neutral-500 font-medium">
-                    <span>Finish ({selectedFinish?.finish_name}):</span>
-                    <span className="font-mono text-red-700">+ ₹{finishPrice.toLocaleString('en-IN')}</span>
-                  </div>
-                )}
-                {handlePrice > 0 && (
-                  <div className="flex items-center justify-between text-xs text-neutral-500 font-medium">
-                    <span>Handle ({selectedHandle?.handle_name}):</span>
-                    <span className="font-mono text-red-700">+ ₹{handlePrice.toLocaleString('en-IN')}</span>
-                  </div>
-                )}
+                {(() => {
+                  const entries = Object.entries(selectedOptions) as [string, CustomizationOption][];
+                  return entries.map(([catId, opt]) => {
+                    const cat = product.custom_parts?.find(c => c.id === catId);
+                    if (opt.price_modifier > 0) {
+                      return (
+                        <div key={catId} className="flex items-center justify-between text-xs text-neutral-500 font-medium">
+                          <span>{cat?.name} ({opt.name}):</span>
+                          <span className="font-mono text-red-700">+ ₹{opt.price_modifier.toLocaleString('en-IN')}</span>
+                        </div>
+                      );
+                    }
+                    return null;
+                  });
+                })()}
                 <div className="pt-2 border-t border-neutral-200 flex items-center justify-between text-xs font-bold text-neutral-900">
                   <span>Unit MRP (Excl. Taxes):</span>
                   <span className="font-mono text-neutral-900 text-sm">₹{unitFinalPrice.toLocaleString('en-IN')}</span>
@@ -520,9 +375,8 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
             </div>
           </div>
 
-          {/* ================= BOTTOM FIXED COMMERCIAL BAR ================= */}
+          {/* ================= BOTTOM BAR ================= */}
           <div className="px-6 py-4 bg-white border-t border-neutral-200 flex flex-wrap items-center justify-between gap-4 shrink-0 shadow-lg">
-            {/* Quantity Selector */}
             <div className="flex items-center gap-3">
               <span className="text-xs font-bold uppercase tracking-wider text-neutral-600">
                 Quantity:
@@ -546,12 +400,8 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               </div>
-              <span className="text-xs text-neutral-400 font-mono">
-                {product.unit || 'PCS'}
-              </span>
             </div>
 
-            {/* Total & Action Buttons */}
             <div className="flex items-center gap-6">
               <div className="text-right">
                 <div className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider font-mono">
@@ -561,7 +411,6 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
                   ₹{grandTotal.toLocaleString('en-IN')}
                 </div>
               </div>
-
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -570,12 +419,10 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
                 >
                   Cancel
                 </button>
-
                 <button
                   type="button"
                   onClick={handleConfirm}
                   className="px-6 py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs sm:text-sm shadow-md flex items-center gap-2 transition-all cursor-pointer"
-                  id="btn-confirm-customization"
                 >
                   <span>{initialCustomization ? 'Save & Update Item' : 'Add to Quotation'}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -588,4 +435,3 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
     </AnimatePresence>
   );
 };
-

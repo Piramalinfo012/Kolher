@@ -21,6 +21,7 @@ import { useToast } from '../context/ToastContext';
 import { ImageUploadModal } from '../components/ImageUploadModal';
 import { ProductCustomizerModal } from './ProductCustomizerModal';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { CustomizationEngine } from '../components/CustomizationEngine';
 
 export const Products: React.FC = () => {
   const { canManageProducts, canDeleteRecords } = useAuth();
@@ -33,7 +34,7 @@ export const Products: React.FC = () => {
 
   // Form State for Add / Edit
   const [showFormModal, setShowFormModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<'DETAILS' | 'SPARE_PARTS'>('DETAILS');
+  const [activeTab, setActiveTab] = useState<'DETAILS' | 'SPARE_PARTS' | 'CUSTOM_PARTS'>('DETAILS');
   const [spareParts, setSpareParts] = useState<SparePart[]>([]);
   const [showSparePartForm, setShowSparePartForm] = useState(false);
   const [showSparePartUploadModal, setShowSparePartUploadModal] = useState(false);
@@ -366,30 +367,29 @@ export const Products: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Add / Edit Product Modal */}
+      </div>      {/* Add / Edit Product Modal */}
       {showFormModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/80 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full border border-neutral-200 overflow-hidden my-8">
-            <div className="px-6 py-4 bg-neutral-900 text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/80 backdrop-blur-xs">
+          <form onSubmit={handleSaveForm} className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full border border-neutral-200 flex flex-col max-h-[90vh] overflow-hidden">
+            <div className="px-6 py-4 bg-neutral-900 text-white flex items-center justify-between shrink-0">
               <h3 className="font-bold text-base">
                 {editingProduct ? 'Product Configuration' : 'Add New Product to Catalog'}
               </h3>
               <button
+                type="button"
                 onClick={() => setShowFormModal(false)}
-                className="text-neutral-400 hover:text-white p-1"
+                className="text-neutral-400 hover:text-white p-1 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {editingProduct && (
-              <div className="flex items-center gap-4 px-6 pt-4 border-b border-neutral-200">
+              <div className="flex items-center gap-4 px-6 pt-4 border-b border-neutral-200 shrink-0 bg-white">
                 <button
                   type="button"
                   onClick={() => setActiveTab('DETAILS')}
-                  className={`pb-2 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors ${
+                  className={`pb-2 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
                     activeTab === 'DETAILS' ? 'border-red-600 text-red-600' : 'border-transparent text-neutral-500 hover:text-neutral-800'
                   }`}
                 >
@@ -397,254 +397,183 @@ export const Products: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setActiveTab('SPARE_PARTS')}
-                  className={`pb-2 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors ${
-                    activeTab === 'SPARE_PARTS' ? 'border-red-600 text-red-600' : 'border-transparent text-neutral-500 hover:text-neutral-800'
+                  onClick={() => setActiveTab('CUSTOM_PARTS')}
+                  className={`pb-2 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
+                    activeTab === 'CUSTOM_PARTS' ? 'border-red-600 text-red-600' : 'border-transparent text-neutral-500 hover:text-neutral-800'
                   }`}
                 >
-                  Spare Parts
+                  Custom Parts & Combo
                 </button>
               </div>
             )}
 
-            <div className="p-6">
-              {activeTab === 'DETAILS' && (
-                <form onSubmit={handleSaveForm} className="space-y-4 text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
-                    Product Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.product_name || ''}
-                    onChange={e => setFormData({ ...formData, product_name: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
-                    Model Number *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.model_number || ''}
-                    onChange={e => setFormData({ ...formData, model_number: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-semibold focus:outline-none focus:border-red-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
-                    Category
-                  </label>
-                  <select
-                    value={formData.category || 'Wash Basin Mixers'}
-                    onChange={e => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-medium focus:outline-none focus:border-red-500"
-                  >
-                    {categories.filter(c => c !== 'ALL').map(c => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
-                    Base Price (INR)
-                  </label>
-                  <input
-                    type="number"
-                    min={0}
-                    value={formData.base_price || 0}
-                    onChange={e => setFormData({ ...formData, base_price: Number(e.target.value) })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
-                    HSN Code
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.hsn_code || '84818020'}
-                    onChange={e => setFormData({ ...formData, hsn_code: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono focus:outline-none focus:border-red-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
-                    GST Percentage (%)
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.gst_percentage || 18}
-                    onChange={e => setFormData({ ...formData, gst_percentage: Number(e.target.value) })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-bold text-neutral-700 uppercase mb-1">
-                  Main Image URL
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={formData.main_image_url || ''}
-                    onChange={e => setFormData({ ...formData, main_image_url: e.target.value })}
-                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500 font-mono text-[11px]"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowUploadModal(true)}
-                    className="px-3 py-2 bg-neutral-100 hover:bg-neutral-200 rounded-xl font-semibold text-neutral-700 flex items-center gap-1 shrink-0"
-                  >
-                    <Upload className="w-3.5 h-3.5" /> Upload to Drive
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-bold text-neutral-700 uppercase mb-1">
-                  Product Description
-                </label>
-                <textarea
-                  rows={3}
-                  value={formData.description || ''}
-                  onChange={e => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500 resize-none leading-relaxed"
+            <div className="p-6 overflow-y-auto flex-1">
+              {activeTab === 'CUSTOM_PARTS' && editingProduct && (
+                <CustomizationEngine
+                  customParts={formData.custom_parts || []}
+                  comboImages={formData.combo_images || {}}
+                  onChange={(parts, combos) => setFormData({ ...formData, custom_parts: parts, combo_images: combos })}
                 />
-              </div>
-
-              <div className="flex items-center gap-6 pt-2">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.has_customization ?? true}
-                    onChange={e => setFormData({ ...formData, has_customization: e.target.checked })}
-                    className="rounded text-red-600 focus:ring-red-500"
-                  />
-                  <span className="font-bold text-neutral-800">Enable Bespoke Customization Engine</span>
-                </label>
-
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.status === 'ACTIVE'}
-                    onChange={e => setFormData({ ...formData, status: e.target.checked ? 'ACTIVE' : 'INACTIVE' })}
-                    className="rounded text-red-600 focus:ring-red-500"
-                  />
-                  <span className="font-bold text-neutral-800">Active in Catalog</span>
-                </label>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-neutral-200">
-                <button
-                  type="button"
-                  onClick={() => setShowFormModal(false)}
-                  className="px-4 py-2.5 rounded-xl border border-neutral-200 text-neutral-700 font-medium hover:bg-neutral-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold shadow-sm"
-                >
-                  Save Product
-                </button>
-              </div>
-                </form>
               )}
+              {activeTab === 'DETAILS' && (
+                <div className="space-y-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-bold text-neutral-700 uppercase mb-1">
+                        Product Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.product_name || ''}
+                        onChange={e => setFormData({ ...formData, product_name: e.target.value })}
+                        className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
+                      />
+                    </div>
 
-              {activeTab === 'SPARE_PARTS' && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-neutral-800">Linked Spare Parts</h4>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingSparePart(null);
-                        setSparePartFormData({ status: 'ACTIVE' });
-                        setShowSparePartForm(true);
-                      }}
-                      className="px-3 py-1.5 rounded-lg bg-neutral-900 text-white text-[11px] font-bold"
-                    >
-                      + Add Part
-                    </button>
+                    <div>
+                      <label className="block font-bold text-neutral-700 uppercase mb-1">
+                        Model Number *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.model_number || ''}
+                        onChange={e => setFormData({ ...formData, model_number: e.target.value })}
+                        className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-semibold focus:outline-none focus:border-red-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-neutral-700 uppercase mb-1">
+                        Category
+                      </label>
+                      <select
+                        value={formData.category || 'Wash Basin Mixers'}
+                        onChange={e => setFormData({ ...formData, category: e.target.value })}
+                        className="w-full p-2.5 rounded-xl border border-neutral-300 font-medium focus:outline-none focus:border-red-500"
+                      >
+                        {categories.filter(c => c !== 'ALL').map(c => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-neutral-700 uppercase mb-1">
+                        Base Price (INR)
+                      </label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={formData.base_price || 0}
+                        onChange={e => setFormData({ ...formData, base_price: Number(e.target.value) })}
+                        className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-neutral-700 uppercase mb-1">
+                        HSN Code
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.hsn_code || '84818020'}
+                        onChange={e => setFormData({ ...formData, hsn_code: e.target.value })}
+                        className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono focus:outline-none focus:border-red-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-neutral-700 uppercase mb-1">
+                        GST Percentage (%)
+                      </label>
+                      <input
+                        type="number"
+                        value={formData.gst_percentage || 18}
+                        onChange={e => setFormData({ ...formData, gst_percentage: Number(e.target.value) })}
+                        className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                      />
+                    </div>
                   </div>
-                  
-                  {showSparePartForm && (
-                    <form onSubmit={handleSaveSparePart} className="bg-neutral-50 p-4 rounded-xl border border-neutral-200 space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-[10px] font-bold text-neutral-600 uppercase mb-1">Part Name *</label>
-                          <input required value={sparePartFormData.part_name || ''} onChange={e => setSparePartFormData({...sparePartFormData, part_name: e.target.value})} className="w-full p-2 border rounded-lg" />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-neutral-600 uppercase mb-1">Part Model *</label>
-                          <input required value={sparePartFormData.part_model || ''} onChange={e => setSparePartFormData({...sparePartFormData, part_model: e.target.value})} className="w-full p-2 border rounded-lg font-mono" />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-neutral-600 uppercase mb-1">Price (+INR)</label>
-                          <input type="number" value={sparePartFormData.price || 0} onChange={e => setSparePartFormData({...sparePartFormData, price: Number(e.target.value)})} className="w-full p-2 border rounded-lg" />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-neutral-600 uppercase mb-1">Image URL</label>
-                          <div className="flex gap-2">
-                            <input value={sparePartFormData.image_url || ''} onChange={e => setSparePartFormData({...sparePartFormData, image_url: e.target.value})} className="flex-1 p-2 border rounded-lg font-mono text-[10px]" />
-                            <button
-                              type="button"
-                              onClick={() => setShowSparePartUploadModal(true)}
-                              className="px-2 py-1 bg-neutral-200 hover:bg-neutral-300 rounded-lg text-[10px] font-bold text-neutral-700 flex items-center gap-1"
-                            >
-                              <Upload className="w-3 h-3" /> Upload
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex justify-end gap-2">
-                        <button type="button" onClick={() => setShowSparePartForm(false)} className="px-3 py-1.5 bg-neutral-200 rounded-lg text-xs font-medium">Cancel</button>
-                        <button type="submit" className="px-3 py-1.5 bg-red-600 text-white rounded-lg text-xs font-bold">Save Part</button>
-                      </div>
-                    </form>
-                  )}
 
-                  <div className="grid grid-cols-2 gap-3 mt-4">
-                    {spareParts.length === 0 && !showSparePartForm && (
-                      <p className="text-xs text-neutral-500 col-span-2 text-center py-4">No spare parts added to this product.</p>
-                    )}
-                    {spareParts.map(part => (
-                      <div key={part.part_id} className="flex gap-3 bg-white border border-neutral-200 p-3 rounded-xl shadow-sm items-center">
-                        {part.image_url ? (
-                          <img src={part.image_url} alt={part.part_name} className="w-12 h-12 object-contain rounded-lg border border-neutral-100" />
-                        ) : (
-                          <div className="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center">
-                            <Tag className="w-4 h-4 text-neutral-400" />
-                          </div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <h5 className="font-bold text-xs truncate" title={part.part_name}>{part.part_name}</h5>
-                          <p className="text-[10px] text-neutral-500 font-mono">{part.part_model}</p>
-                          <p className="text-[10px] font-bold text-red-600">+₹{part.price}</p>
-                        </div>
-                        <div className="flex flex-col gap-1">
-                          <button onClick={() => { setEditingSparePart(part); setSparePartFormData(part); setShowSparePartForm(true); }} className="p-1 hover:text-neutral-900 text-neutral-400"><Edit className="w-3.5 h-3.5" /></button>
-                          <button onClick={() => handleDeleteSparePart(part.part_id)} className="p-1 hover:text-red-600 text-neutral-400"><Trash2 className="w-3.5 h-3.5" /></button>
-                        </div>
-                      </div>
-                    ))}
+                  <div>
+                    <label className="block font-bold text-neutral-700 uppercase mb-1">
+                      Main Image URL
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={formData.main_image_url || ''}
+                        onChange={e => setFormData({ ...formData, main_image_url: e.target.value })}
+                        className="flex-1 p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500 font-mono text-[11px]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowUploadModal(true)}
+                        className="px-3 py-2 bg-neutral-100 hover:bg-neutral-200 rounded-xl font-semibold text-neutral-700 flex items-center gap-1 shrink-0 cursor-pointer"
+                      >
+                        <Upload className="w-3.5 h-3.5" /> Upload to Drive
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-neutral-700 uppercase mb-1">
+                      Product Description
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={formData.description || ''}
+                      onChange={e => setFormData({ ...formData, description: e.target.value })}
+                      className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500 resize-none leading-relaxed"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-6 pt-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.has_customization ?? true}
+                        onChange={e => setFormData({ ...formData, has_customization: e.target.checked })}
+                        className="rounded text-red-600 focus:ring-red-500"
+                      />
+                      <span className="font-bold text-neutral-800">Enable Bespoke Customization Engine</span>
+                    </label>
+
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.status === 'ACTIVE'}
+                        onChange={e => setFormData({ ...formData, status: e.target.checked ? 'ACTIVE' : 'INACTIVE' })}
+                        className="rounded text-red-600 focus:ring-red-500"
+                      />
+                      <span className="font-bold text-neutral-800">Active in Catalog</span>
+                    </label>
                   </div>
                 </div>
               )}
+
+
             </div>
-          </div>
+
+            {/* Persistent Modal Footer */}
+            <div className="px-6 py-4 bg-white border-t border-neutral-200 flex items-center justify-end gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowFormModal(false)}
+                className="px-4 py-2 rounded-xl border border-neutral-200 text-neutral-700 font-medium hover:bg-neutral-50 cursor-pointer text-xs"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold shadow-sm cursor-pointer text-xs"
+              >
+                Save Product
+              </button>
+            </div>
+          </form>
         </div>
       )}
 

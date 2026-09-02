@@ -110,8 +110,8 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
 
   const filteredQuotes = quotations.filter(q => {
     const matchesSearch =
-      q.quotation_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      q.party_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (q.quotation_number || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (q.party_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (q.mobile && q.mobile.includes(searchTerm)) ||
       (q.email && q.email.toLowerCase().includes(searchTerm.toLowerCase()));
 

@@ -1134,15 +1134,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
                         <tbody className="divide-y divide-neutral-100 text-xs">
                           {sectionItems.map((item, itmIdx) => {
                             const unitRate = Number(item.clp && item.clp > 0 ? item.clp : (item.mrp || item.base_price || 0));
-                            const displayImageUrl =
-                              item.product_image_url && item.product_image_url.startsWith('data:image/svg')
-                                ? item.product_image_url
-                                : item.finish_name || item.handle_name || (item.model_number && (item.model_number.startsWith('F5801') || item.model_number.startsWith('K-77959') || item.model_number.includes('SLIDE')))
-                                  ? getVisualizerDataUrl(
-                                      { finish_name: item.finish_name, finish_code: item.finish_id },
-                                      { handle_name: item.handle_name, handle_model: item.handle_id }
-                                    )
-                                  : item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
+                            const displayImageUrl = item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
 
                             return (
                               <tr key={item.quotation_item_id || itmIdx} className="hover:bg-neutral-50/70 transition-colors">
@@ -1150,7 +1142,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
                                 <td className="py-3 px-2 text-center align-middle">
                                   <div
                                     onClick={() => handleOpenCustomizerForItem(item, section)}
-                                    className="w-12 h-12 rounded-lg border border-neutral-200 bg-white p-0.5 flex items-center justify-center mx-auto shadow-2xs cursor-pointer group/img relative hover:border-[#9A6A38] transition-colors overflow-hidden"
+                                    className="w-20 h-20 rounded-lg border border-neutral-200 bg-white p-1 flex items-center justify-center mx-auto shadow-2xs cursor-pointer group/img relative hover:border-[#9A6A38] transition-colors overflow-hidden"
                                     title="Click to Configure Finish, Handle & Preview"
                                   >
                                     <img

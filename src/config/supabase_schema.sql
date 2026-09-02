@@ -59,6 +59,8 @@ CREATE TABLE IF NOT EXISTS products (
     status TEXT NOT NULL DEFAULT 'ACTIVE',
     customizable TEXT NOT NULL DEFAULT 'YES',
     image_mode TEXT DEFAULT 'COMBINATION_IMAGE',
+    custom_parts JSONB DEFAULT '[]'::jsonb,
+    combo_images JSONB DEFAULT '{}'::jsonb,
     created_at TEXT NOT NULL DEFAULT NOW()::TEXT,
     updated_at TEXT NOT NULL DEFAULT NOW()::TEXT,
     created_by TEXT

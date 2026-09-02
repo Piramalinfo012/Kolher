@@ -14,6 +14,23 @@ export type ProductStatus = 'ACTIVE' | 'INACTIVE';
 export type CustomizableOption = 'YES' | 'NO';
 export type ImageMode = 'PRODUCT_IMAGE' | 'COMBINATION_IMAGE' | 'LAYER_BASED' | 'SINGLE_IMAGE';
 
+export interface CustomizationOption {
+  id: string;
+  name: string;
+  image_url?: string;
+  price_modifier: number;
+}
+
+export interface CustomizationCategory {
+  id: string;
+  name: string;
+  options: CustomizationOption[];
+}
+
+export interface ComboImageMap {
+  [comboKey: string]: string; // comboKey is sorted option IDs joined by '|'
+}
+
 export interface Product {
   product_id: string;
   category: string;
@@ -31,6 +48,10 @@ export interface Product {
   created_at: string;
   updated_at: string;
   created_by?: string;
+  
+  // Dynamic customization fields
+  custom_parts?: CustomizationCategory[];
+  combo_images?: ComboImageMap;
 }
 
 export interface SparePart {

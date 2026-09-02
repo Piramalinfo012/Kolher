@@ -41,7 +41,8 @@ const STORAGE_KEYS = {
   LOGS: 'spc_logs_v5',
   CONFIG: 'spc_config_v5',
   CURRENT_USER: 'spc_current_user_v5',
-  QUOTATION_DRAFT: 'spc_quotation_draft_v5'
+  QUOTATION_DRAFT: 'spc_quotation_draft_v5',
+  DYNAMIC_CUSTOMS: 'spc_dynamic_customs_v5'
 };
 class ApiService {
   private config: ConfigSettings;
@@ -443,26 +444,45 @@ class ApiService {
   // --- Products Master ---
   public async getProducts(): Promise<Product[]> {
     const sb = supabaseService.getClient();
+    let data: Product[] = [];
     if (sb) {
       try {
-        const { data, error } = await sb.from('products').select('*').order('created_at', { ascending: false });
-        if (!error && data && data.length > 0) {
-          localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(data));
-          return data;
+        const { data: sbData, error } = await sb.from('products').select('*').order('created_at', { ascending: false });
+        if (!error && sbData) {
+          data = sbData;
+        } else {
+          const localData = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
+          data = localData ? JSON.parse(localData) : INITIAL_PRODUCTS;
         }
       } catch (e) {
-        console.warn('Supabase getProducts error:', e);
+        const localData = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
+        data = localData ? JSON.parse(localData) : INITIAL_PRODUCTS;
       }
+    } else {
+      const localData = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
+      data = localData ? JSON.parse(localData) : INITIAL_PRODUCTS;
     }
 
-    if (!this.isDemoMode && this.config.appsScriptUrl) {
-      try {
-        const res = await this.executeBackend<Product[]>('getProducts');
-        if (res.success && res.data) return res.data;
-      } catch (e) {}
-    }
-    const data = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
-    return data ? JSON.parse(data) : INITIAL_PRODUCTS;
+    // Merge Dynamic Customizations from LocalStorage
+    try {
+      const customsMapStr = localStorage.getItem(STORAGE_KEYS.DYNAMIC_CUSTOMS);
+      if (customsMapStr) {
+        const customsMap = JSON.parse(customsMapStr);
+        data = data.map(p => {
+          if (customsMap[p.product_id]) {
+            return {
+              ...p,
+              custom_parts: customsMap[p.product_id].custom_parts,
+              combo_images: customsMap[p.product_id].combo_images
+            };
+          }
+          return p;
+        });
+      }
+    } catch(e) {}
+
+    localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(data));
+    return data;
   }
 
   public async getProductById(productId: string): Promise<Product | undefined> {
@@ -470,47 +490,50 @@ class ApiService {
     return products.find(p => p.product_id === productId);
   }
 
-  public async createProduct(productData: Partial<Product>): Promise<Product> {
-    const products = await this.getProducts();
-    const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
-    const currentUser = this.getCurrentUser();
-    const newProduct: Product = {
-      product_id: `PRD${('0000' + (products.length + 1)).slice(-4)}`,
-      category: productData.category || 'Basin Mixer',
-      product_name: productData.product_name || 'New Product',
-      model_number: productData.model_number || '',
-      description: productData.description || '',
-      base_price: Number(productData.base_price) || 0,
-      gst_percentage: Number(productData.gst_percentage) || 18,
-      hsn_code: productData.hsn_code || '8481',
-      unit: productData.unit || 'PCS',
-      main_image_url: productData.main_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&auto=format&fit=crop&q=80',
-      status: productData.status || 'ACTIVE',
-      customizable: productData.customizable || 'YES',
-      image_mode: productData.image_mode || 'COMBINATION_IMAGE',
-      created_at: now,
-      updated_at: now,
-      created_by: currentUser.name
-    };
-
+  public async createProduct(product: Partial<Product>): Promise<Product> {
     const sb = supabaseService.getClient();
+    const newProduct: Product = {
+      ...product,
+      product_id: product.product_id || `PRD_${Date.now()}`,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    } as Product;
+
+    const { custom_parts, combo_images, has_customization, ...dbProduct } = newProduct as any;
+    if (has_customization !== undefined) {
+      dbProduct.customizable = has_customization ? 'YES' : 'NO';
+    }
+
     if (sb) {
-      try {
-        await sb.from('products').insert(newProduct);
-      } catch (e) {
-        console.warn('Supabase createProduct error:', e);
+      // Try inserting with custom_parts and combo_images included
+      const fullPayload = { ...dbProduct, custom_parts, combo_images };
+      const { error } = await sb.from('products').insert([fullPayload]);
+      if (error) {
+        // Fallback without custom_parts/combo_images if columns don't exist yet
+        const { error: fallbackError } = await sb.from('products').insert([dbProduct]);
+        if (fallbackError) throw new Error(fallbackError.message);
+      }
+    } else {
+      if (!this.isDemoMode && this.config.appsScriptUrl) {
+        // Mock google script request
       }
     }
 
+    // Save custom parts to mapping
+    if (custom_parts || combo_images) {
+      try {
+        const customsMapStr = localStorage.getItem(STORAGE_KEYS.DYNAMIC_CUSTOMS);
+        const customsMap = customsMapStr ? JSON.parse(customsMapStr) : {};
+        customsMap[newProduct.product_id] = { custom_parts, combo_images };
+        localStorage.setItem(STORAGE_KEYS.DYNAMIC_CUSTOMS, JSON.stringify(customsMap));
+      } catch (e) {}
+    }
+
+    const cache = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
+    const products: Product[] = cache ? JSON.parse(cache) : INITIAL_PRODUCTS;
     products.unshift(newProduct);
     localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(products));
 
-    if (!this.isDemoMode && this.config.appsScriptUrl) {
-      try {
-        await this.executeBackend('createProduct', newProduct);
-      } catch (e) {}
-    }
-    this.logActivity('CREATE_PRODUCT', 'PRODUCTS', newProduct.product_id, `Created product ${newProduct.product_name} (${newProduct.model_number})`);
     return newProduct;
   }
 
@@ -519,20 +542,56 @@ class ApiService {
     const index = products.findIndex(p => p.product_id === productId);
     if (index === -1) throw new Error('Product not found');
 
+    const { custom_parts, combo_images, has_customization, ...dbUpdates } = updates as any;
+    if (has_customization !== undefined) {
+      dbUpdates.customizable = has_customization ? 'YES' : 'NO';
+    }
+    
     const updated = {
       ...products[index],
-      ...updates,
+      ...dbUpdates,
       updated_at: new Date().toISOString().replace('T', ' ').slice(0, 19)
     };
 
     const sb = supabaseService.getClient();
     if (sb) {
       try {
-        await sb.from('products').update(updated).eq('product_id', productId);
-      } catch (e) {
+        const fullPayload = { ...dbUpdates };
+        if (custom_parts !== undefined) fullPayload.custom_parts = custom_parts;
+        if (combo_images !== undefined) fullPayload.combo_images = combo_images;
+
+        const { error } = await sb.from('products').update(fullPayload).eq('product_id', productId);
+        if (error) {
+          // If columns don't exist in Supabase yet, try updating without them
+          const { error: fallbackError } = await sb.from('products').update(dbUpdates).eq('product_id', productId);
+          if (fallbackError) {
+            console.error('Supabase DB error on updateProduct:', fallbackError);
+            throw new Error(`Database error: ${fallbackError.message}`);
+          }
+        }
+      } catch (e: any) {
         console.warn('Supabase updateProduct error:', e);
+        throw e;
       }
     }
+
+    // Update dynamic fields mapping
+    if (custom_parts !== undefined || combo_images !== undefined) {
+      try {
+        const customsMapStr = localStorage.getItem(STORAGE_KEYS.DYNAMIC_CUSTOMS);
+        const customsMap = customsMapStr ? JSON.parse(customsMapStr) : {};
+        customsMap[productId] = {
+          ...customsMap[productId],
+          ...(custom_parts !== undefined ? { custom_parts } : {}),
+          ...(combo_images !== undefined ? { combo_images } : {})
+        };
+        localStorage.setItem(STORAGE_KEYS.DYNAMIC_CUSTOMS, JSON.stringify(customsMap));
+      } catch (e) {}
+    }
+
+    // Also inject back for immediate state update
+    updated.custom_parts = custom_parts !== undefined ? custom_parts : products[index].custom_parts;
+    updated.combo_images = combo_images !== undefined ? combo_images : products[index].combo_images;
 
     products[index] = updated;
     localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(products));
@@ -542,7 +601,7 @@ class ApiService {
         await this.executeBackend('updateProduct', updated);
       } catch (e) {}
     }
-    this.logActivity('UPDATE_PRODUCT', 'PRODUCTS', productId, `Updated product ${updated.product_name}`);
+    this.logActivity('UPDATE_PRODUCT', 'PRODUCTS', productId, `Updated product configuration`);
     return updated;
   }
 
@@ -1198,26 +1257,43 @@ class ApiService {
   // --- Quotations Management ---
   public async getQuotations(): Promise<Quotation[]> {
     const sb = supabaseService.getClient();
+    let sbQuotations: Quotation[] = [];
+
     if (sb) {
       try {
         const { data, error } = await sb.from('quotations').select('*').order('created_at', { ascending: false });
-        if (!error && data && data.length > 0) {
-          localStorage.setItem(STORAGE_KEYS.QUOTATIONS, JSON.stringify(data));
-          return data;
+        if (!error && data) {
+          sbQuotations = data;
         }
       } catch (e) {
         console.warn('Supabase getQuotations error:', e);
       }
     }
 
-    if (!this.isDemoMode && this.config.appsScriptUrl) {
-      try {
-        const res = await this.executeBackend<Quotation[]>('getQuotations');
-        if (res.success && res.data) return res.data;
-      } catch (e) {}
-    }
-    const data = localStorage.getItem(STORAGE_KEYS.QUOTATIONS);
-    return data ? JSON.parse(data) : INITIAL_QUOTATIONS;
+    const localDataStr = localStorage.getItem(STORAGE_KEYS.QUOTATIONS);
+    const localQuotations: Quotation[] = localDataStr ? JSON.parse(localDataStr) : INITIAL_QUOTATIONS;
+
+    // Merge Supabase & LocalStorage quotations by ID/Number to make sure no quotation is missing
+    const quoteMap = new Map<string, Quotation>();
+
+    // Put initial/local first
+    localQuotations.forEach(q => {
+      const key = q.quotation_id || q.quotation_number;
+      if (key) quoteMap.set(key, q);
+    });
+
+    // Overwrite/Add Supabase records
+    sbQuotations.forEach(q => {
+      const key = q.quotation_id || q.quotation_number;
+      if (key) quoteMap.set(key, q);
+    });
+
+    const allQuotations = Array.from(quoteMap.values()).sort((a, b) => {
+      return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+    });
+
+    localStorage.setItem(STORAGE_KEYS.QUOTATIONS, JSON.stringify(allQuotations));
+    return allQuotations;
   }
 
   public async getQuotationById(quotationIdOrNumber: string): Promise<Quotation | undefined> {
@@ -1420,14 +1496,13 @@ class ApiService {
       }
     }
 
-    // Local fallback using Object URL
-    const objectUrl = URL.createObjectURL(file);
+    // Local fallback using Base64 string so it persists across refreshes
     const mockFileId = `DRV_LOC_${Date.now()}`;
     this.logActivity('UPLOAD_IMAGE', 'LOCAL_STORAGE', mockFileId, `Cached local image: ${file.name}`);
     return {
       fileId: mockFileId,
-      fileUrl: objectUrl,
-      thumbnailUrl: objectUrl
+      fileUrl: base64Data,
+      thumbnailUrl: base64Data
     };
   }
 

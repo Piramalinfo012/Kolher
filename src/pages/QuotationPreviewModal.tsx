@@ -334,24 +334,16 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
                               </td>
                             </tr>
                             {secItems.map(item => {
-                              const itemImg =
-                                item.product_image_url && item.product_image_url.startsWith('data:image/svg')
-                                  ? item.product_image_url
-                                  : item.finish_name || item.handle_name || (item.model_number && (item.model_number.startsWith('F5801') || item.model_number.startsWith('K-77959') || item.model_number.includes('SLIDE')))
-                                    ? getVisualizerDataUrl(
-                                        { finish_name: item.finish_name, finish_code: item.finish_id },
-                                        { handle_name: item.handle_name, handle_model: item.handle_id }
-                                      )
-                                    : item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
+                              const displayImageUrl = item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
 
                               return (
                                 <tr key={item.quotation_item_id || globalIndex} className="hover:bg-neutral-50/50">
                                   <td className="p-3 text-center text-neutral-500 font-mono">{globalIndex++}</td>
                                   <td className="p-3 text-center">
                                     <img
-                                      src={itemImg}
+                                      src={displayImageUrl}
                                       alt={item.product_name}
-                                      className="w-12 h-12 rounded-lg object-contain border border-neutral-200 mx-auto bg-neutral-50"
+                                      className="w-20 h-20 rounded-lg object-contain border border-neutral-200 mx-auto bg-white p-1 shadow-2xs"
                                       referrerPolicy="no-referrer"
                                     />
                                   </td>

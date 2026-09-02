@@ -1,6 +1,5 @@
 import { Quotation, CompanySettings } from '../types';
 import { api } from './api';
-import { getVisualizerDataUrl } from '../components/InteractiveVisualizer';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -10,8 +9,6 @@ export class PdfGeneratorService {
    */
   public static generateHtml(quotation: Quotation, settings: CompanySettings): string {
     const items = quotation.items || [];
-    const isInterState = (quotation.billing_address || '').toLowerCase().indexOf('maharashtra') === -1 &&
-                         (quotation.shipping_address || '').toLowerCase().indexOf('maharashtra') === -1;
 
     // Check if items have sections
     const hasSections = items.some(item => !!item.section_name);
@@ -51,41 +48,33 @@ export class PdfGeneratorService {
 
         const secRows = secItems.map(item => {
           const customization: any = item.customization_json || {};
-          const itemImg =
-            item.product_image_url && item.product_image_url.startsWith('data:image/svg')
-              ? item.product_image_url
-              : item.finish_name || item.handle_name || (item.model_number && (item.model_number.startsWith('F5801') || item.model_number.startsWith('K-77959') || item.model_number.includes('SLIDE')))
-                ? getVisualizerDataUrl(
-                    { finish_name: item.finish_name, finish_code: item.finish_id },
-                    { handle_name: item.handle_name, handle_model: item.handle_id }
-                  )
-                : item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
+          const itemImg = item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
 
           const rowHtml = `
             <tr class="item-row" style="border-bottom: 1px solid #e5e7eb;">
-              <td style="padding: 9px 8px; text-align: center; vertical-align: middle; font-size: 11px; color: #6b7280;">${globalIdx++}</td>
-              <td style="padding: 9px 8px; vertical-align: middle; text-align: center; width: 60px;">
+              <td style="padding: 10px 8px; text-align: center; vertical-align: middle; font-size: 11px; color: #6b7280;">${globalIdx++}</td>
+              <td style="padding: 10px 8px; vertical-align: middle; text-align: center; width: 95px;">
                 <img src="${itemImg}"
                      alt="${item.product_name}"
-                     style="width: 48px; height: 48px; object-fit: contain; border-radius: 4px; border: 1px solid #e5e7eb; background: #fff;"
+                     style="width: 80px; height: 80px; object-fit: contain; border-radius: 6px; border: 1px solid #e5e7eb; background: #fff; padding: 2px;"
                      referrerpolicy="no-referrer" />
               </td>
-              <td style="padding: 9px 8px; vertical-align: middle;">
+              <td style="padding: 10px 8px; vertical-align: middle;">
                 <div style="font-weight: 700; font-size: 12px; color: #111827;">${item.model_number ? `${item.model_number} - ` : ''}${item.product_name}</div>
-                <div style="font-size: 11px; color: #4b5563; margin-top: 1px;">Code: <strong style="color: #111827;">${item.model_number || 'N/A'}</strong></div>
-                <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px;">
-                  ${item.finish_name ? `<span style="display: inline-block; background-color: #fee2e2; color: #b91c1c; font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 3px; border: 1px solid #fca5a5;">Finish: ${item.finish_name}</span>` : ''}
-                  ${item.handle_name ? `<span style="display: inline-block; background-color: #f3f4f6; color: #374151; font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 3px; border: 1px solid #e5e7eb;">Handle: ${item.handle_name}</span>` : ''}
+                <div style="font-size: 11px; color: #4b5563; margin-top: 2px;">Code: <strong style="color: #111827;">${item.model_number || 'N/A'}</strong></div>
+                <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
+                  ${item.finish_name ? `<span style="display: inline-block; background-color: #fee2e2; color: #b91c1c; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; border: 1px solid #fca5a5;">Finish: ${item.finish_name}</span>` : ''}
+                  ${item.handle_name ? `<span style="display: inline-block; background-color: #f3f4f6; color: #374151; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; border: 1px solid #e5e7eb;">Handle: ${item.handle_name}</span>` : ''}
                 </div>
-                ${customization.notes ? `<div style="font-size: 10px; color: #6b7280; font-style: italic; margin-top: 3px;">Note: ${customization.notes}</div>` : ''}
+                ${customization.notes ? `<div style="font-size: 10px; color: #6b7280; font-style: italic; margin-top: 4px;">Note: ${customization.notes}</div>` : ''}
               </td>
-              <td style="padding: 9px 8px; text-align: center; vertical-align: middle; font-size: 12px; font-weight: 600;">
+              <td style="padding: 10px 8px; text-align: center; vertical-align: middle; font-size: 12px; font-weight: 600;">
                 ${item.quantity} <span style="font-size: 10px; color: #6b7280; font-weight: normal;">${item.unit || 'PCS'}</span>
               </td>
-              <td style="padding: 9px 8px; text-align: right; vertical-align: middle; font-size: 12px;">
+              <td style="padding: 10px 8px; text-align: right; vertical-align: middle; font-size: 12px;">
                 ₹${Number(item.unit_final_price || item.clp || item.mrp || item.base_price).toLocaleString('en-IN')}
               </td>
-              <td style="padding: 9px 8px; text-align: right; vertical-align: middle; font-size: 12px; font-weight: 700; color: #111827;">
+              <td style="padding: 10px 8px; text-align: right; vertical-align: middle; font-size: 12px; font-weight: 700; color: #111827;">
                 ₹${Number(item.line_total).toLocaleString('en-IN')}
               </td>
             </tr>
@@ -98,31 +87,23 @@ export class PdfGeneratorService {
     } else {
       itemsRows = items.map((item, index) => {
         const customization: any = item.customization_json || {};
-        const itemImg =
-          item.product_image_url && item.product_image_url.startsWith('data:image/svg')
-            ? item.product_image_url
-            : item.finish_name || item.handle_name || (item.model_number && (item.model_number.startsWith('F5801') || item.model_number.startsWith('K-77959') || item.model_number.includes('SLIDE')))
-              ? getVisualizerDataUrl(
-                  { finish_name: item.finish_name, finish_code: item.finish_id },
-                  { handle_name: item.handle_name, handle_model: item.handle_id }
-                )
-              : item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
+        const itemImg = item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
 
         return `
           <tr class="item-row" style="border-bottom: 1px solid #e5e7eb;">
             <td style="padding: 10px 8px; text-align: center; vertical-align: middle; font-size: 11px; color: #6b7280;">${index + 1}</td>
-            <td style="padding: 10px 8px; vertical-align: middle; text-align: center; width: 65px;">
+            <td style="padding: 10px 8px; vertical-align: middle; text-align: center; width: 95px;">
               <img src="${itemImg}"
                    alt="${item.product_name}"
-                   style="width: 50px; height: 50px; object-fit: contain; border-radius: 4px; border: 1px solid #e5e7eb; background: #fff;"
+                   style="width: 80px; height: 80px; object-fit: contain; border-radius: 6px; border: 1px solid #e5e7eb; background: #fff; padding: 2px;"
                    referrerpolicy="no-referrer" />
             </td>
             <td style="padding: 10px 8px; vertical-align: middle;">
               <div style="font-weight: 700; font-size: 13px; color: #111827;">${item.model_number ? `${item.model_number} - ` : ''}${item.product_name}</div>
               <div style="font-size: 11px; color: #4b5563; margin-top: 2px;">Code: <strong style="color: #111827;">${item.model_number || 'N/A'}</strong></div>
               <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
-                ${item.finish_name ? `<span style="display: inline-block; background-color: #fee2e2; color: #b91c1c; font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 3px; border: 1px solid #fca5a5;">Finish: ${item.finish_name}</span>` : ''}
-                ${item.handle_name ? `<span style="display: inline-block; background-color: #f3f4f6; color: #374151; font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 3px; border: 1px solid #e5e7eb;">Handle: ${item.handle_name}</span>` : ''}
+                ${item.finish_name ? `<span style="display: inline-block; background-color: #fee2e2; color: #b91c1c; font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 4px; border: 1px solid #fca5a5;">Finish: ${item.finish_name}</span>` : ''}
+                ${item.handle_name ? `<span style="display: inline-block; background-color: #f3f4f6; color: #374151; font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 4px; border: 1px solid #e5e7eb;">Handle: ${item.handle_name}</span>` : ''}
               </div>
               ${customization.notes ? `<div style="font-size: 10px; color: #6b7280; font-style: italic; margin-top: 4px;">Note: ${customization.notes}</div>` : ''}
             </td>
@@ -153,30 +134,29 @@ export class PdfGeneratorService {
             color: #1f2937;
             background: #ffffff;
             font-size: 12px;
-            line-height: 1.45;
+            line-height: 1.5;
             padding: 30px;
           }
           .page-container {
-            max-width: 800px;
+            width: 730px;
             margin: 0 auto;
             background: #ffffff;
           }
-          .header-table { width: 100%; border-bottom: 2px solid #e30613; padding-bottom: 15px; margin-bottom: 20px; }
-          .company-name { font-size: 20px; font-weight: 700; color: #111827; letter-spacing: 0.5px; }
-          .gold-text { color: #e30613; font-weight: 600; }
-          .meta-box { background: #fafafa; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; }
-          .info-table { width: 100%; margin-bottom: 20px; }
-          .info-td { width: 50%; vertical-align: top; padding-right: 15px; }
+          .header-table { width: 100%; border-bottom: 2.5px solid #e30613; padding-bottom: 12px; margin-bottom: 20px; }
+          .company-name { font-size: 18px; font-weight: 800; color: #111827; letter-spacing: -0.2px; }
+          .meta-box { background: #fafafa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 14px; }
+          .info-table { width: 100%; margin-bottom: 20px; border-collapse: separate; border-spacing: 10px 0; margin-left: -10px; margin-right: -10px; }
+          .info-td { width: 50%; vertical-align: top; }
           .table-products { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px; }
-          .table-products th { background: #111827; color: #ffffff; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px; font-weight: 600; }
-          .summary-table { width: 320px; margin-left: auto; border-collapse: collapse; }
-          .summary-table td { padding: 5px 8px; font-size: 12px; }
-          .summary-table .grand-row { border-top: 2px solid #111827; border-bottom: 2px solid #111827; font-weight: 700; font-size: 14px; background: #fffbeb; }
+          .table-products th { background: #111827; color: #ffffff; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 9px 8px; font-weight: 700; }
+          .summary-table { width: 100%; border-collapse: collapse; }
+          .summary-table td { padding: 6px 10px; font-size: 12px; }
+          .summary-table .grand-row { border-top: 2px solid #111827; border-bottom: 2px solid #111827; font-weight: 800; font-size: 14px; background: #fffbeb; }
           .footer-section { margin-top: 25px; border-top: 1px solid #e5e7eb; padding-top: 15px; }
-          .bank-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 4px; padding: 8px 12px; margin-top: 10px; font-size: 11px; }
+          .bank-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px 14px; font-size: 11px; line-height: 1.6; }
           @media print {
             body { padding: 0; }
-            .page-container { max-width: 100%; }
+            .page-container { width: 100%; }
           }
         </style>
       </head>
@@ -185,21 +165,19 @@ export class PdfGeneratorService {
           <!-- Header -->
           <table class="header-table">
             <tr>
-              <td style="vertical-align: middle; width: 65%;">
+              <td style="vertical-align: top; width: 62%;">
                 <div class="company-name">${settings.company_name}</div>
-                <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">
-                  ${settings.address}<br>
-                  Tel: ${settings.phone} | Email: ${settings.email} | Web: ${settings.website}<br>
-                  <strong>GSTIN:</strong> ${settings.gstin} | <strong>PAN:</strong> ${settings.pan}
+                <div style="font-size: 11px; color: #4b5563; margin-top: 4px; line-height: 1.5;">
+                  ${settings.address || 'FIMA Carlo Frattini Experience Centre, Mumbai, Maharashtra 400052'}<br>
+                  Tel: ${settings.phone || '+91 22 1234 5678'} | Email: ${settings.email || 'info@fimacf.in'} | Web: ${settings.website || 'www.fimacf.com'}<br>
+                  ${settings.gstin ? `<strong>GSTIN:</strong> ${settings.gstin}` : ''} ${settings.pan ? `| <strong>PAN:</strong> ${settings.pan}` : ''}
                 </div>
               </td>
-              <td style="text-align: right; vertical-align: middle; width: 35%;">
-                <div style="display: inline-block; text-align: right;">
-                  <div style="font-size: 22px; font-weight: 800; color: #e30613; letter-spacing: 1px;">QUOTATION</div>
-                  <div style="font-size: 13px; font-weight: 700; color: #111827; margin-top: 2px;">${quotation.quotation_number}</div>
-                  <div style="font-size: 11px; color: #4b5563;">Date: ${quotation.quotation_date}</div>
-                  <div style="font-size: 11px; color: #059669; font-weight: 600;">Status: ${quotation.status}</div>
-                </div>
+              <td style="text-align: right; vertical-align: top; width: 38%;">
+                <div style="font-size: 22px; font-weight: 900; color: #e30613; letter-spacing: 1px; line-height: 1;">QUOTATION</div>
+                <div style="font-size: 13px; font-weight: 700; color: #111827; margin-top: 4px;">${quotation.quotation_number}</div>
+                <div style="font-size: 11px; color: #4b5563; margin-top: 2px;">Date: <strong>${quotation.quotation_date}</strong></div>
+                <div style="font-size: 11px; color: #059669; font-weight: 700; margin-top: 2px;">Status: ${quotation.status}</div>
               </td>
             </tr>
           </table>
@@ -212,7 +190,7 @@ export class PdfGeneratorService {
                   <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: #6b7280; letter-spacing: 0.5px; margin-bottom: 4px;">Quotation For:</div>
                   <div style="font-size: 14px; font-weight: 700; color: #111827;">${quotation.party_name}</div>
                   ${quotation.company_name ? `<div style="font-size: 12px; color: #374151;">${quotation.company_name}</div>` : ''}
-                  <div style="font-size: 11px; color: #4b5563; margin-top: 4px;">
+                  <div style="font-size: 11px; color: #4b5563; margin-top: 4px; line-height: 1.5;">
                     <strong>Contact:</strong> ${quotation.contact_person || 'Client Representative'}<br>
                     <strong>Mobile:</strong> ${quotation.mobile || '-'} | <strong>Email:</strong> ${quotation.email || '-'}<br>
                     ${quotation.gstin ? `<strong>GSTIN:</strong> ${quotation.gstin}<br>` : ''}
@@ -220,7 +198,7 @@ export class PdfGeneratorService {
                   </div>
                 </div>
               </td>
-              <td class="info-td" style="padding-right: 0;">
+              <td class="info-td">
                 <div class="meta-box">
                   <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: #6b7280; letter-spacing: 0.5px; margin-bottom: 4px;">Commercial Terms:</div>
                   <div style="font-size: 11px; color: #374151; line-height: 1.6;">
@@ -252,8 +230,8 @@ export class PdfGeneratorService {
           </table>
 
           <!-- Financial Calculation Breakdown -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 10px;">
-            <div style="width: 45%; font-size: 11px; color: #4b5563;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 15px;">
+            <div style="width: 48%; font-size: 11px; color: #4b5563;">
               <div class="bank-box">
                 <strong style="color: #111827;">Bank Remittance Details:</strong><br>
                 Bank: <strong>${settings.bank_name}</strong><br>
@@ -261,7 +239,7 @@ export class PdfGeneratorService {
                 IFSC: <strong>${settings.ifsc}</strong> | Branch: ${settings.branch}
               </div>
             </div>
-            <div style="width: 50%;">
+            <div style="width: 48%;">
               <table class="summary-table">
                 <tr>
                   <td>Subtotal:</td>
@@ -337,7 +315,7 @@ export class PdfGeneratorService {
     container.style.position = 'fixed';
     container.style.top = '-9999px';
     container.style.left = '0';
-    container.style.width = '800px';
+    container.style.width = '794px';
     container.style.backgroundColor = '#ffffff';
     container.style.zIndex = '-1000';
     container.innerHTML = this.generateHtml(quotation, settings);
@@ -361,29 +339,37 @@ export class PdfGeneratorService {
       );
 
       const printRoot = (container.querySelector('#quotation-print-root') as HTMLElement) || container;
-      // Add page-break properties to avoid cutting important blocks
-      const summaryTable = printRoot.querySelector('.summary-table') as HTMLElement;
-      if (summaryTable) summaryTable.style.pageBreakInside = 'avoid';
-      const footerSection = printRoot.querySelector('.footer-section') as HTMLElement;
-      if (footerSection) footerSection.style.pageBreakInside = 'avoid';
-      const itemRows = printRoot.querySelectorAll('.item-row');
-      itemRows.forEach(row => { (row as HTMLElement).style.pageBreakInside = 'avoid'; });
-
-      const pdf = new jsPDF('p', 'pt', 'a4');
       
-      await pdf.html(printRoot, {
-        callback: function (doc) {
-          doc.save(fileName);
-        },
-        x: 0,
-        y: 0,
-        html2canvas: {
-          scale: 0.74, // Scale to fit A4 width (595.28 / 800)
-          useCORS: true,
-          logging: false
-        },
-        autoPaging: 'text' // Better page breaks for text
+      const canvas = await html2canvas(printRoot, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        backgroundColor: '#ffffff'
       });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.98);
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pdfHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
+
+      pdf.save(fileName);
 
       // Update status & log
       await api.updateQuotation(quotation.quotation_id, {
@@ -477,5 +463,6 @@ export class PdfGeneratorService {
     }
   }
 }
+
 
 
