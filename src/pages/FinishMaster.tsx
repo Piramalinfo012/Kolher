@@ -134,10 +134,10 @@ export const FinishMaster: React.FC = () => {
         {canManageProducts && (
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-amber-300 hover:text-amber-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             id="btn-add-finish"
           >
-            <Plus className="w-4 h-4 text-amber-400" />
+            <Plus className="w-4 h-4 text-red-400" />
             <span>Add Finish</span>
           </button>
         )}
@@ -152,7 +152,7 @@ export const FinishMaster: React.FC = () => {
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search finishes by name, code or coating type..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
       </div>
@@ -254,7 +254,7 @@ export const FinishMaster: React.FC = () => {
                     placeholder="e.g. ORO SPAZZOLATO"
                     value={formData.finish_name || ''}
                     onChange={e => setFormData({ ...formData, finish_name: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
                   />
                 </div>
 
@@ -268,7 +268,7 @@ export const FinishMaster: React.FC = () => {
                     placeholder="e.g. OS"
                     value={formData.finish_code || ''}
                     onChange={e => setFormData({ ...formData, finish_code: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -283,7 +283,7 @@ export const FinishMaster: React.FC = () => {
                     placeholder="PVD Vapor Deposition"
                     value={formData.finish_type || ''}
                     onChange={e => setFormData({ ...formData, finish_type: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   />
                 </div>
 
@@ -296,7 +296,7 @@ export const FinishMaster: React.FC = () => {
                     min={0}
                     value={formData.additional_price || 0}
                     onChange={e => setFormData({ ...formData, additional_price: Number(e.target.value) })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -316,7 +316,7 @@ export const FinishMaster: React.FC = () => {
                     type="text"
                     value={formData.color_hex || '#C5A880'}
                     onChange={e => setFormData({ ...formData, color_hex: e.target.value })}
-                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 font-mono focus:outline-none focus:border-amber-500"
+                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 font-mono focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -330,7 +330,7 @@ export const FinishMaster: React.FC = () => {
                   placeholder="linear-gradient(135deg, #e6d5b8 0%, #c5a880 50%, #9a7b4f 100%)"
                   value={formData.texture_css || ''}
                   onChange={e => setFormData({ ...formData, texture_css: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono text-[11px] focus:outline-none focus:border-amber-500"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono text-[11px] focus:outline-none focus:border-red-500"
                 />
               </div>
 
@@ -369,3 +369,4 @@ export const FinishMaster: React.FC = () => {
     </div>
   );
 };
+

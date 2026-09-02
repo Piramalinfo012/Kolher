@@ -83,6 +83,23 @@ export const INITIAL_PRODUCTS: Product[] = [
     created_by: 'Rajeev Sharma'
   },
   {
+    product_id: 'PRD_FIMA_F3804',
+    category: 'Exposed Bath Mixer',
+    product_name: 'Exposed bath mixer with shower set',
+    model_number: 'F3804',
+    description: 'Exposed bath mixer with shower set from FIMA Carlo Frattini.',
+    base_price: 25000,
+    gst_percentage: 18,
+    hsn_code: '84818020',
+    unit: 'PCS',
+    main_image_url: '/products/fima_exp_1_0.jpg',
+    status: 'ACTIVE',
+    customizable: 'YES',
+    image_mode: 'COMBINATION_IMAGE',
+    created_at: '2026-09-02 10:00:00',
+    updated_at: '2026-09-02 10:00:00'
+  },
+  {
     product_id: 'PRD0001',
     category: 'Basin Mixer',
     product_name: 'Kohler Components™ Basin Mixer (Row Spout)',

@@ -136,7 +136,7 @@ export const PriceManagement: React.FC = () => {
       {/* Bulk Adjustment Tool */}
       <div className="bg-neutral-900 text-white rounded-3xl p-6 shadow-xl space-y-4">
         <div className="flex items-center gap-2">
-          <DollarSign className="w-5 h-5 text-amber-400" />
+          <DollarSign className="w-5 h-5 text-red-400" />
           <h3 className="text-sm font-bold tracking-wide uppercase">
             Bulk Price Inflation / Margin Revision Tool
           </h3>
@@ -148,7 +148,7 @@ export const PriceManagement: React.FC = () => {
             <select
               value={targetType}
               onChange={e => setTargetType(e.target.value as any)}
-              className="w-full p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-white font-semibold focus:outline-none focus:border-amber-500"
+              className="w-full p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-white font-semibold focus:outline-none focus:border-red-500"
             >
               <option value="PRODUCTS">All Product Base Prices ({products.length})</option>
               <option value="FINISHES">All Finish Surcharges ({finishes.length})</option>
@@ -161,7 +161,7 @@ export const PriceManagement: React.FC = () => {
             <select
               value={adjustmentType}
               onChange={e => setAdjustmentType(e.target.value as any)}
-              className="w-full p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-white font-semibold focus:outline-none focus:border-amber-500"
+              className="w-full p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-white font-semibold focus:outline-none focus:border-red-500"
             >
               <option value="PERCENT">Percentage (%)</option>
               <option value="FLAT">Flat Amount (INR)</option>
@@ -184,7 +184,7 @@ export const PriceManagement: React.FC = () => {
                 min={0}
                 value={adjustmentValue}
                 onChange={e => setAdjustmentValue(Number(e.target.value))}
-                className="w-full p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-amber-300 font-bold text-center"
+                className="w-full p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-red-300 font-bold text-center"
               />
             </div>
           </div>
@@ -192,7 +192,7 @@ export const PriceManagement: React.FC = () => {
           <div className="flex items-end">
             <button
               onClick={handleApplyBulkMarkup}
-              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 font-bold shadow-md transition-all cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-neutral-950 font-bold shadow-md transition-all cursor-pointer"
             >
               Apply Revisions
             </button>
@@ -209,7 +209,7 @@ export const PriceManagement: React.FC = () => {
         {/* Products Table */}
         <div className="space-y-3">
           <div className="text-xs font-bold text-neutral-500 uppercase flex items-center gap-1.5">
-            <Package className="w-4 h-4 text-amber-600" /> Products Master Base Prices
+            <Package className="w-4 h-4 text-red-600" /> Products Master Base Prices
           </div>
           <div className="overflow-x-auto border border-neutral-200 rounded-2xl">
             <table className="w-full text-xs text-left">
@@ -236,7 +236,7 @@ export const PriceManagement: React.FC = () => {
                         type="number"
                         defaultValue={p.base_price}
                         onBlur={e => handleQuickInlineUpdate('PRODUCT', p.product_id, Number(e.target.value))}
-                        className="w-28 p-1.5 rounded-lg border border-neutral-300 text-right font-bold text-xs focus:outline-none focus:border-amber-500"
+                        className="w-28 p-1.5 rounded-lg border border-neutral-300 text-right font-bold text-xs focus:outline-none focus:border-red-500"
                       />
                     </td>
                   </tr>
@@ -249,7 +249,7 @@ export const PriceManagement: React.FC = () => {
         {/* Finishes Table */}
         <div className="space-y-3 pt-4">
           <div className="text-xs font-bold text-neutral-500 uppercase flex items-center gap-1.5">
-            <Palette className="w-4 h-4 text-amber-600" /> Architectural Finish Surcharges
+            <Palette className="w-4 h-4 text-red-600" /> Architectural Finish Surcharges
           </div>
           <div className="overflow-x-auto border border-neutral-200 rounded-2xl">
             <table className="w-full text-xs text-left">
@@ -276,7 +276,7 @@ export const PriceManagement: React.FC = () => {
                         type="number"
                         defaultValue={f.additional_price}
                         onBlur={e => handleQuickInlineUpdate('FINISH', f.finish_id, Number(e.target.value))}
-                        className="w-28 p-1.5 rounded-lg border border-neutral-300 text-right font-bold text-xs focus:outline-none focus:border-amber-500"
+                        className="w-28 p-1.5 rounded-lg border border-neutral-300 text-right font-bold text-xs focus:outline-none focus:border-red-500"
                       />
                     </td>
                   </tr>
@@ -289,3 +289,4 @@ export const PriceManagement: React.FC = () => {
     </div>
   );
 };
+

@@ -141,10 +141,10 @@ export const HandleMaster: React.FC = () => {
         {canManageProducts && (
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-amber-300 hover:text-amber-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             id="btn-add-handle"
           >
-            <Plus className="w-4 h-4 text-amber-400" />
+            <Plus className="w-4 h-4 text-red-400" />
             <span>Add Handle / Knob</span>
           </button>
         )}
@@ -159,7 +159,7 @@ export const HandleMaster: React.FC = () => {
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search handle by material, marble name, or model..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
 
@@ -171,7 +171,7 @@ export const HandleMaster: React.FC = () => {
               onClick={() => setMaterialFilter(mat)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                 materialFilter === mat
-                  ? 'bg-neutral-900 text-amber-300 shadow-xs'
+                  ? 'bg-neutral-900 text-red-300 shadow-xs'
                   : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
               }`}
             >
@@ -200,7 +200,7 @@ export const HandleMaster: React.FC = () => {
                 <span className="absolute top-3 left-3 text-[10px] font-mono font-bold bg-neutral-900/80 text-white px-2 py-0.5 rounded backdrop-blur-xs">
                   {h.handle_model}
                 </span>
-                <span className="absolute top-3 right-3 text-[10px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded">
+                <span className="absolute top-3 right-3 text-[10px] font-bold bg-red-100 text-red-900 px-2 py-0.5 rounded">
                   {h.material}
                 </span>
               </div>
@@ -276,7 +276,7 @@ export const HandleMaster: React.FC = () => {
                     placeholder="e.g. Marmo Nero Marquina"
                     value={formData.handle_name || ''}
                     onChange={e => setFormData({ ...formData, handle_name: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
                   />
                 </div>
 
@@ -288,7 +288,7 @@ export const HandleMaster: React.FC = () => {
                     type="text"
                     value={formData.handle_model || 'F1420'}
                     onChange={e => setFormData({ ...formData, handle_model: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -301,7 +301,7 @@ export const HandleMaster: React.FC = () => {
                   <select
                     value={formData.material || 'Marble'}
                     onChange={e => setFormData({ ...formData, material: e.target.value as any })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   >
                     <option value="Marble">Marble</option>
                     <option value="Wood">Wood</option>
@@ -319,7 +319,7 @@ export const HandleMaster: React.FC = () => {
                     min={0}
                     value={formData.additional_price || 0}
                     onChange={e => setFormData({ ...formData, additional_price: Number(e.target.value) })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -333,7 +333,7 @@ export const HandleMaster: React.FC = () => {
                     type="text"
                     value={formData.texture_image_url || ''}
                     onChange={e => setFormData({ ...formData, texture_image_url: e.target.value, preview_image_url: e.target.value })}
-                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 font-mono text-[11px] focus:outline-none focus:border-amber-500"
+                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 font-mono text-[11px] focus:outline-none focus:border-red-500"
                   />
                   <button
                     type="button"
@@ -396,3 +396,4 @@ export const HandleMaster: React.FC = () => {
     </div>
   );
 };
+

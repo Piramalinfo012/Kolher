@@ -33,6 +33,18 @@ export interface Product {
   created_by?: string;
 }
 
+export interface SparePart {
+  part_id: string;
+  product_id: string;
+  part_name: string;
+  part_model: string;
+  price: number;
+  image_url: string;
+  status: 'ACTIVE' | 'INACTIVE';
+  created_at: string;
+  updated_at: string;
+}
+
 export type FinishType = 'PVD' | 'Chrome' | 'Metallic' | 'Matte' | 'Brushed' | 'Glossy';
 
 export interface Finish {

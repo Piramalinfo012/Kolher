@@ -88,10 +88,10 @@ export const CompanySettingsPage: React.FC = () => {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-5 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-amber-300 hover:text-amber-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
             id="btn-save-settings"
           >
-            <Save className="w-4 h-4 text-amber-400" />
+            <Save className="w-4 h-4 text-red-400" />
             <span>{saving ? 'Saving...' : 'Save Settings'}</span>
           </button>
         )}
@@ -101,7 +101,7 @@ export const CompanySettingsPage: React.FC = () => {
         {/* Section 1: Legal Entity Profile */}
         <div className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold text-neutral-900 uppercase">
-            <Building2 className="w-4 h-4 text-amber-600" />
+            <Building2 className="w-4 h-4 text-red-600" />
             1. Legal Entity & Brand Details
           </div>
 
@@ -112,7 +112,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.company_name}
                 onChange={e => setSettings({ ...settings, company_name: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -122,7 +122,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.tagline || ''}
                 onChange={e => setSettings({ ...settings, tagline: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -132,7 +132,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.address}
                 onChange={e => setSettings({ ...settings, address: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -142,7 +142,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.phone}
                 onChange={e => setSettings({ ...settings, phone: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -152,7 +152,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="email"
                 value={settings.email}
                 onChange={e => setSettings({ ...settings, email: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -162,7 +162,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.gstin}
                 onChange={e => setSettings({ ...settings, gstin: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -172,7 +172,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.pan}
                 onChange={e => setSettings({ ...settings, pan: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
@@ -181,7 +181,7 @@ export const CompanySettingsPage: React.FC = () => {
         {/* Section 2: Bank Remittance Coordinates */}
         <div className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold text-neutral-900 uppercase">
-            <CreditCard className="w-4 h-4 text-amber-600" />
+            <CreditCard className="w-4 h-4 text-red-600" />
             2. Bank Remittance & Electronic Settlement Coordinates
           </div>
 
@@ -192,7 +192,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.bank_name}
                 onChange={e => setSettings({ ...settings, bank_name: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -202,7 +202,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.account_number}
                 onChange={e => setSettings({ ...settings, account_number: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -212,7 +212,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.ifsc}
                 onChange={e => setSettings({ ...settings, ifsc: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -222,7 +222,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.branch}
                 onChange={e => setSettings({ ...settings, branch: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
@@ -231,7 +231,7 @@ export const CompanySettingsPage: React.FC = () => {
         {/* Section 3: Quotation Format & Standard Terms */}
         <div className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold text-neutral-900 uppercase">
-            <FileText className="w-4 h-4 text-amber-600" />
+            <FileText className="w-4 h-4 text-red-600" />
             3. Quotation Numbering Rules & Default Terms
           </div>
 
@@ -242,7 +242,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.quotation_prefix}
                 onChange={e => setSettings({ ...settings, quotation_prefix: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
               />
               <p className="text-[10px] text-neutral-400 mt-1">Example: PIR/QT/</p>
             </div>
@@ -253,7 +253,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.financial_year}
                 onChange={e => setSettings({ ...settings, financial_year: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
               />
               <p className="text-[10px] text-neutral-400 mt-1">Example: 26-27</p>
             </div>
@@ -264,7 +264,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="number"
                 value={settings.default_gst}
                 onChange={e => setSettings({ ...settings, default_gst: Number(e.target.value) })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
@@ -276,7 +276,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.default_validity}
                 onChange={e => setSettings({ ...settings, default_validity: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -286,7 +286,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.default_payment_terms}
                 onChange={e => setSettings({ ...settings, default_payment_terms: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -296,7 +296,7 @@ export const CompanySettingsPage: React.FC = () => {
                 type="text"
                 value={settings.default_delivery_terms}
                 onChange={e => setSettings({ ...settings, default_delivery_terms: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
@@ -309,7 +309,7 @@ export const CompanySettingsPage: React.FC = () => {
               type="text"
               value={settings.authorized_signatory}
               onChange={e => setSettings({ ...settings, authorized_signatory: e.target.value })}
-              className="w-full sm:w-80 p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-amber-500"
+              className="w-full sm:w-80 p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
             />
           </div>
 
@@ -321,7 +321,7 @@ export const CompanySettingsPage: React.FC = () => {
               rows={4}
               value={settings.terms_conditions}
               onChange={e => setSettings({ ...settings, terms_conditions: e.target.value })}
-              className="w-full p-3 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500 leading-relaxed font-sans text-xs"
+              className="w-full p-3 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500 leading-relaxed font-sans text-xs"
             />
           </div>
         </div>
@@ -329,3 +329,4 @@ export const CompanySettingsPage: React.FC = () => {
     </div>
   );
 };
+

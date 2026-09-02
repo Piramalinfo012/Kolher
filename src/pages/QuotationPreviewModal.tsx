@@ -96,7 +96,7 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
           <div className="px-6 py-4 bg-neutral-900 text-white flex flex-wrap items-center justify-between gap-3 border-b border-neutral-800">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-md border border-amber-500/30">
+                <span className="text-xs font-mono font-bold bg-red-500/20 text-red-300 px-2 py-0.5 rounded-md border border-red-500/30">
                   {quotation.quotation_number}
                 </span>
                 <h3 className="text-sm font-bold text-white truncate max-w-xs sm:max-w-md">
@@ -122,7 +122,7 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
               <button
                 onClick={handleDownloadPdf}
                 disabled={generatingPdf}
-                className="px-3 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-amber-300 hover:text-amber-200 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+                className="px-3 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-red-300 hover:text-red-200 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
                 id="btn-download-pdf"
               >
                 {generatingPdf ? (
@@ -139,7 +139,7 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
                 id="btn-email-share"
                 title="Share via Email"
               >
-                <Mail className="w-3.5 h-3.5 text-amber-300" />
+                <Mail className="w-3.5 h-3.5 text-red-300" />
                 <span className="hidden sm:inline">Email</span>
               </button>
 
@@ -165,7 +165,7 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
           <div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-neutral-100/70">
             <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-md border border-neutral-200/80 p-6 sm:p-10 font-sans text-neutral-900 print-page">
               {/* Header */}
-              <div className="flex flex-col sm:flex-row justify-between items-start pb-6 border-b-2 border-amber-600/60 gap-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start pb-6 border-b-2 border-red-600/60 gap-4">
                 <div>
                   <div className="font-serif-luxury font-bold text-lg sm:text-xl tracking-wider text-neutral-950">
                     {companySettings.company_name}
@@ -178,7 +178,7 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
                 </div>
 
                 <div className="sm:text-right shrink-0">
-                  <div className="text-xl sm:text-2xl font-bold font-serif-luxury text-amber-700 tracking-wider">
+                  <div className="text-xl sm:text-2xl font-bold font-serif-luxury text-red-700 tracking-wider">
                     QUOTATION
                   </div>
                   <div className="text-sm font-bold text-neutral-950 mt-1">
@@ -273,7 +273,7 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
                                 <div className="text-neutral-500 text-[11px] font-mono">Code: {item.model_number}</div>
                                 <div className="flex flex-wrap gap-1.5 mt-1">
                                   {item.finish_name && (
-                                    <span className="bg-amber-50 text-amber-900 text-[10px] font-semibold px-2 py-0.5 rounded border border-amber-200">
+                                    <span className="bg-red-50 text-red-900 text-[10px] font-semibold px-2 py-0.5 rounded border border-red-200">
                                       Finish: {item.finish_name}
                                     </span>
                                   )}
@@ -322,10 +322,10 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
 
                         return (
                           <React.Fragment key={secName}>
-                            <tr className="bg-amber-50/80 border-t-2 border-amber-200/70 border-b border-amber-200/50">
-                              <td colSpan={6} className="px-4 py-2 text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center justify-between">
+                            <tr className="bg-red-50/80 border-t-2 border-red-200/70 border-b border-red-200/50">
+                              <td colSpan={6} className="px-4 py-2 text-xs font-bold text-red-900 uppercase tracking-wider flex items-center justify-between">
                                 <span className="flex items-center gap-2">
-                                  <span className="w-1.5 h-3.5 bg-amber-700 rounded-xs inline-block"></span>
+                                  <span className="w-1.5 h-3.5 bg-red-700 rounded-xs inline-block"></span>
                                   SECTION: {secName}
                                 </span>
                                 <span className="font-semibold text-neutral-800 text-[11px]">
@@ -360,7 +360,7 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
                                     <div className="text-neutral-500 text-[11px] font-mono">Code: {item.model_number}</div>
                                     <div className="flex flex-wrap gap-1.5 mt-1">
                                       {item.finish_name && (
-                                        <span className="bg-amber-50 text-amber-900 text-[10px] font-semibold px-2 py-0.5 rounded border border-amber-200">
+                                        <span className="bg-red-50 text-red-900 text-[10px] font-semibold px-2 py-0.5 rounded border border-red-200">
                                           Finish: {item.finish_name}
                                         </span>
                                       )}
@@ -408,7 +408,7 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
                   <div>Branch: {companySettings.branch}</div>
                 </div>
 
-                <div className="bg-amber-50/40 p-4 rounded-xl border border-amber-200/80">
+                <div className="bg-red-50/40 p-4 rounded-xl border border-red-200/80">
                   <div className="space-y-1.5 text-xs">
                     <div className="flex justify-between text-neutral-600">
                       <span>Subtotal:</span>
@@ -432,7 +432,7 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
                         <span>+ ₹{Number(quotation.other_charges).toLocaleString('en-IN')}</span>
                       </div>
                     )}
-                    <div className="flex justify-between font-semibold text-neutral-900 pt-1 border-t border-amber-200">
+                    <div className="flex justify-between font-semibold text-neutral-900 pt-1 border-t border-red-200">
                       <span>Taxable Amount:</span>
                       <span>₹{Number(quotation.taxable_amount || quotation.subtotal).toLocaleString('en-IN')}</span>
                     </div>
@@ -455,7 +455,7 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
                     )}
                     <div className="flex justify-between items-center text-sm font-bold text-neutral-950 pt-2 border-t-2 border-neutral-900">
                       <span>Grand Total (INR):</span>
-                      <span className="text-base text-amber-800 font-serif-luxury">
+                      <span className="text-base text-red-800 font-serif-luxury">
                         ₹{Number(quotation.grand_total).toLocaleString('en-IN')}
                       </span>
                     </div>
@@ -486,3 +486,4 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
     </AnimatePresence>
   );
 };
+

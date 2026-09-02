@@ -34,7 +34,7 @@ export const BackupExport: React.FC = () => {
       ]);
 
       const fullBackup = {
-        app: 'Kohler India Luxury Sanitaryware Smart Configurator & Quotation Management',
+        app: 'FIMA India Luxury Sanitaryware Smart Configurator & Quotation Management',
         version: '2.4.0',
         exportedAt: new Date().toISOString(),
         database: {
@@ -53,7 +53,7 @@ export const BackupExport: React.FC = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Kohler_Backup_${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `FIMA_Backup_${new Date().toISOString().split('T')[0]}.json`;
       a.click();
       URL.revokeObjectURL(url);
 
@@ -112,7 +112,7 @@ export const BackupExport: React.FC = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Kohler_${tableName}_${new Date().toISOString().split('T')[0]}.csv`;
+      a.download = `FIMA_${tableName}_${new Date().toISOString().split('T')[0]}.csv`;
       a.click();
       URL.revokeObjectURL(url);
 
@@ -142,7 +142,7 @@ export const BackupExport: React.FC = () => {
       <div className="bg-neutral-950 text-white rounded-3xl p-6 border border-neutral-800 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <FileJson className="w-5 h-5 text-amber-400" />
+            <FileJson className="w-5 h-5 text-red-400" />
             <h3 className="font-bold text-base text-white font-serif-luxury">
               Full System Snapshot (JSON Format)
             </h3>
@@ -155,7 +155,7 @@ export const BackupExport: React.FC = () => {
         <button
           onClick={handleExportJson}
           disabled={exporting}
-          className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 font-bold text-xs flex items-center gap-2 shrink-0 shadow-lg cursor-pointer disabled:opacity-50"
+          className="px-5 py-3 rounded-xl bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-neutral-950 font-bold text-xs flex items-center gap-2 shrink-0 shadow-lg cursor-pointer disabled:opacity-50"
         >
           <Download className="w-4 h-4" />
           <span>Export Full JSON Dump</span>
@@ -183,7 +183,7 @@ export const BackupExport: React.FC = () => {
             >
               <div>
                 <div className="flex items-center gap-2 font-bold text-neutral-900">
-                  <tbl.icon className="w-4 h-4 text-amber-600" />
+                  <tbl.icon className="w-4 h-4 text-red-600" />
                   {tbl.name}
                 </div>
                 <p className="text-[11px] text-neutral-500 mt-1">{tbl.desc}</p>
@@ -204,3 +204,4 @@ export const BackupExport: React.FC = () => {
     </div>
   );
 };
+

@@ -148,10 +148,10 @@ export const CombinationMaster: React.FC = () => {
         {canManageProducts && (
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-amber-300 hover:text-amber-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             id="btn-add-combination"
           >
-            <Plus className="w-4 h-4 text-amber-400" />
+            <Plus className="w-4 h-4 text-red-400" />
             <span>Map New Combination</span>
           </button>
         )}
@@ -166,7 +166,7 @@ export const CombinationMaster: React.FC = () => {
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search combination by product name, finish, or marble..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
       </div>
@@ -198,7 +198,7 @@ export const CombinationMaster: React.FC = () => {
 
                 <div className="p-5 space-y-3">
                   <div>
-                    <span className="text-[10px] font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-mono font-bold text-red-800 bg-red-50 px-2 py-0.5 rounded">
                       {prod?.model_number || 'MODEL'}
                     </span>
                     <h3 className="font-bold text-sm text-neutral-950 mt-1 leading-snug">
@@ -278,7 +278,7 @@ export const CombinationMaster: React.FC = () => {
                   required
                   value={formData.product_id}
                   onChange={e => setFormData({ ...formData, product_id: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-amber-500"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
                 >
                   {products.map(p => (
                     <option key={p.product_id} value={p.product_id}>
@@ -297,7 +297,7 @@ export const CombinationMaster: React.FC = () => {
                     required
                     value={formData.finish_id}
                     onChange={e => setFormData({ ...formData, finish_id: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   >
                     {finishes.map(f => (
                       <option key={f.finish_id} value={f.finish_id}>
@@ -315,7 +315,7 @@ export const CombinationMaster: React.FC = () => {
                     required
                     value={formData.handle_id}
                     onChange={e => setFormData({ ...formData, handle_id: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   >
                     {handles.map(h => (
                       <option key={h.handle_id} value={h.handle_id}>
@@ -335,7 +335,7 @@ export const CombinationMaster: React.FC = () => {
                     type="text"
                     value={formData.combination_image_url || ''}
                     onChange={e => setFormData({ ...formData, combination_image_url: e.target.value })}
-                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 font-mono text-[11px] focus:outline-none focus:border-amber-500"
+                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 font-mono text-[11px] focus:outline-none focus:border-red-500"
                   />
                   <button
                     type="button"
@@ -357,7 +357,7 @@ export const CombinationMaster: React.FC = () => {
                     min={0}
                     value={formData.additional_price || 0}
                     onChange={e => setFormData({ ...formData, additional_price: Number(e.target.value) })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
                   />
                 </div>
 
@@ -368,7 +368,7 @@ export const CombinationMaster: React.FC = () => {
                   <select
                     value={formData.status || 'Active'}
                     onChange={e => setFormData({ ...formData, status: e.target.value as any })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -423,3 +423,4 @@ export const CombinationMaster: React.FC = () => {
     </div>
   );
 };
+

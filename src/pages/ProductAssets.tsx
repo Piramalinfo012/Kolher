@@ -146,10 +146,10 @@ export const ProductAssets: React.FC = () => {
         {canManageProducts && (
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-amber-300 hover:text-amber-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             id="btn-add-asset"
           >
-            <Plus className="w-4 h-4 text-amber-400" />
+            <Plus className="w-4 h-4 text-red-400" />
             <span>Add Layer Asset</span>
           </button>
         )}
@@ -164,7 +164,7 @@ export const ProductAssets: React.FC = () => {
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search assets by layer name or product..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
 
@@ -175,7 +175,7 @@ export const ProductAssets: React.FC = () => {
               onClick={() => setLayerFilter(lt)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                 layerFilter === lt
-                  ? 'bg-neutral-900 text-amber-300 shadow-xs'
+                  ? 'bg-neutral-900 text-red-300 shadow-xs'
                   : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
               }`}
             >
@@ -206,7 +206,7 @@ export const ProductAssets: React.FC = () => {
                   <span className="absolute top-3 left-3 text-[10px] font-mono font-bold bg-neutral-900 text-white px-2 py-0.5 rounded border border-neutral-700">
                     Z: {asset.z_index}
                   </span>
-                  <span className="absolute top-3 right-3 text-[10px] font-bold bg-amber-500 text-neutral-950 px-2 py-0.5 rounded">
+                  <span className="absolute top-3 right-3 text-[10px] font-bold bg-red-500 text-neutral-950 px-2 py-0.5 rounded">
                     {asset.layer_type}
                   </span>
                 </div>
@@ -276,10 +276,10 @@ export const ProductAssets: React.FC = () => {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Kohler Components Tall Mixer Body (Moderne Brass)"
+                  placeholder="e.g. FIMA Components Tall Mixer Body (Moderne Brass)"
                   value={formData.asset_name || ''}
                   onChange={e => setFormData({ ...formData, asset_name: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-amber-500"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
                 />
               </div>
 
@@ -291,7 +291,7 @@ export const ProductAssets: React.FC = () => {
                   <select
                     value={formData.product_id}
                     onChange={e => setFormData({ ...formData, product_id: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   >
                     {products.map(p => (
                       <option key={p.product_id} value={p.product_id}>
@@ -308,7 +308,7 @@ export const ProductAssets: React.FC = () => {
                   <select
                     value={formData.layer_type || 'BASE_BODY'}
                     onChange={e => setFormData({ ...formData, layer_type: e.target.value as any })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   >
                     <option value="BASE_BODY">BASE_BODY</option>
                     <option value="HANDLE_OVERLAY">HANDLE_OVERLAY</option>
@@ -328,7 +328,7 @@ export const ProductAssets: React.FC = () => {
                     required
                     value={formData.image_url || ''}
                     onChange={e => setFormData({ ...formData, image_url: e.target.value })}
-                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 font-mono text-[11px] focus:outline-none focus:border-amber-500"
+                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 font-mono text-[11px] focus:outline-none focus:border-red-500"
                   />
                   <button
                     type="button"
@@ -351,7 +351,7 @@ export const ProductAssets: React.FC = () => {
                     max={10}
                     value={formData.z_index || 1}
                     onChange={e => setFormData({ ...formData, z_index: Number(e.target.value) })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
                   />
                 </div>
 
@@ -361,7 +361,7 @@ export const ProductAssets: React.FC = () => {
                       type="checkbox"
                       checked={formData.is_transparent ?? true}
                       onChange={e => setFormData({ ...formData, is_transparent: e.target.checked })}
-                      className="rounded text-amber-600 focus:ring-amber-500"
+                      className="rounded text-red-600 focus:ring-red-500"
                     />
                     <span className="font-bold text-neutral-800">Transparent PNG</span>
                   </label>
@@ -415,3 +415,4 @@ export const ProductAssets: React.FC = () => {
     </div>
   );
 };
+

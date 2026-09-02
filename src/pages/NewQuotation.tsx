@@ -384,8 +384,8 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
     if (!prod) {
       prod = {
         product_id: item.product_id || `PROD_${Date.now()}`,
-        model_number: item.model_number || 'KOHLER_ITEM',
-        product_name: item.product_name || 'Kohler Architectural Fitting',
+        model_number: item.model_number || 'FIMA_ITEM',
+        product_name: item.product_name || 'FIMA Architectural Fitting',
         category: 'Faucets & Sanitaryware',
         sub_category: '',
         description: item.product_name || '',
@@ -626,7 +626,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
     }
 
     const rows: string[][] = [
-      ['KOHLER INDIA LUXURY SANITARYWARE & BATHWARE'],
+      ['FIMA INDIA LUXURY SANITARYWARE & BATHWARE'],
       ['QUOTATION DETAILS'],
       ['Quotation Number:', quotationNumber, 'Date:', quotationDate],
       ['Client / Party Name:', clientToName || selectedCustomer?.party_name || 'Client', 'Status:', 'DRAFT'],
@@ -667,7 +667,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `Kohler_Quotation_${quotationNumber.replace(/\//g, '_')}_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `FIMA_Quotation_${quotationNumber.replace(/\//g, '_')}_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -715,7 +715,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
             className="px-4 py-2 rounded-xl bg-[#9A6A38] hover:bg-[#835627] text-white text-xs font-bold shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
             id="btn-save-quotation-top"
           >
-            <Save className="w-3.5 h-3.5 text-amber-200" />
+            <Save className="w-3.5 h-3.5 text-red-200" />
             <span>{isSaving ? 'Saving...' : 'Save & Preview'}</span>
           </button>
         </div>
@@ -1029,7 +1029,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
                     {isDropdownOpen && (
                       <div className="absolute left-0 top-full mt-1.5 w-full sm:max-w-xl bg-white border border-neutral-200 rounded-2xl shadow-xl z-40 max-h-72 overflow-y-auto divide-y divide-neutral-100">
                         <div className="p-2 bg-neutral-50 text-[10px] uppercase font-bold text-neutral-500 font-mono tracking-wider flex justify-between">
-                          <span>Kohler Products Master Catalog</span>
+                          <span>FIMA Products Master Catalog</span>
                           <span>{matchingProducts.length} Results</span>
                         </div>
                         {matchingProducts.map(prod => (
@@ -1108,7 +1108,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
 
                         {matchingProducts.length === 0 && (
                           <div className="p-4 text-center text-xs text-neutral-400">
-                            No matching Kohler product found for "{searchQuery}".
+                            No matching FIMA product found for "{searchQuery}".
                           </div>
                         )}
                       </div>
@@ -1160,7 +1160,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
                                       referrerPolicy="no-referrer"
                                     />
                                     <div className="absolute inset-0 bg-neutral-900/60 rounded-lg opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity">
-                                      <Sliders className="w-3.5 h-3.5 text-amber-300" />
+                                      <Sliders className="w-3.5 h-3.5 text-red-300" />
                                     </div>
                                   </div>
                                 </td>
@@ -1183,8 +1183,8 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
                                   </div>
                                   <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
                                     {item.finish_name ? (
-                                      <span className="inline-flex items-center gap-1 text-[9px] bg-amber-50 text-amber-900 border border-amber-200 px-1.5 py-0.5 rounded font-medium">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
+                                      <span className="inline-flex items-center gap-1 text-[9px] bg-red-50 text-red-900 border border-red-200 px-1.5 py-0.5 rounded font-medium">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-red-600" />
                                         Finish: {item.finish_name}
                                       </span>
                                     ) : null}
@@ -1423,3 +1423,4 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
     </div>
   );
 };
+

@@ -546,6 +546,197 @@ function generateFloFaucetSvg(
 </svg>`;
 }
 
+function generateExposedMixerSvg(
+  finishProps: FinishThemeProps,
+  handleType: string,
+  options: { width?: number; height?: number; transparentBg?: boolean } = {}
+): string {
+  const width = options.width || 800;
+  const height = options.height || 900;
+  const bgFill = options.transparentBg
+    ? ''
+    : '<rect width="800" height="900" rx="36" fill="#F8F8F9"/>';
+
+  let knobFillId = 'url(#body-cylinder-metal)';
+  let knobTopFillId = 'url(#body-cylinder-metal)';
+
+  if (handleType === 'CALACATTA') { knobFillId = 'url(#pat-calacatta)'; knobTopFillId = 'url(#pat-calacatta)'; }
+  else if (handleType === 'NERO_MARQUINA') { knobFillId = 'url(#pat-marquina)'; knobTopFillId = 'url(#pat-marquina)'; }
+  else if (handleType === 'RESINA_CORNO') { knobFillId = 'url(#pat-corno)'; knobTopFillId = 'url(#pat-corno)'; }
+  else if (handleType === 'ROSSO_LEPANTO') { knobFillId = 'url(#pat-lepanto)'; knobTopFillId = 'url(#pat-lepanto)'; }
+  else if (handleType === 'VERDE_GUATEMALA') { knobFillId = 'url(#pat-guatemala)'; knobTopFillId = 'url(#pat-guatemala)'; }
+  else if (handleType === 'LEGNO_SCURO') { knobFillId = 'url(#pat-legno)'; knobTopFillId = 'url(#pat-legno)'; }
+  else if (handleType === 'RESINA_AVORIO') { knobFillId = 'url(#pat-avorio)'; knobTopFillId = 'url(#pat-avorio)'; }
+  else if (handleType === 'RESINA_TARTARUGA') { knobFillId = 'url(#pat-tartaruga)'; knobTopFillId = 'url(#pat-tartaruga)'; }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" width="${width}" height="${height}">
+  <defs>
+    <!-- Basic Shadows -->
+    <radialGradient id="floor-shadow-main" cx="45%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a1c20" stop-opacity="0.32" />
+      <stop offset="40%" stop-color="#40434a" stop-opacity="0.18" />
+      <stop offset="75%" stop-color="#8a8d94" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#c0c2c8" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Metal Gradients -->
+    <linearGradient id="body-cylinder-metal" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="${finishProps.dark}" />
+      <stop offset="12%" stop-color="${finishProps.base3}" />
+      <stop offset="28%" stop-color="${finishProps.highlight}" />
+      <stop offset="38%" stop-color="${finishProps.sheen}" />
+      <stop offset="65%" stop-color="${finishProps.base2}" />
+      <stop offset="85%" stop-color="${finishProps.base3}" />
+      <stop offset="100%" stop-color="${finishProps.dark}" />
+    </linearGradient>
+
+    <!-- Handle Metal -->
+    <linearGradient id="handle-cylinder-metal" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="${finishProps.dark}" />
+      <stop offset="25%" stop-color="${finishProps.highlight}" />
+      <stop offset="50%" stop-color="${finishProps.base2}" />
+      <stop offset="80%" stop-color="${finishProps.base3}" />
+      <stop offset="100%" stop-color="${finishProps.dark}" />
+    </linearGradient>
+
+    <!-- Patterns (Extracted from main) -->
+    <pattern id="pat-calacatta" patternUnits="userSpaceOnUse" width="300" height="300">
+      <rect width="300" height="300" fill="#F8F6F2" />
+      <path d="M0,0 Q90,70 140,160 T300,220 L300,0 Z" fill="#ECE7DD" opacity="0.6" />
+      <path d="M50,300 Q150,210 180,110 T300,40 L300,300 Z" fill="#E6DFD2" opacity="0.4" />
+      <path d="M-20,40 Q60,110 110,130 T200,210 T320,260" fill="none" stroke="#B39366" stroke-width="5" opacity="0.65" stroke-linecap="round" />
+    </pattern>
+    <pattern id="pat-marquina" patternUnits="userSpaceOnUse" width="300" height="300">
+      <rect width="300" height="300" fill="#141416" />
+      <path d="M0,0 Q120,60 160,180 T300,280 L300,0 Z" fill="#1E1E22" opacity="0.7" />
+      <path d="M-10,30 Q80,95 130,120 T220,180 T310,270" fill="none" stroke="#FFFFFF" stroke-width="3.5" opacity="0.9" stroke-linecap="round" />
+    </pattern>
+    <pattern id="pat-corno" patternUnits="userSpaceOnUse" width="300" height="300">
+      <rect width="300" height="300" fill="#8C6E52" />
+      <path d="M0,0 L300,0 L300,300 L0,300 Z" fill="#7A583B" opacity="0.5" />
+      <path d="M-50,0 Q80,100 150,120 T350,300" fill="none" stroke="#D8C3A5" stroke-width="18" opacity="0.7" stroke-linecap="round" />
+    </pattern>
+    <pattern id="pat-lepanto" patternUnits="userSpaceOnUse" width="300" height="300">
+      <rect width="300" height="300" fill="#581822" />
+      <path d="M0,0 Q100,80 160,150 T300,260 L300,0 Z" fill="#3D0E16" opacity="0.8" />
+      <path d="M-20,40 Q70,90 120,130 T220,200 T320,280" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.8" />
+    </pattern>
+    <pattern id="pat-guatemala" patternUnits="userSpaceOnUse" width="300" height="300">
+      <rect width="300" height="300" fill="#1B3B2B" />
+      <path d="M0,0 Q120,60 180,170 T300,290 L300,0 Z" fill="#0E2319" opacity="0.8" />
+      <path d="M-10,30 Q90,100 140,120 T240,190 T320,280" fill="none" stroke="#95D5B2" stroke-width="2.5" opacity="0.75" />
+    </pattern>
+    <pattern id="pat-legno" patternUnits="userSpaceOnUse" width="300" height="300">
+      <rect width="300" height="300" fill="#3E2723" />
+      <path d="M-20,0 L320,0 L320,300 L-20,300 Z" fill="#2E1C18" opacity="0.4" />
+      <path d="M-10,20 Q150,30 310,20" fill="none" stroke="#5D4037" stroke-width="4" opacity="0.7" />
+    </pattern>
+    <pattern id="pat-avorio" patternUnits="userSpaceOnUse" width="300" height="300">
+      <rect width="300" height="300" fill="#FDFBF7" />
+      <path d="M0,0 Q100,70 150,160 T300,240 L300,0 Z" fill="#F4EFE6" opacity="0.75" />
+    </pattern>
+    <pattern id="pat-tartaruga" patternUnits="userSpaceOnUse" width="300" height="300">
+      <rect width="300" height="300" fill="#D47A22" />
+      <ellipse cx="60" cy="50" rx="35" ry="25" fill="#3D1A06" opacity="0.85" />
+      <ellipse cx="180" cy="90" rx="45" ry="30" fill="#240D02" opacity="0.9" />
+    </pattern>
+
+    <radialGradient id="handle-highlight" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.4" />
+      <stop offset="60%" stop-color="#000000" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.5" />
+    </radialGradient>
+  </defs>
+
+  ${bgFill}
+
+  <!-- Shadow -->
+  <path d="M260,500 C300,750 550,850 630,550" fill="none" stroke="url(#floor-shadow-main)" stroke-width="25" filter="blur(8px)" opacity="0.6" />
+  <ellipse cx="400" cy="520" rx="130" ry="15" fill="url(#floor-shadow-main)" opacity="0.5" />
+
+  <!-- Hand Shower & Hose (Background part of hose) -->
+  <path d="M380,440 C350,850 650,850 635,500" fill="none" stroke="#999999" stroke-width="12" stroke-linecap="round" />
+  <path d="M380,440 C350,850 650,850 635,500" fill="none" stroke="url(#body-cylinder-metal)" stroke-width="10" stroke-linecap="round" />
+
+  <!-- Wall Escutcheons (Flanges) -->
+  <g id="escutcheons">
+    <ellipse cx="300" cy="380" rx="28" ry="32" fill="url(#body-cylinder-metal)" />
+    <ellipse cx="300" cy="380" rx="22" ry="26" fill="none" stroke="${finishProps.dark}" stroke-width="2" />
+    
+    <ellipse cx="470" cy="380" rx="28" ry="32" fill="url(#body-cylinder-metal)" />
+    <ellipse cx="470" cy="380" rx="22" ry="26" fill="none" stroke="${finishProps.dark}" stroke-width="2" />
+  </g>
+
+  <!-- Horizontal Cylinder Main Body -->
+  <g id="main-body">
+    <!-- Offset cylinders connecting to wall -->
+    <rect x="285" y="380" width="30" height="25" fill="url(#body-cylinder-metal)" />
+    <rect x="455" y="380" width="30" height="25" fill="url(#body-cylinder-metal)" />
+    
+    <!-- Main horizontal pipe -->
+    <rect x="250" y="390" width="270" height="40" rx="3" fill="url(#body-cylinder-metal)" />
+    <line x1="250" y1="400" x2="520" y2="400" stroke="${finishProps.highlight}" stroke-width="3" opacity="0.7" />
+    <line x1="250" y1="420" x2="520" y2="420" stroke="${finishProps.dark}" stroke-width="2" opacity="0.5" />
+  </g>
+
+  <!-- Flat Spout & Diverter -->
+  <g id="spout">
+    <!-- Spout base sticking forward -->
+    <path d="M300,410 L370,410 L385,450 L315,450 Z" fill="url(#body-cylinder-metal)" />
+    <!-- Spout top highlight -->
+    <path d="M300,410 L370,410 L375,420 L305,420 Z" fill="${finishProps.highlight}" opacity="0.6" />
+    
+    <!-- Diverter knob on top of spout -->
+    <rect x="330" y="385" width="10" height="15" rx="2" fill="url(#body-cylinder-metal)" />
+    
+    <!-- Hose connector under spout -->
+    <rect x="370" y="440" width="20" height="15" fill="url(#body-cylinder-metal)" />
+  </g>
+
+  <!-- Right Knob & Lever -->
+  <g id="right-knob">
+    <!-- Separator line -->
+    <line x1="520" y1="390" x2="520" y2="430" stroke="${finishProps.dark}" stroke-width="2" opacity="0.8" />
+    <!-- Knob body -->
+    <rect x="522" y="390" width="30" height="40" rx="3" fill="url(#body-cylinder-metal)" />
+    <line x1="522" y1="400" x2="552" y2="400" stroke="${finishProps.highlight}" stroke-width="2" opacity="0.7" />
+    
+    <!-- Lever extension pointing down and slightly forward -->
+    <path d="M530,425 L545,425 L540,465 L535,465 Z" fill="url(#body-cylinder-metal)" />
+  </g>
+  
+  <!-- Left Knob -->
+  <g id="left-knob">
+    <line x1="250" y1="390" x2="250" y2="430" stroke="${finishProps.dark}" stroke-width="2" opacity="0.8" />
+    <rect x="235" y="390" width="15" height="40" rx="3" fill="url(#body-cylinder-metal)" />
+    <line x1="235" y1="400" x2="250" y2="400" stroke="${finishProps.highlight}" stroke-width="2" opacity="0.7" />
+  </g>
+
+  <!-- Hand Shower & Mount (Right side) -->
+  <g id="hand-shower">
+    <!-- Wall bracket base -->
+    <ellipse cx="640" cy="380" rx="15" ry="25" fill="url(#body-cylinder-metal)" />
+    <rect x="635" y="380" width="10" height="20" fill="url(#body-cylinder-metal)" />
+    
+    <!-- Hand shower stick (tall thin cylinder) -->
+    <rect x="625" y="200" width="20" height="260" rx="8" fill="url(#body-cylinder-metal)" />
+    <line x1="628" y1="210" x2="628" y2="450" stroke="${finishProps.highlight}" stroke-width="2" opacity="0.8" />
+    
+    <!-- Shower head face nozzles (grey area) -->
+    <rect x="627" y="210" width="16" height="100" rx="5" fill="#444444" opacity="0.6" />
+    <circle cx="635" cy="220" r="1.5" fill="#222" />
+    <circle cx="635" cy="230" r="1.5" fill="#222" />
+    <circle cx="635" cy="240" r="1.5" fill="#222" />
+    <circle cx="635" cy="250" r="1.5" fill="#222" />
+    <circle cx="635" cy="260" r="1.5" fill="#222" />
+    <circle cx="635" cy="270" r="1.5" fill="#222" />
+    <circle cx="635" cy="280" r="1.5" fill="#222" />
+    <circle cx="635" cy="290" r="1.5" fill="#222" />
+    <circle cx="635" cy="300" r="1.5" fill="#222" />
+  </g>
+</svg>`;
+}
+
 /**
  * Generate a standalone, photorealistic SVG representation of the faucet with specified finish and handle
  */
@@ -556,6 +747,12 @@ export function getVisualizerSvgString(
 ): string {
   const finishProps = getFinishThemeProps(finish);
   const modelUpper = (options.model || options.productName || '').toUpperCase();
+  const handleType = getHandleMaterialType(handle);
+
+  // If model is an Exposed Bath Mixer
+  if (modelUpper.includes('EXP') || modelUpper.includes('EXPOSED') || modelUpper.includes('F3804') || modelUpper.includes('3804')) {
+    return generateExposedMixerSvg(finishProps, handleType, options);
+  }
 
   // If model is FLO / F3801 / F3801ZS, render the dedicated FLO organic flared faucet geometry
   if (modelUpper.includes('FLO') || modelUpper.includes('F3801') || modelUpper.includes('3801')) {
@@ -563,7 +760,6 @@ export function getVisualizerSvgString(
   }
 
   // Otherwise, render SLIDE / Components modular faucet geometry
-  const handleType = getHandleMaterialType(handle);
   const width = options.width || 800;
   const height = options.height || 900;
   const bgFill = options.transparentBg
@@ -898,22 +1094,32 @@ export const InteractiveVisualizer: React.FC<InteractiveVisualizerProps> = ({
     return combined.includes('FLO') || combined.includes('F3801') || combined.includes('3801');
   }, [productName, modelNumber]);
 
-  const floSvgDataUrl = useMemo(() => {
-    if (!isFloModel) return '';
-    return getVisualizerDataUrl(finish, handle, { model: 'F3801ZS', productName: 'FLO' });
-  }, [isFloModel, finish, handle]);
+  const isExposedMixer = useMemo(() => {
+    const combined = `${productName} ${modelNumber}`.toUpperCase();
+    return combined.includes('EXP') || combined.includes('EXPOSED') || combined.includes('3804');
+  }, [productName, modelNumber]);
+
+  const dynamicSvgDataUrl = useMemo(() => {
+    if (isFloModel) {
+      return getVisualizerDataUrl(finish, handle, { model: 'F3801ZS', productName: 'FLO' });
+    }
+    if (isExposedMixer) {
+      return getVisualizerDataUrl(finish, handle, { model: modelNumber, productName: productName });
+    }
+    return '';
+  }, [isFloModel, isExposedMixer, finish, handle, modelNumber, productName]);
 
   const finishProps = useMemo(() => getFinishThemeProps(finish), [finish]);
   const handleType = useMemo(() => getHandleMaterialType(handle), [handle]);
 
-  if (isFloModel) {
+  if (isFloModel || isExposedMixer) {
     return (
       <div className={`relative w-full h-full flex items-center justify-center select-none ${className}`}>
         {/* Studio Lighting Radial Backing */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#f9f9fa] via-[#f4f4f6] to-[#eaebee] pointer-events-none rounded-2xl" />
         <img
-          src={floSvgDataUrl}
-          alt="FLO Miscelatore lavabo 3D Render"
+          src={dynamicSvgDataUrl}
+          alt={`${productName} 3D Render`}
           className="relative w-full h-full max-h-[580px] drop-shadow-2xl object-contain"
         />
       </div>

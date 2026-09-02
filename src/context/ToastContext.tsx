@@ -56,14 +56,14 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             const icons = {
               success: <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />,
               error: <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />,
-              warning: <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />,
+              warning: <AlertTriangle className="w-5 h-5 text-red-600 shrink-0" />,
               info: <Info className="w-5 h-5 text-blue-600 shrink-0" />
             };
 
             const borderColors = {
               success: 'border-emerald-200 bg-white shadow-lg shadow-emerald-950/5',
               error: 'border-rose-200 bg-white shadow-lg shadow-rose-950/5',
-              warning: 'border-amber-200 bg-white shadow-lg shadow-amber-950/5',
+              warning: 'border-red-200 bg-white shadow-lg shadow-red-950/5',
               info: 'border-blue-200 bg-white shadow-lg shadow-blue-950/5'
             };
 
@@ -106,3 +106,4 @@ export const useToast = (): ToastContextType => {
   }
   return context;
 };
+

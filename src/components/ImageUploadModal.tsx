@@ -83,7 +83,7 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
         >
           <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-lg bg-red-50 text-red-700 flex items-center justify-center font-bold">
                 <ImageIcon className="w-4 h-4" />
               </div>
               <div>
@@ -109,8 +109,8 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                 onClick={() => fileInputRef.current?.click()}
                 className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all ${
                   isDragging
-                    ? 'border-amber-500 bg-amber-50/50'
-                    : 'border-neutral-200 hover:border-amber-400 hover:bg-neutral-50/80'
+                    ? 'border-red-500 bg-red-50/50'
+                    : 'border-neutral-200 hover:border-red-400 hover:bg-neutral-50/80'
                 }`}
               >
                 <input
@@ -120,7 +120,7 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                   className="hidden"
                   onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])}
                 />
-                <div className="w-14 h-14 rounded-2xl bg-amber-100/60 text-amber-800 flex items-center justify-center mx-auto mb-3">
+                <div className="w-14 h-14 rounded-2xl bg-red-100/60 text-red-800 flex items-center justify-center mx-auto mb-3">
                   <UploadCloud className="w-7 h-7" />
                 </div>
                 <h4 className="text-sm font-semibold text-neutral-900">
@@ -175,12 +175,12 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               >
                 {uploading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                    <Loader2 className="w-4 h-4 animate-spin text-red-400" />
                     Uploading to Drive...
                   </>
                 ) : (
                   <>
-                    <Check className="w-4 h-4 text-amber-400" />
+                    <Check className="w-4 h-4 text-red-400" />
                     Confirm & Upload
                   </>
                 )}
@@ -192,3 +192,4 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     </AnimatePresence>
   );
 };
+

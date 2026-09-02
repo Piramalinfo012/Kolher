@@ -297,7 +297,7 @@ class SupabaseService {
 
       return {
         success: true,
-        message: 'All Kohler catalog data, combinations, customers, and settings seeded successfully into Supabase!',
+        message: 'All FIMA catalog data, combinations, customers, and settings seeded successfully into Supabase!',
         details: summary
       };
     } catch (err: any) {
@@ -310,3 +310,4 @@ class SupabaseService {
 }
 
 export const supabaseService = new SupabaseService();
+

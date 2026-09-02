@@ -10,7 +10,8 @@ import {
   User,
   ActivityLog,
   ApiResponse,
-  ConfigSettings
+  ConfigSettings,
+  SparePart
 } from '../types';
 
 import {
@@ -27,23 +28,21 @@ import {
 } from '../config/demoData';
 
 import { supabaseService } from './supabase';
-
 const STORAGE_KEYS = {
-  PRODUCTS: 'spc_products_v1',
-  FINISHES: 'spc_finishes_v1',
-  HANDLES: 'spc_handles_v1',
-  COMBINATIONS: 'spc_combinations_v1',
-  PRODUCT_ASSETS: 'spc_product_assets_v1',
-  CUSTOMERS: 'spc_customers_v1',
-  QUOTATIONS: 'spc_quotations_v1',
-  SETTINGS: 'spc_settings_v1',
-  USERS: 'spc_users_v1',
-  LOGS: 'spc_logs_v1',
-  CONFIG: 'spc_config_v1',
-  CURRENT_USER: 'spc_current_user_v1',
-  QUOTATION_DRAFT: 'spc_quotation_draft_v1'
+  PRODUCTS: 'spc_products_v5',
+  FINISHES: 'spc_finishes_v5',
+  HANDLES: 'spc_handles_v5',
+  COMBINATIONS: 'spc_combinations_v5',
+  PRODUCT_ASSETS: 'spc_product_assets_v5',
+  CUSTOMERS: 'spc_customers_v5',
+  QUOTATIONS: 'spc_quotations_v5',
+  SETTINGS: 'spc_settings_v5',
+  USERS: 'spc_users_v5',
+  LOGS: 'spc_logs_v5',
+  CONFIG: 'spc_config_v5',
+  CURRENT_USER: 'spc_current_user_v5',
+  QUOTATION_DRAFT: 'spc_quotation_draft_v5'
 };
-
 class ApiService {
   private config: ConfigSettings;
   private isDemoMode: boolean = true;
@@ -568,6 +567,100 @@ class ApiService {
 
     this.logActivity('DELETE_PRODUCT', 'PRODUCTS', productId, `Marked product ${products[index].product_name} as INACTIVE`);
     return true;
+  }
+
+  // --- Spare Parts Master ---
+  public async getSparePartsByProduct(productId: string): Promise<SparePart[]> {
+    const sb = supabaseService.getClient();
+    if (sb) {
+      try {
+        const { data, error } = await sb.from('product_spare_parts').select('*').eq('product_id', productId).order('created_at');
+        if (!error && data) {
+          return data;
+        }
+      } catch (e) {
+        console.warn('Supabase getSpareParts error:', e);
+      }
+    }
+    // Fallback to local storage
+    const allParts: SparePart[] = JSON.parse(localStorage.getItem('spc_spare_parts_v1') || '[]');
+    return allParts.filter(p => p.product_id === productId);
+  }
+
+  public async createSparePart(partData: Partial<SparePart>): Promise<SparePart> {
+    const allParts: SparePart[] = JSON.parse(localStorage.getItem('spc_spare_parts_v1') || '[]');
+    const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
+    const newPart: SparePart = {
+      part_id: `SP${('0000' + (allParts.length + 1)).slice(-4)}`,
+      product_id: partData.product_id || '',
+      part_name: partData.part_name || 'New Spare Part',
+      part_model: partData.part_model || '',
+      price: Number(partData.price) || 0,
+      image_url: partData.image_url || '',
+      status: partData.status || 'ACTIVE',
+      created_at: now,
+      updated_at: now
+    };
+
+    const sb = supabaseService.getClient();
+    if (sb) {
+      try {
+        await sb.from('product_spare_parts').insert(newPart);
+      } catch (e) {
+        console.warn('Supabase createSparePart error:', e);
+      }
+    }
+
+    allParts.push(newPart);
+    localStorage.setItem('spc_spare_parts_v1', JSON.stringify(allParts));
+    this.logActivity('CREATE_SPARE_PART', 'PRODUCTS', newPart.part_id, `Added spare part ${newPart.part_name}`);
+    return newPart;
+  }
+
+  public async updateSparePart(partId: string, updates: Partial<SparePart>): Promise<SparePart> {
+    const allParts: SparePart[] = JSON.parse(localStorage.getItem('spc_spare_parts_v1') || '[]');
+    const index = allParts.findIndex(p => p.part_id === partId);
+    if (index === -1) throw new Error('Spare part not found');
+
+    const updated = {
+      ...allParts[index],
+      ...updates,
+      updated_at: new Date().toISOString().replace('T', ' ').slice(0, 19)
+    };
+
+    const sb = supabaseService.getClient();
+    if (sb) {
+      try {
+        await sb.from('product_spare_parts').update(updated).eq('part_id', partId);
+      } catch (e) {
+        console.warn('Supabase updateSparePart error:', e);
+      }
+    }
+
+    allParts[index] = updated;
+    localStorage.setItem('spc_spare_parts_v1', JSON.stringify(allParts));
+    return updated;
+  }
+
+  public async deleteSparePart(partId: string): Promise<boolean> {
+    const sb = supabaseService.getClient();
+    if (sb) {
+      try {
+        await sb.from('product_spare_parts').delete().eq('part_id', partId);
+      } catch (e) {
+        console.warn('Supabase deleteSparePart error:', e);
+      }
+    }
+
+    const allParts: SparePart[] = JSON.parse(localStorage.getItem('spc_spare_parts_v1') || '[]');
+    const index = allParts.findIndex(p => p.part_id === partId);
+    if (index > -1) {
+      allParts.splice(index, 1);
+      localStorage.setItem('spc_spare_parts_v1', JSON.stringify(allParts));
+      this.logActivity('DELETE_SPARE_PART', 'PRODUCTS', partId, `Deleted spare part`);
+      return true;
+    }
+    return false;
   }
 
   // --- Finishes Master ---
@@ -1099,7 +1192,7 @@ class ApiService {
     const quotations = await this.getQuotations();
     const nextSeq = (settings.starting_number || 1) + quotations.length;
     const padded = ('0000' + nextSeq).slice(-4);
-    return `${settings.quotation_prefix || 'KOHLER'}/${settings.financial_year || '26-27'}/${padded}`;
+    return `${settings.quotation_prefix || 'FIMA'}/${settings.financial_year || '26-27'}/${padded}`;
   }
 
   // --- Quotations Management ---
@@ -1386,3 +1479,4 @@ class ApiService {
 }
 
 export const api = new ApiService();
+

@@ -38,11 +38,11 @@ export class PdfGeneratorService {
         const secSubtotal = secItems.reduce((acc, it) => acc + (Number(it.line_total) || 0), 0);
         
         const secHeader = `
-          <tr style="background-color: #f7f3ed; border-top: 2px solid #e0d3c1; border-bottom: 1px solid #d4c3ae;">
-            <td colspan="6" style="padding: 8px 12px; font-size: 11px; font-weight: 800; color: #784c1f; text-transform: uppercase; letter-spacing: 0.8px;">
-              <span style="display: inline-block; width: 6px; height: 12px; background: #9a6a38; vertical-align: middle; margin-right: 6px; border-radius: 1px;"></span>
+          <tr style="background-color: #fff5f5; border-top: 2px solid #fecaca; border-bottom: 1px solid #fca5a5;">
+            <td colspan="6" style="padding: 8px 12px; font-size: 11px; font-weight: 800; color: #b91c1c; text-transform: uppercase; letter-spacing: 0.8px;">
+              <span style="display: inline-block; width: 6px; height: 12px; background: #ef4444; vertical-align: middle; margin-right: 6px; border-radius: 1px;"></span>
               SECTION: ${secName}
-              <span style="float: right; font-weight: 700; color: #4a3319; font-size: 11px;">
+              <span style="float: right; font-weight: 700; color: #7f1d1d; font-size: 11px;">
                 Section Subtotal: ₹${secSubtotal.toLocaleString('en-IN')}
               </span>
             </td>
@@ -74,7 +74,7 @@ export class PdfGeneratorService {
                 <div style="font-weight: 700; font-size: 12px; color: #111827;">${item.model_number ? `${item.model_number} - ` : ''}${item.product_name}</div>
                 <div style="font-size: 11px; color: #4b5563; margin-top: 1px;">Code: <strong style="color: #111827;">${item.model_number || 'N/A'}</strong></div>
                 <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px;">
-                  ${item.finish_name ? `<span style="display: inline-block; background-color: #fef3c7; color: #92400e; font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 3px; border: 1px solid #fde68a;">Finish: ${item.finish_name}</span>` : ''}
+                  ${item.finish_name ? `<span style="display: inline-block; background-color: #fee2e2; color: #b91c1c; font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 3px; border: 1px solid #fca5a5;">Finish: ${item.finish_name}</span>` : ''}
                   ${item.handle_name ? `<span style="display: inline-block; background-color: #f3f4f6; color: #374151; font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 3px; border: 1px solid #e5e7eb;">Handle: ${item.handle_name}</span>` : ''}
                 </div>
                 ${customization.notes ? `<div style="font-size: 10px; color: #6b7280; font-style: italic; margin-top: 3px;">Note: ${customization.notes}</div>` : ''}
@@ -121,7 +121,7 @@ export class PdfGeneratorService {
               <div style="font-weight: 700; font-size: 13px; color: #111827;">${item.model_number ? `${item.model_number} - ` : ''}${item.product_name}</div>
               <div style="font-size: 11px; color: #4b5563; margin-top: 2px;">Code: <strong style="color: #111827;">${item.model_number || 'N/A'}</strong></div>
               <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
-                ${item.finish_name ? `<span style="display: inline-block; background-color: #fef3c7; color: #92400e; font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 3px; border: 1px solid #fde68a;">Finish: ${item.finish_name}</span>` : ''}
+                ${item.finish_name ? `<span style="display: inline-block; background-color: #fee2e2; color: #b91c1c; font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 3px; border: 1px solid #fca5a5;">Finish: ${item.finish_name}</span>` : ''}
                 ${item.handle_name ? `<span style="display: inline-block; background-color: #f3f4f6; color: #374151; font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 3px; border: 1px solid #e5e7eb;">Handle: ${item.handle_name}</span>` : ''}
               </div>
               ${customization.notes ? `<div style="font-size: 10px; color: #6b7280; font-style: italic; margin-top: 4px;">Note: ${customization.notes}</div>` : ''}
@@ -161,9 +161,9 @@ export class PdfGeneratorService {
             margin: 0 auto;
             background: #ffffff;
           }
-          .header-table { width: 100%; border-bottom: 2px solid #C5A880; padding-bottom: 15px; margin-bottom: 20px; }
+          .header-table { width: 100%; border-bottom: 2px solid #e30613; padding-bottom: 15px; margin-bottom: 20px; }
           .company-name { font-size: 20px; font-weight: 700; color: #111827; letter-spacing: 0.5px; }
-          .gold-text { color: #9A7B4F; font-weight: 600; }
+          .gold-text { color: #e30613; font-weight: 600; }
           .meta-box { background: #fafafa; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; }
           .info-table { width: 100%; margin-bottom: 20px; }
           .info-td { width: 50%; vertical-align: top; padding-right: 15px; }
@@ -195,7 +195,7 @@ export class PdfGeneratorService {
               </td>
               <td style="text-align: right; vertical-align: middle; width: 35%;">
                 <div style="display: inline-block; text-align: right;">
-                  <div style="font-size: 22px; font-weight: 800; color: #C5A880; letter-spacing: 1px;">QUOTATION</div>
+                  <div style="font-size: 22px; font-weight: 800; color: #e30613; letter-spacing: 1px;">QUOTATION</div>
                   <div style="font-size: 13px; font-weight: 700; color: #111827; margin-top: 2px;">${quotation.quotation_number}</div>
                   <div style="font-size: 11px; color: #4b5563;">Date: ${quotation.quotation_date}</div>
                   <div style="font-size: 11px; color: #059669; font-weight: 600;">Status: ${quotation.status}</div>
@@ -301,7 +301,7 @@ export class PdfGeneratorService {
                 </tr>`}
                 <tr class="grand-row">
                   <td style="padding: 8px;">Grand Total (INR):</td>
-                  <td style="text-align: right; color: #9A7B4F; padding: 8px; font-size: 15px;">₹${Number(quotation.grand_total).toLocaleString('en-IN')}</td>
+                  <td style="text-align: right; color: #e30613; padding: 8px; font-size: 15px;">₹${Number(quotation.grand_total).toLocaleString('en-IN')}</td>
                 </tr>
               </table>
             </div>
@@ -330,7 +330,7 @@ export class PdfGeneratorService {
 
   public static async downloadDirectPdf(quotation: Quotation, settings: CompanySettings): Promise<void> {
     const cleanNumber = (quotation.quotation_number || 'Quote').replace(/[^a-zA-Z0-9_-]/g, '_');
-    const fileName = `Kohler_Quotation_${cleanNumber}.pdf`;
+    const fileName = `FIMA_Quotation_${cleanNumber}.pdf`;
 
     // Create an offscreen render container
     const container = document.createElement('div');
@@ -454,7 +454,7 @@ export class PdfGeneratorService {
     const a = document.createElement('a');
     const cleanNumber = (quotation.quotation_number || 'Quote').replace(/[^a-zA-Z0-9_-]/g, '_');
     a.href = url;
-    a.download = `Kohler_Quotation_${cleanNumber}.html`;
+    a.download = `FIMA_Quotation_${cleanNumber}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -477,3 +477,5 @@ export class PdfGeneratorService {
     }
   }
 }
+
+

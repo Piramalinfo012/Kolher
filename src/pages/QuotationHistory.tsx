@@ -145,10 +145,10 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
           {isSales && (
             <button
               onClick={() => onNavigate('new-quotation')}
-              className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-amber-300 hover:text-amber-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
               id="btn-new-quote-history"
             >
-              <Plus className="w-4 h-4 text-amber-400" />
+              <Plus className="w-4 h-4 text-red-400" />
               <span>Create Quotation</span>
             </button>
           )}
@@ -164,7 +164,7 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search by quote #, client name, mobile or email..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
 
@@ -176,7 +176,7 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
               onClick={() => setStatusFilter(st)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                 statusFilter === st
-                  ? 'bg-neutral-900 text-amber-300 shadow-xs'
+                  ? 'bg-neutral-900 text-red-300 shadow-xs'
                   : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
               }`}
             >
@@ -209,7 +209,7 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
                   SENT: 'bg-blue-50 text-blue-800 border-blue-200',
                   APPROVED: 'bg-emerald-50 text-emerald-800 border-emerald-200',
                   REJECTED: 'bg-rose-50 text-rose-800 border-rose-200',
-                  EXPIRED: 'bg-amber-50 text-amber-800 border-amber-200'
+                  EXPIRED: 'bg-red-50 text-red-800 border-red-200'
                 };
 
                 return (
@@ -263,7 +263,7 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
                         <button
                           onClick={() => handleDownloadPdf(quote)}
                           disabled={downloadingId === quote.quotation_id}
-                          className="p-1.5 rounded-lg text-amber-700 hover:text-amber-950 hover:bg-amber-50 transition-colors disabled:opacity-50"
+                          className="p-1.5 rounded-lg text-red-700 hover:text-red-950 hover:bg-red-50 transition-colors disabled:opacity-50"
                           title="Download PDF directly"
                         >
                           <Download className={`w-4 h-4 ${downloadingId === quote.quotation_id ? 'animate-bounce' : ''}`} />
@@ -338,3 +338,4 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
     </div>
   );
 };
+

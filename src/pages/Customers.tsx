@@ -166,10 +166,10 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
         {canManageCustomers && (
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-amber-300 hover:text-amber-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             id="btn-add-customer"
           >
-            <Plus className="w-4 h-4 text-amber-400" />
+            <Plus className="w-4 h-4 text-red-400" />
             <span>Add Customer</span>
           </button>
         )}
@@ -184,7 +184,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search by party, firm, phone, or GSTIN..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
       </div>
@@ -203,7 +203,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
               <div className="space-y-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-800 flex items-center justify-center font-bold text-sm">
+                    <div className="w-9 h-9 rounded-xl bg-red-50 text-red-800 flex items-center justify-center font-bold text-sm">
                       <Building2 className="w-4 h-4" />
                     </div>
                     <div>
@@ -255,7 +255,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                 {isSales ? (
                   <button
                     onClick={() => handleCreateQuotationForCustomer(cust)}
-                    className="text-xs font-bold text-amber-800 hover:text-amber-900 flex items-center gap-1 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
+                    className="text-xs font-bold text-red-800 hover:text-red-900 flex items-center gap-1 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>New Quote</span>
@@ -315,7 +315,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                     required
                     value={formData.party_name || ''}
                     onChange={e => setFormData({ ...formData, party_name: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
                   />
                 </div>
 
@@ -327,7 +327,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                     type="text"
                     value={formData.company_name || ''}
                     onChange={e => setFormData({ ...formData, company_name: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -341,7 +341,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                     type="text"
                     value={formData.contact_person || ''}
                     onChange={e => setFormData({ ...formData, contact_person: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   />
                 </div>
 
@@ -353,7 +353,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                     type="text"
                     value={formData.mobile || ''}
                     onChange={e => setFormData({ ...formData, mobile: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -367,7 +367,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                     type="email"
                     value={formData.email || ''}
                     onChange={e => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   />
                 </div>
 
@@ -379,7 +379,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                     type="text"
                     value={formData.gstin || ''}
                     onChange={e => setFormData({ ...formData, gstin: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -392,7 +392,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                   rows={2}
                   value={formData.billing_address || ''}
                   onChange={e => setFormData({ ...formData, billing_address: e.target.value, shipping_address: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500 resize-none"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500 resize-none"
                 />
               </div>
 
@@ -405,7 +405,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                     type="text"
                     value={formData.city || 'Mumbai'}
                     onChange={e => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   />
                 </div>
 
@@ -417,7 +417,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                     type="text"
                     value={formData.state || 'Maharashtra'}
                     onChange={e => setFormData({ ...formData, state: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -457,3 +457,4 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
     </div>
   );
 };
+

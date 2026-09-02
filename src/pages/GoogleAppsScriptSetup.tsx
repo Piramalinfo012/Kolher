@@ -67,7 +67,7 @@ function handleRequest(e) {
       case 'ping':
         responseData = {
           status: 'success',
-          message: 'Kohler Apps Script Backend is Live and Connected',
+          message: 'FIMA Apps Script Backend is Live and Connected',
           spreadsheetName: ss.getName(),
           spreadsheetId: ss.getId(),
           timestamp: new Date().toISOString()
@@ -279,7 +279,7 @@ function initializeAllSheets(ss) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'Kohler_GoogleAppsScript_Backend.js';
+    a.download = 'FIMA_GoogleAppsScript_Backend.js';
     a.click();
     URL.revokeObjectURL(url);
     success('Downloaded', 'Script file saved to your downloads.');
@@ -327,7 +327,7 @@ function initializeAllSheets(ss) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-neutral-200/80 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-900 border border-red-300">
               Enterprise Google Cloud Integration
             </span>
           </div>
@@ -349,9 +349,9 @@ function initializeAllSheets(ss) {
           </button>
           <button
             onClick={handleCopyCode}
-            className="px-4 py-2 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-amber-300 hover:text-amber-200 text-xs font-bold shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
           >
-            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-amber-400" />}
+            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-red-400" />}
             <span>{copied ? 'Copied!' : 'Copy Script Code'}</span>
           </button>
         </div>
@@ -360,7 +360,7 @@ function initializeAllSheets(ss) {
       {/* Live Connection Configuration Card */}
       <div className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
         <h3 className="text-sm font-bold text-neutral-900 uppercase tracking-wide flex items-center gap-2">
-          <Server className="w-4 h-4 text-amber-600" />
+          <Server className="w-4 h-4 text-red-600" />
           Live Google Apps Script Web App Endpoint
         </h3>
 
@@ -370,14 +370,14 @@ function initializeAllSheets(ss) {
             value={testingUrl}
             onChange={e => setTestingUrl(e.target.value)}
             placeholder="https://script.google.com/macros/s/AKfycbx.../exec"
-            className="flex-1 p-3 rounded-xl border border-neutral-300 font-mono text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+            className="flex-1 p-3 rounded-xl border border-neutral-300 font-mono text-xs focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
           />
           <button
             onClick={handleTestConnection}
             disabled={testStatus === 'TESTING'}
             className="px-5 py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-bold shadow-sm flex items-center justify-center gap-2 shrink-0 cursor-pointer disabled:opacity-50"
           >
-            <Zap className={`w-4 h-4 text-amber-400 ${testStatus === 'TESTING' ? 'animate-bounce' : ''}`} />
+            <Zap className={`w-4 h-4 text-red-400 ${testStatus === 'TESTING' ? 'animate-bounce' : ''}`} />
             <span>{testStatus === 'TESTING' ? 'Testing...' : 'Test & Save Endpoint'}</span>
           </button>
         </div>
@@ -422,14 +422,14 @@ function initializeAllSheets(ss) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
           {/* Step 1 */}
           <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-3">
-            <div className="w-7 h-7 rounded-full bg-neutral-900 text-amber-300 font-bold flex items-center justify-center font-mono">
+            <div className="w-7 h-7 rounded-full bg-neutral-900 text-red-300 font-bold flex items-center justify-center font-mono">
               1
             </div>
             <h4 className="font-bold text-sm text-neutral-950 flex items-center gap-1.5">
               <FileSpreadsheet className="w-4 h-4 text-emerald-600" /> Create Google Sheet
             </h4>
             <p className="text-neutral-600 leading-relaxed">
-              Create a new blank Google Spreadsheet in your Google Drive (e.g. named <code>Kohler Quotation Database</code>).
+              Create a new blank Google Spreadsheet in your Google Drive (e.g. named <code>FIMA Quotation Database</code>).
             </p>
             <p className="text-neutral-600 leading-relaxed">
               Open <strong>Extensions</strong> → <strong>Apps Script</strong>.
@@ -438,11 +438,11 @@ function initializeAllSheets(ss) {
 
           {/* Step 2 */}
           <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-3">
-            <div className="w-7 h-7 rounded-full bg-neutral-900 text-amber-300 font-bold flex items-center justify-center font-mono">
+            <div className="w-7 h-7 rounded-full bg-neutral-900 text-red-300 font-bold flex items-center justify-center font-mono">
               2
             </div>
             <h4 className="font-bold text-sm text-neutral-950 flex items-center gap-1.5">
-              <Code2 className="w-4 h-4 text-amber-600" /> Paste Code & Save
+              <Code2 className="w-4 h-4 text-red-600" /> Paste Code & Save
             </h4>
             <p className="text-neutral-600 leading-relaxed">
               Replace any default code in <code>Code.gs</code> by pasting the complete script below.
@@ -454,7 +454,7 @@ function initializeAllSheets(ss) {
 
           {/* Step 3 */}
           <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-3">
-            <div className="w-7 h-7 rounded-full bg-neutral-900 text-amber-300 font-bold flex items-center justify-center font-mono">
+            <div className="w-7 h-7 rounded-full bg-neutral-900 text-red-300 font-bold flex items-center justify-center font-mono">
               3
             </div>
             <h4 className="font-bold text-sm text-neutral-950 flex items-center gap-1.5">
@@ -477,14 +477,14 @@ function initializeAllSheets(ss) {
       <div className="bg-neutral-950 rounded-3xl border border-neutral-800 overflow-hidden shadow-2xl">
         <div className="px-6 py-4 bg-neutral-900 border-b border-neutral-800 flex items-center justify-between">
           <div className="flex items-center gap-2 text-white text-xs font-mono">
-            <Code2 className="w-4 h-4 text-amber-400" />
+            <Code2 className="w-4 h-4 text-red-400" />
             <span>Code.gs (Complete Backend Implementation)</span>
           </div>
           <button
             onClick={handleCopyCode}
-            className="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-bold flex items-center gap-1 cursor-pointer"
+            className="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-red-300 text-xs font-bold flex items-center gap-1 cursor-pointer"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-amber-400" />}
+            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-red-400" />}
             <span>{copied ? 'Copied' : 'Copy'}</span>
           </button>
         </div>
@@ -496,3 +496,4 @@ function initializeAllSheets(ss) {
     </div>
   );
 };
+

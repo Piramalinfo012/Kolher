@@ -112,7 +112,7 @@ export const UserManagement: React.FC = () => {
   };
 
   const roleColors: Record<UserRole, string> = {
-    SUPER_ADMIN: 'bg-amber-100 text-amber-900 border-amber-300',
+    SUPER_ADMIN: 'bg-red-100 text-red-900 border-red-300',
     ADMIN: 'bg-blue-100 text-blue-900 border-blue-300',
     SALES: 'bg-emerald-100 text-emerald-900 border-emerald-300',
     VIEWER: 'bg-neutral-100 text-neutral-800 border-neutral-300'
@@ -141,10 +141,10 @@ export const UserManagement: React.FC = () => {
         {isSuperAdmin && (
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-amber-300 hover:text-amber-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             id="btn-add-user"
           >
-            <Plus className="w-4 h-4 text-amber-400" />
+            <Plus className="w-4 h-4 text-red-400" />
             <span>Add New User</span>
           </button>
         )}
@@ -169,7 +169,7 @@ export const UserManagement: React.FC = () => {
             </thead>
             <tbody className="divide-y divide-neutral-100">
               <tr>
-                <td className="p-3 font-bold text-amber-900">SUPER ADMIN</td>
+                <td className="p-3 font-bold text-red-900">SUPER ADMIN</td>
                 <td className="p-3 text-center text-emerald-600 font-bold">✓ Full</td>
                 <td className="p-3 text-center text-emerald-600 font-bold">✓ Full</td>
                 <td className="p-3 text-center text-emerald-600 font-bold">✓ Full</td>
@@ -211,7 +211,7 @@ export const UserManagement: React.FC = () => {
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               placeholder="Search users by name or email..."
-              className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+              className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
             />
           </div>
         </div>
@@ -231,7 +231,7 @@ export const UserManagement: React.FC = () => {
               {filtered.map(u => (
                 <tr key={u.user_id} className="hover:bg-neutral-50/60">
                   <td className="p-4 font-bold text-neutral-950 flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-neutral-900 text-amber-300 flex items-center justify-center font-bold text-xs">
+                    <div className="w-8 h-8 rounded-full bg-neutral-900 text-red-300 flex items-center justify-center font-bold text-xs">
                       {u.name.charAt(0)}
                     </div>
                     <div>
@@ -311,7 +311,7 @@ export const UserManagement: React.FC = () => {
                   required
                   value={formData.name || ''}
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-amber-500"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
                 />
               </div>
 
@@ -324,7 +324,7 @@ export const UserManagement: React.FC = () => {
                   required
                   value={formData.email || ''}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono focus:outline-none focus:border-amber-500"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono focus:outline-none focus:border-red-500"
                 />
               </div>
 
@@ -335,7 +335,7 @@ export const UserManagement: React.FC = () => {
                 <select
                   value={formData.role || 'SALES'}
                   onChange={e => setFormData({ ...formData, role: e.target.value as UserRole })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-amber-500"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
                 >
                   <option value="SUPER_ADMIN">SUPER ADMIN (Full Permissions + Delete)</option>
                   <option value="ADMIN">ADMIN (Catalog & Settings Manager)</option>
@@ -351,7 +351,7 @@ export const UserManagement: React.FC = () => {
                 <select
                   value={formData.status || 'ACTIVE'}
                   onChange={e => setFormData({ ...formData, status: e.target.value as any })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-amber-500"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
                 >
                   <option value="ACTIVE">ACTIVE</option>
                   <option value="INACTIVE">INACTIVE</option>
@@ -393,3 +393,4 @@ export const UserManagement: React.FC = () => {
     </div>
   );
 };
+

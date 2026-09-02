@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { Navbar } from './components/Navbar';
-import { Sidebar } from './components/Sidebar';
+import { TopMenu } from './components/TopMenu';
 
 // Pages
 import { Dashboard } from './pages/Dashboard';
@@ -87,25 +87,22 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-900/5 flex flex-col font-sans text-neutral-900 selection:bg-amber-500 selection:text-neutral-950">
+    <div className="min-h-screen bg-neutral-900/5 flex flex-col font-sans text-neutral-900 selection:bg-red-500 selection:text-neutral-950">
       {/* Top Navigation */}
       <Navbar
         onToggleSidebar={() => setSidebarOpen(prev => !prev)}
         onNavigate={handleNavigate}
       />
 
-      <div className="flex flex-1 overflow-hidden relative">
-        {/* Responsive Sidebar */}
-        <Sidebar
+      <div className="flex flex-col flex-1 overflow-hidden relative">
+        <TopMenu
           currentPage={currentPage}
           onNavigate={handleNavigate}
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-full">
-          <div className="max-w-7xl mx-auto">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 w-full">
+          <div key={currentPage} className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-700 ease-out fill-mode-both">
             {renderContent()}
           </div>
         </main>
@@ -123,3 +120,4 @@ export default function App() {
     </AuthProvider>
   );
 }
+

@@ -24,7 +24,7 @@ import { SupabaseTableStatus } from '../types';
 import { useToast } from '../context/ToastContext';
 
 const SQL_SCHEMA_CONTENT = `-- ==============================================================================
--- KOHLER INDIA B2B SANITARYWARE CONFIGURATOR & QUOTATION MANAGEMENT SYSTEM
+-- FIMA INDIA B2B SANITARYWARE CONFIGURATOR & QUOTATION MANAGEMENT SYSTEM
 -- SUPABASE POSTGRESQL DATABASE SCHEMA
 -- ==============================================================================
 
@@ -33,7 +33,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 1. COMPANY SETTINGS TABLE
 CREATE TABLE IF NOT EXISTS company_settings (
     id TEXT PRIMARY KEY DEFAULT 'current',
-    company_name TEXT NOT NULL DEFAULT 'KOHLER INDIA CORPORATION PVT. LTD.',
+    company_name TEXT NOT NULL DEFAULT 'FIMA INDIA CORPORATION PVT. LTD.',
     logo_drive_url TEXT,
     address TEXT,
     phone TEXT,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS company_settings (
     account_number TEXT,
     ifsc TEXT,
     branch TEXT,
-    quotation_prefix TEXT DEFAULT 'KOHLER',
+    quotation_prefix TEXT DEFAULT 'FIMA',
     financial_year TEXT DEFAULT '26-27',
     starting_number INTEGER DEFAULT 1,
     default_gst NUMERIC DEFAULT 18,
@@ -382,8 +382,8 @@ export const SupabaseSetup: React.FC = () => {
                   Active & Connected
                 </span>
               ) : (
-                <span className="bg-amber-500/20 text-amber-400 text-xs font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                <span className="bg-red-500/20 text-red-400 text-xs font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-red-400"></span>
                   Pending Configuration
                 </span>
               )}
@@ -392,7 +392,7 @@ export const SupabaseSetup: React.FC = () => {
               Supabase Database Integration
             </h1>
             <p className="text-neutral-400 text-xs sm:text-sm max-w-2xl leading-relaxed">
-              Connect Kohler India B2B Configurator directly with your Supabase PostgreSQL cloud database for persistent live products, finish combinations, client masters, and commercial quotations.
+              Connect FIMA India B2B Configurator directly with your Supabase PostgreSQL cloud database for persistent live products, finish combinations, client masters, and commercial quotations.
             </p>
           </div>
 
@@ -488,7 +488,7 @@ export const SupabaseSetup: React.FC = () => {
                       </>
                     ) : (
                       <>
-                        <Zap className="w-3.5 h-3.5 text-amber-200" />
+                        <Zap className="w-3.5 h-3.5 text-red-200" />
                         <span>Test & Save Connection</span>
                       </>
                     )}
@@ -525,10 +525,10 @@ export const SupabaseSetup: React.FC = () => {
             {/* Seed Button Box */}
             <div className="bg-white rounded-2xl p-5 border border-neutral-200 shadow-xs space-y-3">
               <h4 className="text-xs font-bold text-neutral-900 uppercase font-mono">
-                Populate Kohler Master Data
+                Populate FIMA Master Data
               </h4>
               <p className="text-xs text-neutral-500 leading-relaxed">
-                Initialize your Supabase database with Kohler Components faucets, PVD Vibrant finishes, precision handles, and sample customer profiles with 1-click.
+                Initialize your Supabase database with FIMA Components faucets, PVD Vibrant finishes, precision handles, and sample customer profiles with 1-click.
               </p>
               <button
                 type="button"
@@ -544,7 +544,7 @@ export const SupabaseSetup: React.FC = () => {
                 ) : (
                   <>
                     <Play className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Seed Kohler Master Data to Supabase</span>
+                    <span>Seed FIMA Master Data to Supabase</span>
                   </>
                 )}
               </button>
@@ -618,8 +618,8 @@ export const SupabaseSetup: React.FC = () => {
                             Ready & Synced
                           </span>
                         ) : tab.status === 'not_created' ? (
-                          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                            <AlertCircle className="w-3 h-3 text-amber-600" />
+                          <span className="inline-flex items-center gap-1 bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                            <AlertCircle className="w-3 h-3 text-red-600" />
                             Run SQL Schema
                           </span>
                         ) : (
@@ -678,7 +678,7 @@ export const SupabaseSetup: React.FC = () => {
           </div>
 
           <div className="relative">
-            <pre className="p-4 bg-neutral-950 text-neutral-200 rounded-xl text-[11px] font-mono overflow-x-auto max-h-[500px] border border-neutral-800 leading-relaxed selection:bg-amber-500 selection:text-black">
+            <pre className="p-4 bg-neutral-950 text-neutral-200 rounded-xl text-[11px] font-mono overflow-x-auto max-h-[500px] border border-neutral-800 leading-relaxed selection:bg-red-500 selection:text-black">
               {SQL_SCHEMA_CONTENT}
             </pre>
           </div>
@@ -687,3 +687,4 @@ export const SupabaseSetup: React.FC = () => {
     </div>
   );
 };
+

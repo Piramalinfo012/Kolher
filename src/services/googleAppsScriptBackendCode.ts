@@ -663,7 +663,7 @@ function buildQuotationHtml(q, comp) {
       '<strong>Terms & Conditions:</strong><br>' +
       (comp.terms_conditions || '1. Valid for 30 days. 2. 50% advance with order.').replace(/\\n/g, '<br>') + '<br><br>' +
       '<strong>Bank Details:</strong> ' + (comp.bank_name || 'HDFC Bank') + ' | A/C: ' + (comp.account_number || '') + ' | IFSC: ' + (comp.ifsc || '') + '<br><br>' +
-      '<strong>Authorized Signatory:</strong> ' + (comp.authorized_signatory || 'Kohler India Corporation Pvt. Ltd.') +
+      '<strong>Authorized Signatory:</strong> ' + (comp.authorized_signatory || 'FIMA India Corporation Pvt. Ltd.') +
     '</div></body></html>';
 }`
   },
@@ -939,3 +939,4 @@ function getDashboardData() {
 }`
   }
 ];
+

@@ -26,12 +26,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d4af37;
+  background: #dc2626; /* FIMA Red */
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #b89628;
+  background: #b91c1c; /* FIMA Dark Red */
 }
 
 /* Print Styles for A4 Quotation */

@@ -54,15 +54,36 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
   useEffect(() => {
     if (!isOpen || !product) return;
 
+    const hasInteractive = product.product_name.toUpperCase().includes('SLIDE') || 
+      product.product_name.toUpperCase().includes('FLO') ||
+      product.product_name.toUpperCase().includes('EXP') ||
+      product.product_name.toUpperCase().includes('EXPOSED') ||
+      product.product_name.toUpperCase().includes('3804');
+    setViewMode(hasInteractive ? 'INTERACTIVE' : 'PHOTO');
+
     const loadMasterData = async () => {
-      const [fData, hData, cData] = await Promise.all([
+      const [fData, spareParts, cData] = await Promise.all([
         api.getFinishes(),
-        api.getHandles(),
+        api.getSparePartsByProduct(product.product_id),
         api.getCombinations()
       ]);
 
       const activeFinishes = fData.filter(f => f.status === 'Active');
-      const activeHandles = hData.filter(h => h.status === 'Active');
+      
+      // Map Spare Parts to the Handle interface for backward compatibility
+      const activeHandles: Handle[] = spareParts
+        .filter(sp => sp.status === 'ACTIVE')
+        .map(sp => ({
+          handle_id: sp.part_id,
+          handle_name: sp.part_name,
+          handle_code: sp.part_model,
+          base_price: sp.price,
+          category: 'Spare Part',
+          preview_image_url: sp.image_url,
+          status: 'Active',
+          created_at: sp.created_at
+        }));
+      
       setFinishes(activeFinishes);
       setHandles(activeHandles);
       setCombinations(cData);
@@ -91,21 +112,33 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
     loadMasterData();
   }, [isOpen, product, initialCustomization]);
 
-  // Derived Dynamic Model Code (e.g. F5801 + INOX -> F5801INOX, F5801 + OS -> F5801OS)
+  // Derived Dynamic Model Code (e.g. F5801 + INOX + MQ -> F5801INOXMQ)
   const dynamicModelCode = useMemo(() => {
     if (!product) return '';
     const baseCode = product.model_number || 'F5801';
     const finishCode = selectedFinish?.finish_code || '';
-    if (!finishCode) return baseCode;
-
-    // If base code already contains finish code, return as is
-    if (baseCode.toUpperCase().endsWith(finishCode.toUpperCase())) {
-      return baseCode;
+    const handleCode = selectedHandle?.handle_model || selectedHandle?.handle_code || '';
+    
+    let result = baseCode.replace(/-[0-9A-Z]+$/, '');
+    
+    if (finishCode && !result.toUpperCase().endsWith(finishCode.toUpperCase())) {
+      result += finishCode;
     }
-    // Clean trailing hyphens or model suffixes if needed
-    const cleanBase = baseCode.replace(/-[0-9A-Z]+$/, '');
-    return `${cleanBase}${finishCode}`;
-  }, [product, selectedFinish]);
+    
+    if (handleCode && handleCode !== 'MATCH' && !result.toUpperCase().endsWith(handleCode.toUpperCase())) {
+      result += handleCode;
+    }
+    
+    return result;
+  }, [product, selectedFinish, selectedHandle]);
+
+  const hasInteractive = product ? (
+    product.product_name.toUpperCase().includes('SLIDE') || 
+    product.product_name.toUpperCase().includes('FLO') ||
+    product.product_name.toUpperCase().includes('EXP') ||
+    product.product_name.toUpperCase().includes('EXPOSED') ||
+    product.product_name.toUpperCase().includes('3804')
+  ) : false;
 
   if (!isOpen || !product) return null;
 
@@ -137,8 +170,13 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
   const grandTotal = gstIncluded ? taxableAmount : taxableAmount + gstAmount;
 
   const handleConfirm = () => {
-    if (!selectedFinish || !selectedHandle) {
-      warning('Incomplete Selection', 'Please choose a metallic finish and handle/knob design.');
+    if (!selectedFinish) {
+      warning('Incomplete Selection', 'Please choose a metallic finish.');
+      return;
+    }
+
+    if (handles.length > 0 && !selectedHandle) {
+      warning('Incomplete Selection', 'Please choose a handle/knob design.');
       return;
     }
 
@@ -146,8 +184,8 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
       finish: selectedFinish.finish_name,
       finish_code: selectedFinish.finish_code,
       finish_price: finishPrice,
-      handle: selectedHandle.handle_name,
-      handle_model: selectedHandle.handle_model,
+      handle: selectedHandle?.handle_name || 'Standard',
+      handle_model: selectedHandle?.handle_model || '',
       handle_price: handlePrice,
       combo_price: comboPrice,
       quantity,
@@ -173,8 +211,8 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
       model_number: dynamicModelCode,
       finish_id: selectedFinish.finish_id,
       finish_name: selectedFinish.finish_name,
-      handle_id: selectedHandle.handle_id,
-      handle_name: selectedHandle.handle_name,
+      handle_id: selectedHandle?.handle_id || '',
+      handle_name: selectedHandle?.handle_name || 'Standard',
       combination_id: matchedCombination?.combination_id || '',
       product_image_url: visualizerImageUrl || photoImageUrl,
       quantity,
@@ -195,7 +233,7 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
     onAddToQuotation(customizedItem);
     success(
       initialCustomization ? 'Item Updated' : 'Added to Quotation',
-      `${product.product_name} (${selectedFinish.finish_name} + ${selectedHandle.handle_name}) configured.`
+      `${product.product_name} (${selectedFinish.finish_name} + ${selectedHandle?.handle_name || 'Standard'}) configured.`
     );
     onClose();
   };
@@ -265,14 +303,14 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
                     FINITURE
                   </h3>
                   {selectedFinish && (
-                    <span className="text-[11px] font-medium text-amber-900 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                    <span className="text-[11px] font-medium text-red-900 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
                       {selectedFinish.finish_name} {selectedFinish.additional_price > 0 ? `(+₹${selectedFinish.additional_price.toLocaleString('en-IN')})` : ''}
                     </span>
                   )}
                 </div>
 
                 {/* Circular Swatches Grid for Finishes */}
-                <div className="grid grid-cols-3 sm:grid-cols-3 gap-4 pt-1">
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 pt-1">
                   {finishes.map(finish => {
                     const isSelected = selectedFinish?.finish_id === finish.finish_id;
                     return (
@@ -280,35 +318,23 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
                         type="button"
                         key={finish.finish_id}
                         onClick={() => setSelectedFinish(finish)}
-                        className={`group flex flex-col items-center text-center p-2 rounded-2xl transition-all cursor-pointer ${
-                          isSelected ? 'bg-amber-50/60 ring-2 ring-amber-500/80 shadow-xs' : 'hover:bg-neutral-50'
-                        }`}
+                        className={`group flex flex-col items-center text-center transition-all cursor-pointer`}
                       >
                         {/* Circular Swatch */}
                         <div
-                          className={`w-14 h-14 rounded-full border-2 transition-all relative flex items-center justify-center shadow-xs overflow-hidden ${
-                            isSelected
-                              ? 'border-neutral-900 scale-105 shadow-md ring-2 ring-white'
-                              : 'border-neutral-300 group-hover:border-neutral-400 group-hover:scale-102'
+                          className={`w-14 h-14 rounded-full transition-all relative flex items-center justify-center shadow-sm overflow-hidden border border-neutral-100 ${
+                            isSelected ? 'ring-1 ring-neutral-300 scale-105' : 'hover:scale-105 hover:shadow-md'
                           }`}
                           style={{
                             background: finish.texture_css || finish.color_hex || '#C8C8C8'
                           }}
                         >
-                          <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/30 pointer-events-none" />
-                          {isSelected && (
-                            <div className="w-5 h-5 rounded-full bg-neutral-900 text-white flex items-center justify-center shadow-md">
-                              <Check className="w-3 h-3 stroke-[3]" />
-                            </div>
-                          )}
+                          <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/20 pointer-events-none" />
                         </div>
 
                         {/* Finish Label */}
-                        <span className="mt-2 text-[10px] font-bold tracking-tight text-neutral-800 uppercase leading-tight max-w-[100px] line-clamp-2">
-                          {finish.finish_name}
-                        </span>
-                        <span className="text-[9px] font-mono text-neutral-400 mt-0.5">
-                          {finish.finish_code}
+                        <span className={`mt-2 text-[10px] font-medium tracking-wide uppercase leading-tight max-w-[85px] line-clamp-3 ${isSelected ? 'text-[#0B2545] font-bold' : 'text-neutral-500'}`}>
+                          {finish.finish_name.replace(/\s*\(.*?\)\s*/g, '')}
                         </span>
                       </button>
                     );
@@ -319,21 +345,23 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
               {/* DIVIDER */}
               <hr className="border-neutral-200" />
 
-              {/* SECTION 2: MANOPOLA F1420 (HANDLES / KNOBS) */}
-              <div className="space-y-3.5">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900 font-sans">
-                    MANOPOLA F1420
-                  </h3>
-                  {selectedHandle && (
-                    <span className="text-[11px] font-medium text-amber-900 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
-                      {selectedHandle.handle_name} {selectedHandle.additional_price > 0 ? `(+₹${selectedHandle.additional_price.toLocaleString('en-IN')})` : ''}
-                    </span>
-                  )}
-                </div>
+              {/* SECTION 2: MANOPOLA (HANDLES / KNOBS) */}
+              {hasInteractive && !product.product_name.toUpperCase().includes('EXPOSED') && !product.product_name.toUpperCase().includes('3804') && (
+                <>
+                  <div className="space-y-3.5">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900 font-sans">
+                        {product.model_number === 'F5801' ? 'HANDLE F1420' : 'MANOPOLA'}
+                      </h3>
+                      {selectedHandle && (
+                        <span className="text-[11px] font-medium text-red-900 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
+                          {selectedHandle.handle_name} {selectedHandle.additional_price > 0 ? `(+₹${selectedHandle.additional_price.toLocaleString('en-IN')})` : ''}
+                        </span>
+                      )}
+                    </div>
 
                 {/* Circular Swatches Grid for Handles */}
-                <div className="grid grid-cols-3 sm:grid-cols-3 gap-4 pt-1">
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 pt-1">
                   {handles.map(handle => {
                     const isSelected = selectedHandle?.handle_id === handle.handle_id;
                     const isMatch = handle.handle_name.toUpperCase().includes('MATCH') || handle.material === 'Metal';
@@ -343,16 +371,12 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
                         type="button"
                         key={handle.handle_id}
                         onClick={() => setSelectedHandle(handle)}
-                        className={`group flex flex-col items-center text-center p-2 rounded-2xl transition-all cursor-pointer ${
-                          isSelected ? 'bg-amber-50/60 ring-2 ring-amber-500/80 shadow-xs' : 'hover:bg-neutral-50'
-                        }`}
+                        className={`group flex flex-col items-center text-center transition-all cursor-pointer`}
                       >
                         {/* Circular Handle Swatch */}
                         <div
-                          className={`w-14 h-14 rounded-full border-2 transition-all relative flex items-center justify-center shadow-xs overflow-hidden ${
-                            isSelected
-                              ? 'border-neutral-900 scale-105 shadow-md ring-2 ring-white'
-                              : 'border-neutral-300 group-hover:border-neutral-400 group-hover:scale-102'
+                          className={`w-14 h-14 rounded-full transition-all relative flex items-center justify-center shadow-sm overflow-hidden border border-neutral-100 ${
+                            isSelected ? 'ring-1 ring-neutral-300 scale-105' : 'hover:scale-105 hover:shadow-md'
                           }`}
                           style={{
                             background: isMatch
@@ -371,28 +395,21 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
                           )}
 
                           <div className="absolute inset-0 bg-gradient-to-tr from-black/15 via-transparent to-white/20 pointer-events-none" />
-
-                          {isSelected && (
-                            <div className="absolute w-5 h-5 rounded-full bg-neutral-900 text-white flex items-center justify-center shadow-md">
-                              <Check className="w-3 h-3 stroke-[3]" />
-                            </div>
-                          )}
                         </div>
 
                         {/* Handle Label */}
-                        <span className="mt-2 text-[10px] font-bold tracking-tight text-neutral-800 uppercase leading-tight max-w-[100px] line-clamp-2">
-                          {isMatch ? `${selectedFinish?.finish_name || 'MATCH'} FINISH` : handle.handle_name}
-                        </span>
-                        <span className="text-[9px] font-mono text-neutral-400 mt-0.5">
-                          {handle.material || 'Special'}
+                        <span className={`mt-2 text-[10px] font-medium tracking-wide uppercase leading-tight max-w-[85px] line-clamp-3 ${isSelected ? 'text-[#0B2545] font-bold' : 'text-neutral-500'}`}>
+                          {isMatch ? `${selectedFinish?.finish_name || 'MATCH'} FINISH` : handle.handle_name.replace(/\s*\(.*?\)\s*/g, '')}
                         </span>
                       </button>
                     );
                   })}
                 </div>
               </div>
+              </>
+            )}
 
-              {/* SECTION 3: NOTES & SPECIFICATIONS */}
+            {/* SECTION 3: NOTES & SPECIFICATIONS */}
               <div className="pt-2">
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 mb-1">
                   Customization Instructions / Room Location
@@ -402,7 +419,7 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
                   value={itemNotes}
                   onChange={e => setItemNotes(e.target.value)}
                   placeholder="e.g., Master Bathroom Suite, Level 2 Vanity, Gold pop-up waste match..."
-                  className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500"
                 />
               </div>
             </div>
@@ -413,34 +430,25 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] uppercase font-bold tracking-widest text-neutral-600 bg-white/80 border border-neutral-200/80 px-2.5 py-1 rounded-full backdrop-blur-xs flex items-center gap-1.5 shadow-2xs">
-                    <Sparkles className="w-3 h-3 text-amber-600" />
+                    <Sparkles className="w-3 h-3 text-red-600" />
                     Bespoke Real-Time Render
                   </span>
                 </div>
 
                 <div className="flex items-center gap-1.5 bg-white/80 border border-neutral-200/80 p-0.5 rounded-xl shadow-2xs">
-                  <button
-                    type="button"
-                    onClick={() => setViewMode('INTERACTIVE')}
-                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
-                      viewMode === 'INTERACTIVE'
-                        ? 'bg-neutral-900 text-white shadow-2xs'
-                        : 'text-neutral-500 hover:text-neutral-900'
-                    }`}
-                  >
-                    Studio 3D Vector
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setViewMode('PHOTO')}
-                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
-                      viewMode === 'PHOTO'
-                        ? 'bg-neutral-900 text-white shadow-2xs'
-                        : 'text-neutral-500 hover:text-neutral-900'
-                    }`}
-                  >
-                    Photo Match
-                  </button>
+                  {hasInteractive && (
+                    <button
+                      type="button"
+                      onClick={() => setViewMode('INTERACTIVE')}
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
+                        viewMode === 'INTERACTIVE'
+                          ? 'bg-neutral-900 text-white shadow-2xs'
+                          : 'text-neutral-500 hover:text-neutral-900'
+                      }`}
+                    >
+                      Studio 3D Vector
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -495,13 +503,13 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
                 {finishPrice > 0 && (
                   <div className="flex items-center justify-between text-xs text-neutral-500 font-medium">
                     <span>Finish ({selectedFinish?.finish_name}):</span>
-                    <span className="font-mono text-amber-700">+ ₹{finishPrice.toLocaleString('en-IN')}</span>
+                    <span className="font-mono text-red-700">+ ₹{finishPrice.toLocaleString('en-IN')}</span>
                   </div>
                 )}
                 {handlePrice > 0 && (
                   <div className="flex items-center justify-between text-xs text-neutral-500 font-medium">
                     <span>Handle ({selectedHandle?.handle_name}):</span>
-                    <span className="font-mono text-amber-700">+ ₹{handlePrice.toLocaleString('en-IN')}</span>
+                    <span className="font-mono text-red-700">+ ₹{handlePrice.toLocaleString('en-IN')}</span>
                   </div>
                 )}
                 <div className="pt-2 border-t border-neutral-200 flex items-center justify-between text-xs font-bold text-neutral-900">
@@ -580,3 +588,4 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
     </AnimatePresence>
   );
 };
+

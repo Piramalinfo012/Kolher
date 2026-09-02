@@ -102,25 +102,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-12">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-amber-950/80 rounded-3xl p-6 sm:p-8 text-white border border-neutral-800 shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-red-950/80 rounded-3xl p-6 sm:p-8 text-white border border-neutral-800 shadow-xl relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-amber-300 font-bold uppercase tracking-wider mb-2">
+            <div className="flex items-center gap-2 text-xs font-mono text-red-300 font-bold uppercase tracking-wider mb-2">
               <Sparkles className="w-3.5 h-3.5" />
-              Kohler India Luxury Sanitaryware Architecture
+              FIMA India Luxury Sanitaryware Architecture
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold font-serif-luxury text-white">
               Welcome back, {currentUser.name}
             </h1>
             <p className="text-xs sm:text-sm text-neutral-400 mt-1 max-w-2xl leading-relaxed">
-              Real-time synchronization with Kohler Google Sheets database, luxury product visual configurator, and automated A4 quotation dispatcher.
+              Real-time synchronization with FIMA Google Sheets database, luxury product visual configurator, and automated A4 quotation dispatcher.
             </p>
           </div>
 
           {isSales && (
             <button
               onClick={() => onNavigate('new-quotation')}
-              className="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 text-xs sm:text-sm font-bold shadow-lg shadow-amber-950/40 flex items-center gap-2 transition-all cursor-pointer shrink-0"
+              className="px-5 py-3 rounded-2xl bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-neutral-950 text-xs sm:text-sm font-bold shadow-lg shadow-red-950/40 flex items-center gap-2 transition-all cursor-pointer shrink-0"
               id="btn-dashboard-new-quote"
             >
               <PlusCircle className="w-4 h-4" />
@@ -136,7 +136,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         <div className="bg-white p-5 rounded-3xl border border-neutral-200/80 shadow-xs space-y-3">
           <div className="flex items-center justify-between text-neutral-500">
             <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Quotations</span>
-            <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-800 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-red-50 text-red-800 flex items-center justify-center">
               <FileText className="w-4 h-4" />
             </div>
           </div>
@@ -213,7 +213,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             </div>
             <button
               onClick={() => onNavigate('quotation-history')}
-              className="text-xs font-bold text-amber-800 hover:text-amber-900 flex items-center gap-1"
+              className="text-xs font-bold text-red-800 hover:text-red-900 flex items-center gap-1"
             >
               View All ({quotations.length}) <ChevronRight className="w-4 h-4" />
             </button>
@@ -238,7 +238,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                     SENT: 'bg-blue-50 text-blue-800 border-blue-200',
                     APPROVED: 'bg-emerald-50 text-emerald-800 border-emerald-200',
                     REJECTED: 'bg-rose-50 text-rose-800 border-rose-200',
-                    EXPIRED: 'bg-amber-50 text-amber-800 border-amber-200'
+                    EXPIRED: 'bg-red-50 text-red-800 border-red-200'
                   };
 
                   return (
@@ -322,7 +322,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           {/* Quick Access to Catalog */}
           <div className="bg-neutral-900 text-white rounded-3xl p-6 shadow-md space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-amber-400 font-bold uppercase">
+              <span className="text-xs font-mono text-red-400 font-bold uppercase">
                 Catalog Fast Access
               </span>
               <Package className="w-4 h-4 text-neutral-400" />
@@ -335,7 +335,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             </p>
             <button
               onClick={() => onNavigate('products')}
-              className="w-full mt-2 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-bold transition-colors cursor-pointer"
+              className="w-full mt-2 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-red-300 text-xs font-bold transition-colors cursor-pointer"
             >
               Browse Catalog Master →
             </button>
@@ -361,3 +361,4 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     </div>
   );
 };
+

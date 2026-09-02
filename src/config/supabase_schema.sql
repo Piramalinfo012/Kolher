@@ -64,6 +64,19 @@ CREATE TABLE IF NOT EXISTS products (
     created_by TEXT
 );
 
+-- 4B. PRODUCT SPARE PARTS TABLE
+CREATE TABLE IF NOT EXISTS product_spare_parts (
+    part_id TEXT PRIMARY KEY,
+    product_id TEXT REFERENCES products(product_id) ON DELETE CASCADE,
+    part_name TEXT NOT NULL,
+    part_model TEXT,
+    price NUMERIC NOT NULL DEFAULT 0,
+    image_url TEXT,
+    status TEXT NOT NULL DEFAULT 'ACTIVE',
+    created_at TEXT NOT NULL DEFAULT NOW()::TEXT,
+    updated_at TEXT NOT NULL DEFAULT NOW()::TEXT
+);
+
 -- 5. FINISHES MASTER TABLE
 CREATE TABLE IF NOT EXISTS finishes (
     finish_id TEXT PRIMARY KEY,

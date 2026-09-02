@@ -37,7 +37,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         >
           <div className="p-6">
             <div className="flex items-start gap-4">
-              <div className={`p-3 rounded-xl shrink-0 ${isDanger ? 'bg-rose-50 text-rose-600' : 'bg-amber-50 text-amber-600'}`}>
+              <div className={`p-3 rounded-xl shrink-0 ${isDanger ? 'bg-rose-50 text-rose-600' : 'bg-red-50 text-red-600'}`}>
                 <AlertTriangle className="w-6 h-6" />
               </div>
               <div className="flex-1 min-w-0">
@@ -84,3 +84,4 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
     </AnimatePresence>
   );
 };
+
