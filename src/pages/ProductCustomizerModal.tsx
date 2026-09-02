@@ -8,7 +8,7 @@ import {
   Plus,
   Minus
 } from 'lucide-react';
-import { Product, QuotationItem, CustomizationJSON, CustomizationOption } from '../types';
+import { Product, QuotationItem, CustomizationJSON, CustomizationOption, CustomizationCategory } from '../types';
 import { useToast } from '../context/ToastContext';
 import { Product3DViewer } from '../components/Product3DViewer';
 
