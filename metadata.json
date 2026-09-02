@@ -1,0 +1,8 @@
+{
+  "name": "Remix Kohler India - Smart Sanitaryware Configurator \u0026 Quotation Management",
+  "description": "Enterprise B2B Product Configurator, Customizer, and Quotation Management System for Kohler India Luxury Sanitaryware \u0026 Bathroom Fittings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
