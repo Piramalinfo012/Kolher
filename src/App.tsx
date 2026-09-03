@@ -51,6 +51,7 @@ function AppContent() {
       case 'new-quotation':
         return <NewQuotation onNavigate={handleNavigate} editQuotationId={editingQuotationId} />;
       case 'quotations':
+      case 'quotation-history':
         return <QuotationHistory onNavigate={handleNavigate} />;
       case 'products':
         return <Products />;

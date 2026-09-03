@@ -11,6 +11,7 @@ import {
 import { Product, QuotationItem, CustomizationJSON, CustomizationOption, CustomizationCategory } from '../types';
 import { useToast } from '../context/ToastContext';
 import { Product3DViewer } from '../components/Product3DViewer';
+import { getVisualizerDataUrl } from '../components/InteractiveVisualizer';
 
 interface ProductCustomizerModalProps {
   isOpen: boolean;
@@ -149,6 +150,21 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
     const existingClp = initialCustomization?.clp;
     const rateToUse = existingClp !== undefined && existingClp > 0 ? existingClp : finalUnitMrp;
 
+    let finalImageUrl = photoImageUrl;
+    if (product.combo_images && product.combo_images[comboKey]) {
+      finalImageUrl = product.combo_images[comboKey];
+    } else {
+      try {
+        finalImageUrl = getVisualizerDataUrl(
+          { finish_name: finishSummary, finish_code: comboKey },
+          null,
+          { model: product.model_number, productName: product.product_name }
+        ) || photoImageUrl;
+      } catch (e) {
+        finalImageUrl = photoImageUrl;
+      }
+    }
+
     const customizedItem: QuotationItem = {
       quotation_item_id: initialCustomization?.quotation_item_id || `QITM_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
       quotation_number: initialCustomization?.quotation_number || '',
@@ -162,7 +178,7 @@ export const ProductCustomizerModal: React.FC<ProductCustomizerModalProps> = ({
       handle_id: '',
       handle_name: '',
       combination_id: comboKey,
-      product_image_url: photoImageUrl,
+      product_image_url: finalImageUrl,
       quantity,
       unit: product.unit || 'PCS',
       base_price: basePrice,

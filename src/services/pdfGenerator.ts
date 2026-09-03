@@ -2,8 +2,39 @@ import { Quotation, CompanySettings } from '../types';
 import { api } from './api';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { getVisualizerDataUrl } from '../components/InteractiveVisualizer';
 
 export class PdfGeneratorService {
+  private static getItemImageUrl(item: any): string {
+    if (item.product_image_url && item.product_image_url.startsWith('data:image/svg')) {
+      return item.product_image_url;
+    }
+    if (
+      item.finish_name ||
+      item.handle_name ||
+      (item.model_number && (
+        item.model_number.startsWith('F5801') ||
+        item.model_number.startsWith('K-77959') ||
+        item.model_number.includes('SLIDE') ||
+        item.model_number.includes('3804') ||
+        item.model_number.includes('3801') ||
+        item.model_number.includes('FLO')
+      ))
+    ) {
+      try {
+        const svgUrl = getVisualizerDataUrl(
+          { finish_name: item.finish_name, finish_code: item.finish_id },
+          { handle_name: item.handle_name, handle_model: item.handle_id },
+          { model: item.model_number, productName: item.product_name }
+        );
+        if (svgUrl) return svgUrl;
+      } catch (e) {
+        console.warn('Error generating visualizer image for PDF:', e);
+      }
+    }
+    return item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
+  }
+
   /**
    * Builds the clean, selectable, corporate A4 quotation HTML
    */
@@ -48,7 +79,7 @@ export class PdfGeneratorService {
 
         const secRows = secItems.map(item => {
           const customization: any = item.customization_json || {};
-          const itemImg = item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
+          const itemImg = this.getItemImageUrl(item);
 
           const rowHtml = `
             <tr class="item-row" style="border-bottom: 1px solid #e5e7eb;">
@@ -87,7 +118,7 @@ export class PdfGeneratorService {
     } else {
       itemsRows = items.map((item, index) => {
         const customization: any = item.customization_json || {};
-        const itemImg = item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
+        const itemImg = this.getItemImageUrl(item);
 
         return `
           <tr class="item-row" style="border-bottom: 1px solid #e5e7eb;">
@@ -316,20 +347,30 @@ export class PdfGeneratorService {
     const cleanNumber = (quotation.quotation_number || 'Quote').replace(/[^a-zA-Z0-9_-]/g, '_');
     const fileName = `FIMA_Quotation_${cleanNumber}.pdf`;
 
-    // Create an offscreen render container
-    const container = document.createElement('div');
-    container.style.position = 'fixed';
-    container.style.top = '-9999px';
-    container.style.left = '0';
-    container.style.width = '794px';
-    container.style.backgroundColor = '#ffffff';
-    container.style.zIndex = '-1000';
-    container.innerHTML = this.generateHtml(quotation, settings);
-    document.body.appendChild(container);
+    // Create an offscreen isolated iframe container to prevent host page style pollution
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.top = '-9999px';
+    iframe.style.left = '-9999px';
+    iframe.style.width = '794px';
+    iframe.style.height = '1123px';
+    iframe.style.border = '0';
+    iframe.style.visibility = 'hidden';
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc) {
+      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+      throw new Error('Failed to access PDF render iframe');
+    }
+
+    doc.open();
+    doc.write(this.generateHtml(quotation, settings));
+    doc.close();
 
     try {
       // Wait for all images inside container to be fully loaded
-      const images = Array.from(container.querySelectorAll('img'));
+      const images = Array.from(doc.querySelectorAll('img'));
       await Promise.all(
         images.map(
           img =>
@@ -344,7 +385,7 @@ export class PdfGeneratorService {
         )
       );
 
-      const printRoot = (container.querySelector('#quotation-print-root') as HTMLElement) || container;
+      const printRoot = (doc.querySelector('#quotation-print-root') as HTMLElement) || doc.body;
       
       const canvas = await html2canvas(printRoot, {
         scale: 2,
@@ -385,7 +426,9 @@ export class PdfGeneratorService {
     } catch (err) {
       console.error('Error generating PDF', err);
     } finally {
-      document.body.removeChild(container);
+      if (iframe.parentNode) {
+        iframe.parentNode.removeChild(iframe);
+      }
     }
   }
 

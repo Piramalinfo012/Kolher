@@ -39,19 +39,28 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
   const { success, error, info } = useToast();
   const [generatingPdf, setGeneratingPdf] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [liveSettings, setLiveSettings] = useState<CompanySettings>(companySettings);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      api.getCompanySettings().then(s => setLiveSettings(s)).catch(() => {});
+    }
+  }, [isOpen, companySettings]);
 
   if (!isOpen || !quotation) return null;
 
   const items = quotation.items || [];
+  const settings = liveSettings || companySettings;
 
   const handlePrint = () => {
-    PdfGeneratorService.printQuotation(quotation, companySettings);
+    PdfGeneratorService.printQuotation(quotation, settings);
   };
 
   const handleDownloadPdf = async () => {
     try {
       setGeneratingPdf(true);
-      await PdfGeneratorService.downloadDirectPdf(quotation, companySettings);
+      const latestSettings = await api.getCompanySettings();
+      await PdfGeneratorService.downloadDirectPdf(quotation, latestSettings);
       success('PDF Downloaded', `Quotation ${quotation.quotation_number} downloaded successfully as PDF.`);
       if (onStatusChange) onStatusChange('SENT');
     } catch (err: any) {
@@ -62,7 +71,7 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
   };
 
   const handleDownloadHtml = () => {
-    PdfGeneratorService.downloadHtmlDocument(quotation, companySettings);
+    PdfGeneratorService.downloadHtmlDocument(quotation, settings);
     success('HTML Document Downloaded', 'Self-contained printable quotation document saved.');
   };
 
@@ -75,9 +84,9 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
   };
 
   const handleEmailShare = () => {
-    const subject = encodeURIComponent(`Quotation ${quotation.quotation_number} - ${companySettings.company_name}`);
+    const subject = encodeURIComponent(`Quotation ${quotation.quotation_number} - ${settings.company_name}`);
     const body = encodeURIComponent(
-      `Dear ${quotation.contact_person || quotation.party_name},\n\nPlease find attached the quotation ${quotation.quotation_number} for your review.\n\nTotal Value: INR ${Number(quotation.grand_total).toLocaleString('en-IN')}\n\nRegards,\n${companySettings.company_name}`
+      `Dear ${quotation.contact_person || quotation.party_name},\n\nPlease find attached the quotation ${quotation.quotation_number} for your review.\n\nTotal Value: INR ${Number(quotation.grand_total).toLocaleString('en-IN')}\n\nRegards,\n${settings.company_name}`
     );
     window.open(`mailto:${quotation.email || ''}?subject=${subject}&body=${body}`, '_blank');
   };
@@ -168,18 +177,18 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
               <div className="flex flex-col sm:flex-row justify-between items-start pb-6 border-b-2 border-red-600/60 gap-4">
                 <div>
                   <img
-                    src={companySettings.logo_drive_url || '/fima-logo.png'}
-                    alt={companySettings.company_name}
+                    src={settings.logo_drive_url || '/fima-logo.png'}
+                    alt={settings.company_name}
                     className="h-10 sm:h-12 w-auto object-contain mb-2"
                     onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
                   />
                   <div className="font-serif-luxury font-bold text-lg sm:text-xl tracking-wider text-neutral-950">
-                    {companySettings.company_name}
+                    {settings.company_name}
                   </div>
                   <div className="text-xs text-neutral-500 mt-1 leading-relaxed">
-                    {companySettings.address}<br />
-                    Tel: {companySettings.phone} | Email: {companySettings.email}<br />
-                    <strong>GSTIN:</strong> {companySettings.gstin} | <strong>PAN:</strong> {companySettings.pan}
+                    {settings.address}<br />
+                    Tel: {settings.phone} | Email: {settings.email}<br />
+                    <strong>GSTIN:</strong> {settings.gstin} | <strong>PAN:</strong> {settings.pan}
                   </div>
                 </div>
 
@@ -227,9 +236,9 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
                     Commercial Terms:
                   </div>
                   <div className="text-xs text-neutral-700 space-y-1.5 leading-relaxed">
-                    <div><strong>Validity:</strong> {quotation.validity || companySettings.default_validity}</div>
-                    <div><strong>Payment Terms:</strong> {quotation.payment_terms || companySettings.default_payment_terms}</div>
-                    <div><strong>Delivery Period:</strong> {quotation.delivery_terms || companySettings.default_delivery_terms}</div>
+                    <div><strong>Validity:</strong> {quotation.validity || settings.default_validity}</div>
+                    <div><strong>Payment Terms:</strong> {quotation.payment_terms || settings.default_payment_terms}</div>
+                    <div><strong>Delivery Period:</strong> {quotation.delivery_terms || settings.default_delivery_terms}</div>
                     <div><strong>Account Exec:</strong> {quotation.created_by || 'Rajeev Sharma'}</div>
                   </div>
                 </div>
@@ -340,7 +349,16 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
                               </td>
                             </tr>
                             {secItems.map(item => {
-                              const displayImageUrl = item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
+                              const displayImageUrl =
+                                item.product_image_url && item.product_image_url.startsWith('data:image/svg')
+                                  ? item.product_image_url
+                                  : item.finish_name || item.handle_name || (item.model_number && (item.model_number.startsWith('F5801') || item.model_number.startsWith('K-77959') || item.model_number.includes('SLIDE') || item.model_number.includes('3804') || item.model_number.includes('3801') || item.model_number.includes('FLO')))
+                                    ? getVisualizerDataUrl(
+                                        { finish_name: item.finish_name, finish_code: item.finish_id },
+                                        { handle_name: item.handle_name, handle_model: item.handle_id },
+                                        { model: item.model_number, productName: item.product_name }
+                                      )
+                                    : item.product_image_url || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&auto=format&fit=crop&q=80';
 
                               return (
                                 <tr key={item.quotation_item_id || globalIndex} className="hover:bg-neutral-50/50">
@@ -466,13 +484,13 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
                 <div className="max-w-md">
                   <div className="font-bold text-neutral-900 mb-1">Standard Terms & Conditions:</div>
                   <div className="text-[11px] leading-relaxed whitespace-pre-line text-neutral-500">
-                    {companySettings.terms_conditions}
+                    {settings.terms_conditions}
                   </div>
                 </div>
 
                 <div className="text-center sm:text-right shrink-0 w-full sm:w-auto">
                   <div className="w-48 border-t border-dashed border-neutral-400 pt-2 mx-auto sm:ml-auto">
-                    <div className="font-bold text-neutral-900 text-xs">{companySettings.authorized_signatory}</div>
+                    <div className="font-bold text-neutral-900 text-xs">{settings.authorized_signatory}</div>
                     <div className="text-[10px] text-neutral-500">Authorized Signatory</div>
                   </div>
                 </div>

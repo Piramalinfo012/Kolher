@@ -1,27 +1,27 @@
 import { Product, Finish, Handle, Combination, Customer, Quotation, QuotationItem, CompanySettings, User, ActivityLog, ProductAsset } from '../types';
 
 export const INITIAL_COMPANY_SETTINGS: CompanySettings = {
-  company_name: 'KOHLER INDIA CORPORATION PVT. LTD.',
-  logo_drive_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&auto=format&fit=crop&q=80',
-  address: 'Kohler Experience Centre, 296, Linking Road, Khar West, Mumbai, Maharashtra 400052 / DLF Cyber City, Tower C, Gurgaon, Haryana 122002',
+  company_name: 'FIMA CARLO FRATTINI INDIA PVT. LTD.',
+  logo_drive_url: '/fima-logo.png',
+  address: 'FIMA Experience Centre, 296, Linking Road, Khar West, Mumbai, Maharashtra 400052 / A-35, Sector 83, Noida, UP 201305',
   phone: '1800 103 2244 / +91 22 6151 3000',
-  email: 'quotations@kohler.co.in',
-  website: 'www.kohler.co.in',
-  gstin: '06AAACK7161H1Z6',
-  pan: 'AAACK7161H',
-  bank_name: 'Citibank N.A. / HDFC Bank Ltd',
+  email: 'quotations@fimacarlofrattini.in',
+  website: 'www.fimacarlofrattini.in',
+  gstin: '09AABCF1234F1Z5',
+  pan: 'AABCF1234F',
+  bank_name: 'HDFC Bank Ltd / ICICI Bank Ltd',
   account_number: '05284910283719',
-  ifsc: 'CITI0000002',
+  ifsc: 'HDFC0000002',
   branch: 'BKC Corporate Banking Branch, Mumbai',
-  quotation_prefix: 'KOHLER',
+  quotation_prefix: 'FIMA',
   financial_year: '26-27',
   starting_number: 1,
   default_gst: 18,
   default_payment_terms: '50% Advance with Purchase Order, 50% against proforma invoice before dispatch.',
   default_delivery_terms: 'Direct site delivery / Within 2-3 weeks from date of confirmed order & technical clearance.',
   default_validity: '30 Days from date of quotation issue.',
-  terms_conditions: `1. Prices are in Indian Rupees (INR) and valid for 30 days from quotation date.\n2. Products are covered under standard Kohler 10-Year Residential & Commercial Warranty against manufacturing defects.\n3. Taxes (GST 18%) and freight charges as applicable at the time of invoicing.\n4. Custom Vibrant® PVD finishes and precision stone handle insets are fabricated to bespoke architectural order tolerances.\n5. Jurisdiction: Subject to Mumbai / Gurugram Court jurisdiction only.`,
-  authorized_signatory: 'Rajeev Sharma (Director - Luxury Projects & Hospitality, Kohler India)'
+  terms_conditions: `1. Prices are in Indian Rupees (INR) and valid for 30 days from quotation date.\n2. Products are covered under standard FIMA Carlo Frattini 7-Year Warranty against manufacturing defects.\n3. Taxes (GST 18%) and freight charges as applicable at the time of invoicing.\n4. Custom finishes are fabricated to bespoke architectural order tolerances.\n5. Jurisdiction: Subject to Mumbai Court jurisdiction only.`,
+  authorized_signatory: 'Sales Director, FIMA Carlo Frattini India'
 };
 
 export const INITIAL_USERS: User[] = [

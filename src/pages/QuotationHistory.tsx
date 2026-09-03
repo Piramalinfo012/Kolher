@@ -42,10 +42,10 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   const handleDownloadPdf = async (quote: Quotation) => {
-    if (!settings) return;
     try {
       setDownloadingId(quote.quotation_id);
-      await PdfGeneratorService.downloadDirectPdf(quote, settings);
+      const latestSettings = await api.getCompanySettings();
+      await PdfGeneratorService.downloadDirectPdf(quote, latestSettings);
       success('PDF Downloaded', `Quotation ${quote.quotation_number} downloaded successfully as PDF.`);
       loadData();
     } catch (err: any) {

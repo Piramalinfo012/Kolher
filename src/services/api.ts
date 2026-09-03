@@ -415,7 +415,12 @@ class ApiService {
       } catch (e) {}
     }
     const data = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-    return data ? JSON.parse(data) : INITIAL_COMPANY_SETTINGS;
+    const settings: CompanySettings = data ? JSON.parse(data) : INITIAL_COMPANY_SETTINGS;
+    if (!settings.quotation_prefix || settings.quotation_prefix === 'KOHLER') {
+      settings.quotation_prefix = 'FIMA';
+      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+    }
+    return settings;
   }
 
   public async updateCompanySettings(settings: Partial<CompanySettings>): Promise<CompanySettings> {
@@ -1176,7 +1181,7 @@ class ApiService {
     const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
     const currentUser = this.getCurrentUser();
     const newCustomer: Customer = {
-      customer_id: `CUST${('0000' + (customers.length + 1)).slice(-4)}`,
+      customer_id: customerData.customer_id || `CUST-${('000' + (customers.length + 1)).slice(-4)}`,
       party_name: customerData.party_name || '',
       company_name: customerData.company_name || '',
       contact_person: customerData.contact_person || '',

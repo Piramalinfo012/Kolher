@@ -50,7 +50,8 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
       title: 'OVERVIEW',
       id: 'overview',
       items: [
-        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, visible: true }
+        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, visible: true },
+        { id: 'quotation-history', label: 'Quotation History', icon: FileText, visible: true }
       ]
     },
     {
@@ -65,6 +66,7 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
       title: 'MANAGEMENT',
       id: 'management',
       items: [
+        { id: 'customers', label: 'Customer Master / Directory', icon: Users, visible: true },
         { id: 'company-settings', label: 'Company Settings', icon: Building2, visible: canEditSettings },
         { id: 'user-management', label: 'Users & Roles', icon: ShieldCheck, visible: isSuperAdmin }
       ]

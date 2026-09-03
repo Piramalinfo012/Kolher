@@ -524,7 +524,11 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
 
   // Save Quotation Handler
   const handleSaveQuotation = async () => {
-    const finalPartyName = clientToName.trim() || selectedCustomer?.party_name || 'VALUED CLIENT';
+    const finalPartyName =
+      clientToName.trim() ||
+      selectedCustomer?.party_name ||
+      customers.find(c => c.customer_id === selectedCustomerId)?.party_name ||
+      'VALUED CLIENT';
     if (cartItems.length === 0) {
       warning('Quotation is Empty', 'Please add at least one product into a section before generating.');
       return;
@@ -689,7 +693,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
         <div>
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs font-bold bg-[#9A6A38]/15 text-[#784c1f] px-2.5 py-0.5 rounded-md border border-[#9A6A38]/30">
-              {quotationNumber || 'KOH/26-27/0001'}
+              {quotationNumber || `${companySettings?.quotation_prefix || 'FIMA'}/${companySettings?.financial_year || '26-27'}/0001`}
             </span>
             <span className="text-xs text-neutral-500 font-medium">
               Financial Year: {companySettings?.financial_year || '26-27'}
