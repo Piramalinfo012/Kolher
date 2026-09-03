@@ -1318,6 +1318,29 @@ class ApiService {
         return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
       });
 
+    // Auto-resolve any legacy/unlinked 'VALUED CLIENT' party_name to active Customer Master name
+    const customers = await this.getCustomers();
+    if (customers.length > 0) {
+      allQuotations.forEach(q => {
+        if (!q.party_name || q.party_name === 'VALUED CLIENT' || q.party_name.trim() === '') {
+          const matched = customers.find(c => c.customer_id === q.customer_id);
+          if (matched) {
+            q.party_name = matched.party_name;
+            q.company_name = q.company_name || matched.company_name || '';
+            q.mobile = q.mobile || matched.mobile || '';
+            q.email = q.email || matched.email || '';
+            q.customer_id = matched.customer_id;
+          } else if (customers.length === 1) {
+            q.party_name = customers[0].party_name;
+            q.company_name = q.company_name || customers[0].company_name || '';
+            q.mobile = q.mobile || customers[0].mobile || '';
+            q.email = q.email || customers[0].email || '';
+            q.customer_id = customers[0].customer_id;
+          }
+        }
+      });
+    }
+
     localStorage.setItem(STORAGE_KEYS.QUOTATIONS, JSON.stringify(allQuotations));
     return allQuotations;
   }
