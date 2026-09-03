@@ -224,12 +224,27 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
                       </div>
                     </td>
                     <td className="p-4 text-neutral-600">
-                      <div className="font-mono">{(() => {
-                        if (!quote.quotation_date) return '';
-                        const parts = quote.quotation_date.split('T')[0].split('-');
-                        return parts.length === 3 && parts[0].length === 4 ? `${parts[2]}-${parts[1]}-${parts[0]}` : quote.quotation_date;
+                      <div className="font-mono font-medium">{(() => {
+                        const dateVal = quote.quotation_date || quote.created_at;
+                        if (!dateVal) return '';
+                        const parts = dateVal.split('T')[0].split(' ')[0].split('-');
+                        return parts.length === 3 && parts[0].length === 4 ? `${parts[2]}-${parts[1]}-${parts[0]}` : dateVal;
                       })()}</div>
-                      <div className="text-[10px] text-neutral-400">Valid: {quote.validity}</div>
+                      {quote.updated_at && (() => {
+                        const createVal = (quote.quotation_date || quote.created_at || '').split('T')[0].split(' ')[0];
+                        const updateVal = quote.updated_at.split('T')[0].split(' ')[0];
+                        if (updateVal && updateVal !== createVal) {
+                          const parts = updateVal.split('-');
+                          const formattedUpdate = parts.length === 3 && parts[0].length === 4 ? `${parts[2]}-${parts[1]}-${parts[0]}` : updateVal;
+                          return (
+                            <div className="text-[10px] font-mono text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded w-fit border border-amber-200 mt-1">
+                              Edited: {formattedUpdate}
+                            </div>
+                          );
+                        }
+                        return null;
+                      })()}
+                      <div className="text-[10px] text-neutral-400 mt-0.5">Valid: {quote.validity}</div>
                     </td>
                     <td className="p-4 text-center">
                       <span className="font-bold bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded-md font-mono">
@@ -286,15 +301,13 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
                         >
                           <Copy className="w-4 h-4" />
                         </button>
-                        {canDeleteRecords && (
-                          <button
-                            onClick={() => setQuoteToDelete(quote)}
-                            className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 transition-colors"
-                            title="Delete Quotation"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        )}
+                        <button
+                          onClick={() => setQuoteToDelete(quote)}
+                          className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 transition-colors"
+                          title="Delete Quotation"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
                     </td>
                   </tr>

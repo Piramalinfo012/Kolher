@@ -1165,8 +1165,10 @@ class ApiService {
         if (res.success && res.data) return res.data;
       } catch (e) {}
     }
+    const dummyCustIds = ['CUST0001', 'CUST0002', 'CUST0003', 'CUST0004'];
     const data = localStorage.getItem(STORAGE_KEYS.CUSTOMERS);
-    return data ? JSON.parse(data) : INITIAL_CUSTOMERS;
+    const customers: Customer[] = data ? JSON.parse(data) : INITIAL_CUSTOMERS;
+    return customers.filter(c => !dummyCustIds.includes(c.customer_id));
   }
 
   public async createCustomer(customerData: Partial<Customer>): Promise<Customer> {
@@ -1302,9 +1304,14 @@ class ApiService {
       if (key) quoteMap.set(key, q);
     });
 
-    const allQuotations = Array.from(quoteMap.values()).sort((a, b) => {
-      return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
-    });
+    const dummyIds = ['QUOT0001', 'QUOT0002', 'QUOT0003'];
+    const dummyNums = ['KOHLER/26-27/0001', 'KOHLER/26-27/0002', 'KOHLER/26-27/0003'];
+
+    const allQuotations = Array.from(quoteMap.values())
+      .filter(q => !dummyIds.includes(q.quotation_id) && !dummyNums.includes(q.quotation_number))
+      .sort((a, b) => {
+        return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+      });
 
     localStorage.setItem(STORAGE_KEYS.QUOTATIONS, JSON.stringify(allQuotations));
     return allQuotations;

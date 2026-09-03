@@ -9,7 +9,6 @@ import { Dashboard } from './pages/Dashboard';
 import { NewQuotation } from './pages/NewQuotation';
 import { QuotationHistory } from './pages/QuotationHistory';
 import { Products } from './pages/Products';
-import { ProductAssets } from './pages/ProductAssets';
 import { FinishMaster } from './pages/FinishMaster';
 import { HandleMaster } from './pages/HandleMaster';
 import { CombinationMaster } from './pages/CombinationMaster';
@@ -55,8 +54,6 @@ function AppContent() {
         return <QuotationHistory onNavigate={handleNavigate} />;
       case 'products':
         return <Products />;
-      case 'product-assets':
-        return <ProductAssets />;
       case 'finishes':
         return <FinishMaster />;
       case 'handles':
@@ -65,8 +62,6 @@ function AppContent() {
         return <CombinationMaster />;
       case 'customers':
         return <Customers onNavigate={handleNavigate} />;
-      case 'price-matrix':
-        return <PriceManagement />;
       case 'company-settings':
         return <CompanySettingsPage />;
       case 'user-management':

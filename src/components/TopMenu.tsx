@@ -58,7 +58,6 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
       id: 'products',
       items: [
         { id: 'products', label: 'Products Master', icon: Package, visible: true },
-        { id: 'product-assets', label: 'Product Assets', icon: Layers, visible: true },
         { id: 'finishes', label: 'Finish Master', icon: Palette, visible: true }
       ]
     },
@@ -66,7 +65,6 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
       title: 'MANAGEMENT',
       id: 'management',
       items: [
-        { id: 'price-matrix', label: 'Price Management', icon: DollarSign, visible: isAdmin },
         { id: 'company-settings', label: 'Company Settings', icon: Building2, visible: canEditSettings },
         { id: 'user-management', label: 'Users & Roles', icon: ShieldCheck, visible: isSuperAdmin }
       ]
