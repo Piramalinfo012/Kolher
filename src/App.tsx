@@ -17,7 +17,6 @@ import { PriceManagement } from './pages/PriceManagement';
 import { CompanySettingsPage } from './pages/CompanySettingsPage';
 import { UserManagement } from './pages/UserManagement';
 import { ActivityLogs } from './pages/ActivityLogs';
-import { GoogleAppsScriptSetup } from './pages/GoogleAppsScriptSetup';
 import { SupabaseSetup } from './pages/SupabaseSetup';
 import { BackupExport } from './pages/BackupExport';
 
@@ -71,10 +70,8 @@ function AppContent() {
         return <ActivityLogs />;
       case 'supabase':
       case 'supabase-setup':
-        return <SupabaseSetup />;
-      case 'google-script':
       case 'api-settings':
-        return <GoogleAppsScriptSetup />;
+        return <SupabaseSetup />;
       case 'backup-export':
         return <BackupExport />;
       default:

@@ -507,6 +507,23 @@ class ApiService {
   }
 
   public async createProduct(product: Partial<Product>): Promise<Product> {
+    const existingProducts = await this.getProducts();
+
+    const cleanModel = product.model_number ? product.model_number.trim().toLowerCase() : '';
+    const cleanName = product.product_name ? product.product_name.trim().toLowerCase() : '';
+
+    const existing = existingProducts.find(p => {
+      const pModel = p.model_number ? p.model_number.trim().toLowerCase() : '';
+      const pName = p.product_name ? p.product_name.trim().toLowerCase() : '';
+      return (cleanModel && pModel && cleanModel === pModel) ||
+             (cleanName && pName && cleanName === pName && p.category === product.category);
+    });
+
+    if (existing && !product.product_id) {
+      console.log('Product with same model number/name already exists, updating existing product:', existing.product_id);
+      return this.updateProduct(existing.product_id, product);
+    }
+
     const sb = supabaseService.getClient();
     const newProduct: Product = {
       ...product,
@@ -773,6 +790,19 @@ class ApiService {
 
   public async createFinish(finishData: Partial<Finish>): Promise<Finish> {
     const finishes = await this.getFinishes();
+    const cleanCode = finishData.finish_code ? finishData.finish_code.trim().toLowerCase() : '';
+    const cleanName = finishData.finish_name ? finishData.finish_name.trim().toLowerCase() : '';
+
+    const existingFinish = finishes.find(f => {
+      const fCode = f.finish_code ? f.finish_code.trim().toLowerCase() : '';
+      const fName = f.finish_name ? f.finish_name.trim().toLowerCase() : '';
+      return (cleanCode && fCode && cleanCode === fCode) || (cleanName && fName && cleanName === fName);
+    });
+
+    if (existingFinish && !finishData.finish_id) {
+      return this.updateFinish(existingFinish.finish_id, finishData);
+    }
+
     const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
     const newFinish: Finish = {
       finish_id: `FIN${('0000' + (finishes.length + 1)).slice(-4)}`,
@@ -881,6 +911,19 @@ class ApiService {
 
   public async createHandle(handleData: Partial<Handle>): Promise<Handle> {
     const handles = await this.getHandles();
+    const cleanModel = handleData.handle_model ? handleData.handle_model.trim().toLowerCase() : '';
+    const cleanName = handleData.handle_name ? handleData.handle_name.trim().toLowerCase() : '';
+
+    const existingHandle = handles.find(h => {
+      const hModel = h.handle_model ? h.handle_model.trim().toLowerCase() : '';
+      const hName = h.handle_name ? h.handle_name.trim().toLowerCase() : '';
+      return (cleanModel && hModel && cleanModel === hModel) || (cleanName && hName && cleanName === hName);
+    });
+
+    if (existingHandle && !handleData.handle_id) {
+      return this.updateHandle(existingHandle.handle_id, handleData);
+    }
+
     const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
     const newHandle: Handle = {
       handle_id: `HDL${('0000' + (handles.length + 1)).slice(-4)}`,
