@@ -236,7 +236,9 @@ class ApiService {
     const saved = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (parsed.name === 'Admin User') parsed.name = 'Rajeev Sharma';
+        return parsed;
       } catch (e) {}
     }
     return INITIAL_USERS[0];
@@ -253,8 +255,13 @@ class ApiService {
       try {
         const { data, error } = await sb.from('app_users').select('*').order('created_at');
         if (!error && data && data.length > 0) {
-          localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(data));
-          return data;
+          const normalized = data.map(u => {
+            if (u.user_id === 'USR0001' && (u.name === 'Admin User' || !u.name)) return { ...u, name: 'Rajeev Sharma' };
+            if (u.user_id === 'USR0002' && (u.name === 'Sales Manager' || !u.name)) return { ...u, name: 'Aarav Singhania' };
+            return u;
+          });
+          localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(normalized));
+          return normalized;
         }
       } catch (e) {
         console.warn('Supabase getUsers error:', e);
@@ -1173,7 +1180,8 @@ class ApiService {
     const dummyCustIds = ['CUST0001', 'CUST0002', 'CUST0003', 'CUST0004'];
     const data = localStorage.getItem(STORAGE_KEYS.CUSTOMERS);
     const customers: Customer[] = data ? JSON.parse(data) : INITIAL_CUSTOMERS;
-    return customers.filter(c => !dummyCustIds.includes(c.customer_id));
+    const filtered = customers.filter(c => !dummyCustIds.includes(c.customer_id));
+    return filtered.length > 0 ? filtered : INITIAL_CUSTOMERS;
   }
 
   public async createCustomer(customerData: Partial<Customer>): Promise<Customer> {
@@ -1330,7 +1338,7 @@ class ApiService {
             q.mobile = q.mobile || matched.mobile || '';
             q.email = q.email || matched.email || '';
             q.customer_id = matched.customer_id;
-          } else if (customers.length === 1) {
+          } else {
             q.party_name = customers[0].party_name;
             q.company_name = q.company_name || customers[0].company_name || '';
             q.mobile = q.mobile || customers[0].mobile || '';

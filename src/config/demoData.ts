@@ -780,7 +780,42 @@ export const INITIAL_PRODUCT_ASSETS: ProductAsset[] = [
   }
 ];
 
-export const INITIAL_CUSTOMERS: Customer[] = [];
+export const INITIAL_CUSTOMERS: Customer[] = [
+  {
+    customer_id: 'CUST_PIRAMAL',
+    party_name: 'Piramal Realty',
+    company_name: 'Piramal Enterprises Ltd',
+    contact_person: 'Anand Piramal',
+    mobile: '+91 98200 11223',
+    email: 'info@piramalrealty.com',
+    billing_address: 'Piramal Tower, Lower Parel, Mumbai',
+    shipping_address: 'Piramal Aranya, Byculla, Mumbai',
+    gstin: '27AABCP1234F1Z5',
+    city: 'Mumbai',
+    state: 'Maharashtra',
+    sales_person: 'Rajesh Sharma',
+    status: 'Active',
+    created_at: '2026-08-01 10:00:00',
+    updated_at: '2026-08-01 10:00:00'
+  },
+  {
+    customer_id: 'CUST_OBEROI',
+    party_name: 'Oberoi Luxury Residences',
+    company_name: 'Oberoi Realty Ltd',
+    contact_person: 'Vikas Oberoi',
+    mobile: '+91 98210 99887',
+    email: 'contact@oberoirealty.com',
+    billing_address: 'Commerz II, International Business Park, Goregaon East, Mumbai',
+    shipping_address: 'Three Towers Site, Worli, Mumbai',
+    gstin: '27AAACO5678G1Z2',
+    city: 'Mumbai',
+    state: 'Maharashtra',
+    sales_person: 'Vikram Mehta',
+    status: 'Active',
+    created_at: '2026-08-05 11:00:00',
+    updated_at: '2026-08-05 11:00:00'
+  }
+];
 
 export const INITIAL_QUOTATION_ITEMS: QuotationItem[] = [];
 

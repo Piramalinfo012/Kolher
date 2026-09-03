@@ -139,7 +139,7 @@ export interface Customer {
   gstin: string;
   state: string;
   city: string;
-  sales_person: string;
+  sales_person?: string;
   notes?: string;
   status: 'Active' | 'Inactive';
   created_at: string;

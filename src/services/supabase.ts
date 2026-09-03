@@ -23,18 +23,28 @@ class SupabaseService {
     this.initClient();
   }
 
+  private cleanUrl(url: string): string {
+    if (!url) return '';
+    let cleaned = url.trim();
+    cleaned = cleaned.replace(/\/rest\/v1\/?$/i, '');
+    cleaned = cleaned.replace(/\/+$/, '');
+    return cleaned;
+  }
+
   private loadConfig(): SupabaseConfig {
     const saved = localStorage.getItem(SUPABASE_STORAGE_KEY);
-    const envUrl = (import.meta as any).env?.VITE_SUPABASE_URL || '';
+    const envUrl = this.cleanUrl((import.meta as any).env?.VITE_SUPABASE_URL || '');
     const envKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
 
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        const url = this.cleanUrl(parsed.supabaseUrl) || envUrl;
+        const key = parsed.supabaseAnonKey || envKey;
         return {
-          supabaseUrl: parsed.supabaseUrl || envUrl,
-          supabaseAnonKey: parsed.supabaseAnonKey || envKey,
-          isConnected: !!parsed.isConnected,
+          supabaseUrl: url,
+          supabaseAnonKey: key,
+          isConnected: !!(url && key),
           lastChecked: parsed.lastChecked,
           autoSync: parsed.autoSync !== undefined ? parsed.autoSync : true
         };
@@ -52,9 +62,10 @@ class SupabaseService {
   }
 
   private initClient(): void {
-    if (this.config.supabaseUrl && this.config.supabaseAnonKey) {
+    const cleanUrl = this.cleanUrl(this.config.supabaseUrl);
+    if (cleanUrl && this.config.supabaseAnonKey) {
       try {
-        this.client = createClient(this.config.supabaseUrl, this.config.supabaseAnonKey, {
+        this.client = createClient(cleanUrl, this.config.supabaseAnonKey, {
           auth: {
             persistSession: true,
             autoRefreshToken: true
@@ -82,16 +93,20 @@ class SupabaseService {
   }
 
   public saveConfig(newConfig: Partial<SupabaseConfig>): void {
-    this.config = {
+    const updated = {
       ...this.config,
       ...newConfig
     };
+    if (updated.supabaseUrl) {
+      updated.supabaseUrl = this.cleanUrl(updated.supabaseUrl);
+    }
+    this.config = updated;
     localStorage.setItem(SUPABASE_STORAGE_KEY, JSON.stringify(this.config));
     this.initClient();
   }
 
   public async testConnection(url?: string, key?: string): Promise<{ success: boolean; message: string; data?: any }> {
-    const targetUrl = url || this.config.supabaseUrl;
+    const targetUrl = this.cleanUrl(url || this.config.supabaseUrl);
     const targetKey = key || this.config.supabaseAnonKey;
 
     if (!targetUrl || !targetKey) {
