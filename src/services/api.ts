@@ -649,10 +649,11 @@ class ApiService {
     if (sb) {
       try {
         await sb.from('product_spare_parts').delete().eq('product_id', productId);
+        await sb.from('combinations').delete().eq('product_id', productId);
+        await sb.from('product_assets').delete().eq('product_id', productId);
         const { error } = await sb.from('products').delete().eq('product_id', productId);
         if (error) {
-          console.warn('Supabase hard delete error, trying soft delete status update:', error);
-          await sb.from('products').update({ status: 'INACTIVE', updated_at: new Date().toISOString() }).eq('product_id', productId);
+          console.warn('Supabase deleteProduct warning:', error.message);
         }
       } catch (e) {
         console.warn('Supabase deleteProduct error:', e);
@@ -1553,18 +1554,26 @@ class ApiService {
     const index = quotations.findIndex(q => q.quotation_id === quotationId || q.quotation_number === quotationId);
     if (index === -1) return false;
 
+    const targetQuotation = quotations[index];
+
     const sb = supabaseService.getClient();
     if (sb) {
       try {
-        await sb.from('quotations').update({ status: 'EXPIRED', updated_at: new Date().toISOString() }).eq('quotation_id', quotations[index].quotation_id);
+        if (targetQuotation.quotation_number) {
+          await sb.from('quotation_items').delete().eq('quotation_number', targetQuotation.quotation_number);
+        }
+        const { error } = await sb.from('quotations').delete().eq('quotation_id', targetQuotation.quotation_id);
+        if (error) {
+          await sb.from('quotations').delete().eq('quotation_number', targetQuotation.quotation_number);
+        }
       } catch (e) {
         console.warn('Supabase deleteQuotation error:', e);
       }
     }
 
-    quotations[index].status = 'EXPIRED'; // Soft delete
+    quotations.splice(index, 1);
     localStorage.setItem(STORAGE_KEYS.QUOTATIONS, JSON.stringify(quotations));
-    this.logActivity('DELETE_QUOTATION', 'QUOTATION', quotations[index].quotation_number, `Marked quotation ${quotations[index].quotation_number} as EXPIRED`);
+    this.logActivity('DELETE_QUOTATION', 'QUOTATION', targetQuotation.quotation_number, `Deleted quotation ${targetQuotation.quotation_number}`);
     return true;
   }
 
