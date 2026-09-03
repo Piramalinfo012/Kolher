@@ -461,7 +461,16 @@ class ApiService {
       try {
         const { data: sbData, error } = await sb.from('products').select('*').order('created_at', { ascending: false });
         if (!error && sbData) {
-          data = sbData;
+          if (sbData.length === 0) {
+            const seedItems = INITIAL_PRODUCTS.map(p => {
+              const { custom_parts, combo_images, has_customization, ...dbP } = p as any;
+              return { ...dbP, customizable: has_customization ? 'YES' : 'NO' };
+            });
+            await sb.from('products').upsert(seedItems);
+            data = INITIAL_PRODUCTS;
+          } else {
+            data = sbData;
+          }
         } else {
           const localData = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
           data = localData ? JSON.parse(localData) : INITIAL_PRODUCTS;
@@ -754,7 +763,12 @@ class ApiService {
     if (sb) {
       try {
         const { data, error } = await sb.from('finishes').select('*').order('finish_name');
-        if (!error && data && data.length > 0) {
+        if (!error && data) {
+          if (data.length === 0) {
+            await sb.from('finishes').upsert(INITIAL_FINISHES);
+            localStorage.setItem(STORAGE_KEYS.FINISHES, JSON.stringify(INITIAL_FINISHES));
+            return INITIAL_FINISHES;
+          }
           localStorage.setItem(STORAGE_KEYS.FINISHES, JSON.stringify(data));
           return data;
         }
@@ -857,7 +871,12 @@ class ApiService {
     if (sb) {
       try {
         const { data, error } = await sb.from('handles').select('*').order('handle_name');
-        if (!error && data && data.length > 0) {
+        if (!error && data) {
+          if (data.length === 0) {
+            await sb.from('handles').upsert(INITIAL_HANDLES);
+            localStorage.setItem(STORAGE_KEYS.HANDLES, JSON.stringify(INITIAL_HANDLES));
+            return INITIAL_HANDLES;
+          }
           localStorage.setItem(STORAGE_KEYS.HANDLES, JSON.stringify(data));
           return data;
         }
@@ -1162,7 +1181,12 @@ class ApiService {
     if (sb) {
       try {
         const { data, error } = await sb.from('customers').select('*').order('created_at', { ascending: false });
-        if (!error && data && data.length > 0) {
+        if (!error && data) {
+          if (data.length === 0) {
+            await sb.from('customers').upsert(INITIAL_CUSTOMERS);
+            localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(INITIAL_CUSTOMERS));
+            return INITIAL_CUSTOMERS;
+          }
           localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(data));
           return data;
         }

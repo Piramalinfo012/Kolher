@@ -36,28 +36,26 @@ class SupabaseService {
     const envUrl = this.cleanUrl((import.meta as any).env?.VITE_SUPABASE_URL || '');
     const envKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
 
+    const url = envUrl || (saved ? this.cleanUrl(JSON.parse(saved).supabaseUrl || '') : '');
+    const key = envKey || (saved ? JSON.parse(saved).supabaseAnonKey || '' : '');
+
+    let lastChecked = undefined;
+    let autoSync = true;
+
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        const url = this.cleanUrl(parsed.supabaseUrl) || envUrl;
-        const key = parsed.supabaseAnonKey || envKey;
-        return {
-          supabaseUrl: url,
-          supabaseAnonKey: key,
-          isConnected: !!(url && key),
-          lastChecked: parsed.lastChecked,
-          autoSync: parsed.autoSync !== undefined ? parsed.autoSync : true
-        };
-      } catch (e) {
-        console.error('Error parsing saved Supabase config:', e);
-      }
+        lastChecked = parsed.lastChecked;
+        if (parsed.autoSync !== undefined) autoSync = parsed.autoSync;
+      } catch (e) {}
     }
 
     return {
-      supabaseUrl: envUrl,
-      supabaseAnonKey: envKey,
-      isConnected: !!(envUrl && envKey),
-      autoSync: true
+      supabaseUrl: url,
+      supabaseAnonKey: key,
+      isConnected: !!(url && key),
+      lastChecked,
+      autoSync
     };
   }
 
