@@ -123,6 +123,10 @@ class ApiService {
   }
 
   private initializeLocalStorage(): void {
+    if (supabaseService.isConfigured()) {
+      return;
+    }
+
     const existingProducts = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
     if (!existingProducts) {
       localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(INITIAL_PRODUCTS));
@@ -461,23 +465,14 @@ class ApiService {
       try {
         const { data: sbData, error } = await sb.from('products').select('*').order('created_at', { ascending: false });
         if (!error && sbData) {
-          if (sbData.length === 0) {
-            const seedItems = INITIAL_PRODUCTS.map(p => {
-              const { custom_parts, combo_images, has_customization, ...dbP } = p as any;
-              return { ...dbP, customizable: has_customization ? 'YES' : 'NO' };
-            });
-            await sb.from('products').upsert(seedItems);
-            data = INITIAL_PRODUCTS;
-          } else {
-            data = sbData;
-          }
+          data = sbData;
         } else {
           const localData = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
-          data = localData ? JSON.parse(localData) : INITIAL_PRODUCTS;
+          data = localData ? JSON.parse(localData) : [];
         }
       } catch (e) {
         const localData = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
-        data = localData ? JSON.parse(localData) : INITIAL_PRODUCTS;
+        data = localData ? JSON.parse(localData) : [];
       }
     } else {
       const localData = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
@@ -764,11 +759,6 @@ class ApiService {
       try {
         const { data, error } = await sb.from('finishes').select('*').order('finish_name');
         if (!error && data) {
-          if (data.length === 0) {
-            await sb.from('finishes').upsert(INITIAL_FINISHES);
-            localStorage.setItem(STORAGE_KEYS.FINISHES, JSON.stringify(INITIAL_FINISHES));
-            return INITIAL_FINISHES;
-          }
           localStorage.setItem(STORAGE_KEYS.FINISHES, JSON.stringify(data));
           return data;
         }
@@ -777,14 +767,8 @@ class ApiService {
       }
     }
 
-    if (!this.isDemoMode && this.config.appsScriptUrl) {
-      try {
-        const res = await this.executeBackend<Finish[]>('getFinishes');
-        if (res.success && res.data) return res.data;
-      } catch (e) {}
-    }
     const data = localStorage.getItem(STORAGE_KEYS.FINISHES);
-    return data ? JSON.parse(data) : INITIAL_FINISHES;
+    return data ? JSON.parse(data) : [];
   }
 
   public async createFinish(finishData: Partial<Finish>): Promise<Finish> {
@@ -1182,11 +1166,6 @@ class ApiService {
       try {
         const { data, error } = await sb.from('customers').select('*').order('created_at', { ascending: false });
         if (!error && data) {
-          if (data.length === 0) {
-            await sb.from('customers').upsert(INITIAL_CUSTOMERS);
-            localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(INITIAL_CUSTOMERS));
-            return INITIAL_CUSTOMERS;
-          }
           localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(data));
           return data;
         }
@@ -1195,17 +1174,8 @@ class ApiService {
       }
     }
 
-    if (!this.isDemoMode && this.config.appsScriptUrl) {
-      try {
-        const res = await this.executeBackend<Customer[]>('getCustomers');
-        if (res.success && res.data) return res.data;
-      } catch (e) {}
-    }
-    const dummyCustIds = ['CUST0001', 'CUST0002', 'CUST0003', 'CUST0004'];
     const data = localStorage.getItem(STORAGE_KEYS.CUSTOMERS);
-    const customers: Customer[] = data ? JSON.parse(data) : INITIAL_CUSTOMERS;
-    const filtered = customers.filter(c => !dummyCustIds.includes(c.customer_id));
-    return filtered.length > 0 ? filtered : INITIAL_CUSTOMERS;
+    return data ? JSON.parse(data) : [];
   }
 
   public async createCustomer(customerData: Partial<Customer>): Promise<Customer> {
@@ -1303,22 +1273,47 @@ class ApiService {
   // --- Quotation Number Generator ---
   public async generateNextQuotationNumber(): Promise<string> {
     const settings = await this.getCompanySettings();
-    const quotations = await this.getQuotations();
-    const nextSeq = (settings.starting_number || 1) + quotations.length;
-    const padded = ('0000' + nextSeq).slice(-4);
-    return `${settings.quotation_prefix || 'FIMA'}/${settings.financial_year || '26-27'}/${padded}`;
+    const rawQuotationsStr = localStorage.getItem(STORAGE_KEYS.QUOTATIONS);
+    const sb = supabaseService.getClient();
+    let allQuotes: Partial<Quotation>[] = rawQuotationsStr ? JSON.parse(rawQuotationsStr) : [];
+    if (sb) {
+      try {
+        const { data } = await sb.from('quotations').select('quotation_number');
+        if (data && data.length > 0) {
+          allQuotes = [...allQuotes, ...data];
+        }
+      } catch (e) {}
+    }
+
+    let maxSeq = settings.starting_number || 1;
+    allQuotes.forEach(q => {
+      if (q.quotation_number) {
+        const match = q.quotation_number.match(/(\d+)$/);
+        if (match) {
+          const num = parseInt(match[1], 10);
+          if (!isNaN(num) && num >= maxSeq) {
+            maxSeq = num + 1;
+          }
+        }
+      }
+    });
+
+    const padded = ('0000' + maxSeq).slice(-4);
+    const prefix = settings.quotation_prefix || 'FIMA';
+    const fy = settings.financial_year || '26-27';
+    return `${prefix}/${fy}/${padded}`;
   }
 
   // --- Quotations Management ---
   public async getQuotations(): Promise<Quotation[]> {
     const sb = supabaseService.getClient();
-    let sbQuotations: Quotation[] = [];
 
     if (sb) {
       try {
         const { data, error } = await sb.from('quotations').select('*').order('created_at', { ascending: false });
         if (!error && data) {
-          sbQuotations = data;
+          localStorage.setItem(STORAGE_KEYS.QUOTATIONS, JSON.stringify(data));
+          return data;
         }
       } catch (e) {
         console.warn('Supabase getQuotations error:', e);
@@ -1326,57 +1321,7 @@ class ApiService {
     }
 
     const localDataStr = localStorage.getItem(STORAGE_KEYS.QUOTATIONS);
-    const localQuotations: Quotation[] = localDataStr ? JSON.parse(localDataStr) : INITIAL_QUOTATIONS;
-
-    // Merge Supabase & LocalStorage quotations by ID/Number to make sure no quotation is missing
-    const quoteMap = new Map<string, Quotation>();
-
-    // Put initial/local first
-    localQuotations.forEach(q => {
-      const key = q.quotation_id || q.quotation_number;
-      if (key) quoteMap.set(key, q);
-    });
-
-    // Overwrite/Add Supabase records
-    sbQuotations.forEach(q => {
-      const key = q.quotation_id || q.quotation_number;
-      if (key) quoteMap.set(key, q);
-    });
-
-    const dummyIds = ['QUOT0001', 'QUOT0002', 'QUOT0003'];
-    const dummyNums = ['KOHLER/26-27/0001', 'KOHLER/26-27/0002', 'KOHLER/26-27/0003'];
-
-    const allQuotations = Array.from(quoteMap.values())
-      .filter(q => !dummyIds.includes(q.quotation_id) && !dummyNums.includes(q.quotation_number))
-      .sort((a, b) => {
-        return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
-      });
-
-    // Auto-resolve any legacy/unlinked 'VALUED CLIENT' party_name to active Customer Master name
-    const customers = await this.getCustomers();
-    if (customers.length > 0) {
-      allQuotations.forEach(q => {
-        if (!q.party_name || q.party_name === 'VALUED CLIENT' || q.party_name.trim() === '') {
-          const matched = customers.find(c => c.customer_id === q.customer_id);
-          if (matched) {
-            q.party_name = matched.party_name;
-            q.company_name = q.company_name || matched.company_name || '';
-            q.mobile = q.mobile || matched.mobile || '';
-            q.email = q.email || matched.email || '';
-            q.customer_id = matched.customer_id;
-          } else {
-            q.party_name = customers[0].party_name;
-            q.company_name = q.company_name || customers[0].company_name || '';
-            q.mobile = q.mobile || customers[0].mobile || '';
-            q.email = q.email || customers[0].email || '';
-            q.customer_id = customers[0].customer_id;
-          }
-        }
-      });
-    }
-
-    localStorage.setItem(STORAGE_KEYS.QUOTATIONS, JSON.stringify(allQuotations));
-    return allQuotations;
+    return localDataStr ? JSON.parse(localDataStr) : [];
   }
 
   public async getQuotationById(quotationIdOrNumber: string): Promise<Quotation | undefined> {
@@ -1389,9 +1334,10 @@ class ApiService {
     const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
     const currentUser = this.getCurrentUser();
     const qNum = quotationData.quotation_number || (await this.generateNextQuotationNumber());
+    const uniqueId = quotationData.quotation_id || `QUOT_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
     const newQuotation: Quotation = {
-      quotation_id: `QUOT${('0000' + (quotations.length + 1)).slice(-4)}`,
+      quotation_id: uniqueId,
       quotation_number: qNum,
       quotation_date: quotationData.quotation_date || now.split(' ')[0],
       customer_id: quotationData.customer_id || '',
