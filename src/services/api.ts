@@ -1259,18 +1259,20 @@ class ApiService {
     const index = customers.findIndex(c => c.customer_id === customerId);
     if (index === -1) return false;
 
+    const deletedPartyName = customers[index].party_name || customerId;
+
     const sb = supabaseService.getClient();
     if (sb) {
       try {
-        await sb.from('customers').update({ status: 'Inactive', updated_at: new Date().toISOString() }).eq('customer_id', customerId);
+        await sb.from('customers').delete().eq('customer_id', customerId);
       } catch (e) {
         console.warn('Supabase deleteCustomer error:', e);
       }
     }
 
-    customers[index].status = 'Inactive';
+    customers.splice(index, 1);
     localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(customers));
-    this.logActivity('DELETE_CUSTOMER', 'CUSTOMERS', customerId, 'Deactivated customer');
+    this.logActivity('DELETE_CUSTOMER', 'CUSTOMERS', customerId, `Deleted customer ${deletedPartyName}`);
     return true;
   }
 

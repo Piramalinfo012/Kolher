@@ -416,7 +416,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                         <Edit className="w-3.5 h-3.5" />
                       </button>
                     )}
-                    {canDeleteRecords && (
+                    {(canDeleteRecords || canManageCustomers) && (
                       <button
                         onClick={() => setCustomerToDelete(cust)}
                         className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 cursor-pointer"
@@ -524,7 +524,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                               <Edit className="w-4 h-4" />
                             </button>
                           )}
-                          {canDeleteRecords && (
+                          {(canDeleteRecords || canManageCustomers) && (
                             <button
                               type="button"
                               onClick={() => setCustomerToDelete(cust)}
@@ -831,6 +831,16 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
           </div>
         </div>
       )}
+
+      {/* Confirm Delete Modal */}
+      <ConfirmModal
+        isOpen={!!customerToDelete}
+        title="Delete Customer Account"
+        message={`Are you sure you want to delete "${customerToDelete?.party_name}"? This action cannot be undone.`}
+        confirmText="Delete Customer"
+        onConfirm={confirmDelete}
+        onCancel={() => setCustomerToDelete(null)}
+      />
     </div>
   );
 };
