@@ -166,6 +166,12 @@ export class PdfGeneratorService {
           <table class="header-table">
             <tr>
               <td style="vertical-align: top; width: 62%;">
+                <div style="margin-bottom: 6px;">
+                  <img src="${settings.logo_drive_url || '/fima-logo.png'}" 
+                       alt="${settings.company_name}" 
+                       style="max-height: 48px; max-width: 220px; object-fit: contain; display: block;" 
+                       onerror="this.style.display='none'" />
+                </div>
                 <div class="company-name">${settings.company_name}</div>
                 <div style="font-size: 11px; color: #4b5563; margin-top: 4px; line-height: 1.5;">
                   ${settings.address || 'FIMA Carlo Frattini Experience Centre, Mumbai, Maharashtra 400052'}<br>

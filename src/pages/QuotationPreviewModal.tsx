@@ -167,6 +167,12 @@ export const QuotationPreviewModal: React.FC<QuotationPreviewModalProps> = ({
               {/* Header */}
               <div className="flex flex-col sm:flex-row justify-between items-start pb-6 border-b-2 border-red-600/60 gap-4">
                 <div>
+                  <img
+                    src={companySettings.logo_drive_url || '/fima-logo.png'}
+                    alt={companySettings.company_name}
+                    className="h-10 sm:h-12 w-auto object-contain mb-2"
+                    onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                  />
                   <div className="font-serif-luxury font-bold text-lg sm:text-xl tracking-wider text-neutral-950">
                     {companySettings.company_name}
                   </div>

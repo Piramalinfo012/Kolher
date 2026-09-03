@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import {
   Sparkles,
   TrendingUp,
@@ -67,20 +68,48 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const approvedRevenue = approvedQuotes.reduce((sum, q) => sum + (Number(q.grand_total) || 0), 0);
   const conversionRate = totalQuotations > 0 ? Math.round((approvedQuotes.length / totalQuotations) * 100) : 0;
 
-  // Status Distribution Chart
-  const statusCounts = {
-    DRAFT: quotations.filter(q => q.status === 'DRAFT').length,
-    SENT: quotations.filter(q => q.status === 'SENT').length,
-    APPROVED: quotations.filter(q => q.status === 'APPROVED').length,
-    REJECTED: quotations.filter(q => q.status === 'REJECTED').length
-  };
+  // Category MIS Breakdown
+  const categoryMISMap: Record<string, { name: string; count: number; value: number; color: string }> = {};
+  const palette = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
 
-  const pieData = [
-    { name: 'Draft', value: statusCounts.DRAFT, color: '#9ca3af' },
-    { name: 'Sent', value: statusCounts.SENT, color: '#3b82f6' },
-    { name: 'Approved', value: statusCounts.APPROVED, color: '#10b981' },
-    { name: 'Rejected', value: statusCounts.REJECTED, color: '#ef4444' }
-  ].filter(d => d.value > 0);
+  quotations.forEach(q => {
+    const seenCat = new Set<string>();
+    (q.items || []).forEach(item => {
+      const prod = products.find(p => p.product_id === item.product_id);
+      const cat = prod?.category || 'Wash Basin Mixers';
+      seenCat.add(cat);
+
+      if (!categoryMISMap[cat]) {
+        const color = palette[Object.keys(categoryMISMap).length % palette.length];
+        categoryMISMap[cat] = { name: cat, count: 0, value: 0, color };
+      }
+      categoryMISMap[cat].value += Number(item.line_total || (item.unit_final_price * item.quantity) || 0);
+    });
+
+    seenCat.forEach(cat => {
+      if (categoryMISMap[cat]) {
+        categoryMISMap[cat].count += 1;
+      }
+    });
+  });
+
+  // Fallback if no quote items mapped yet, display products categories
+  if (Object.keys(categoryMISMap).length === 0 && products.length > 0) {
+    products.forEach(p => {
+      if (p.category && !categoryMISMap[p.category]) {
+        const color = palette[Object.keys(categoryMISMap).length % palette.length];
+        categoryMISMap[p.category] = { name: p.category, count: 0, value: 0, color };
+      }
+    });
+  }
+
+  const categoryPieData = Object.values(categoryMISMap).map(c => ({
+    name: c.name,
+    value: c.count > 0 ? c.count : 1,
+    count: c.count,
+    amount: c.value,
+    color: c.color
+  }));
 
   // Bar Chart: Top Quotes
   const topQuotesChart = quotations
@@ -131,71 +160,95 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       </div>
 
       {/* 4 Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1 */}
-        <div className="bg-white p-5 rounded-3xl border border-neutral-200/80 shadow-xs space-y-3">
-          <div className="flex items-center justify-between text-neutral-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Quotations</span>
-            <div className="w-9 h-9 rounded-xl bg-red-50 text-red-800 flex items-center justify-center">
-              <FileText className="w-4 h-4" />
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.05 }}
+          whileHover={{ y: -3, scale: 1.01 }}
+          className="bg-gradient-to-b from-white via-white to-neutral-50/60 p-4.5 rounded-2xl border border-neutral-200/80 shadow-2xs hover:shadow-md hover:border-red-200 transition-all duration-300 space-y-2 relative overflow-hidden group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 font-mono">Total Quotations</span>
+            <div className="w-8 h-8 rounded-xl bg-red-50/80 border border-red-100 text-red-600 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
+              <FileText className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <div className="text-xl font-bold font-serif-luxury text-neutral-950 tracking-tight">
             {totalQuotations}
           </div>
-          <div className="text-[11px] text-neutral-500 flex items-center gap-1 font-medium">
-            <span className="text-emerald-700 font-bold">100% active</span> across sales desk
+          <div className="text-[10px] text-neutral-500 flex items-center gap-1 font-medium">
+            <span className="text-emerald-600 font-bold">100% active</span> across sales desk
           </div>
-        </div>
+        </motion.div>
 
         {/* Card 2 */}
-        <div className="bg-white p-5 rounded-3xl border border-neutral-200/80 shadow-xs space-y-3">
-          <div className="flex items-center justify-between text-neutral-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">Pipeline Value</span>
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center">
-              <DollarSign className="w-4 h-4" />
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.1 }}
+          whileHover={{ y: -3, scale: 1.01 }}
+          className="bg-gradient-to-b from-white via-white to-neutral-50/60 p-4.5 rounded-2xl border border-neutral-200/80 shadow-2xs hover:shadow-md hover:border-emerald-200 transition-all duration-300 space-y-2 relative overflow-hidden group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 font-mono">Pipeline Value</span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50/80 border border-emerald-100 text-emerald-600 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
+              <DollarSign className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <div className="text-xl font-bold font-serif-luxury text-neutral-950 tracking-tight">
             ₹{totalPipelineRevenue.toLocaleString('en-IN')}
           </div>
-          <div className="text-[11px] text-neutral-500 flex items-center gap-1 font-medium">
-            <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="text-[10px] text-neutral-500 flex items-center gap-1 font-medium">
+            <TrendingUp className="w-3 h-3 text-emerald-600" />
             <span>Active quotation proposals</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Card 3 */}
-        <div className="bg-white p-5 rounded-3xl border border-neutral-200/80 shadow-xs space-y-3">
-          <div className="flex items-center justify-between text-neutral-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">Approved Orders</span>
-            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-800 flex items-center justify-center">
-              <CheckCircle2 className="w-4 h-4" />
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.15 }}
+          whileHover={{ y: -3, scale: 1.01 }}
+          className="bg-gradient-to-b from-white via-white to-neutral-50/60 p-4.5 rounded-2xl border border-neutral-200/80 shadow-2xs hover:shadow-md hover:border-blue-200 transition-all duration-300 space-y-2 relative overflow-hidden group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 font-mono">Approved Orders</span>
+            <div className="w-8 h-8 rounded-xl bg-blue-50/80 border border-blue-100 text-blue-600 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
+              <CheckCircle2 className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <div className="text-xl font-bold font-serif-luxury text-neutral-950 tracking-tight">
             ₹{approvedRevenue.toLocaleString('en-IN')}
           </div>
-          <div className="text-[11px] text-neutral-500 flex items-center gap-1 font-medium">
+          <div className="text-[10px] text-neutral-500 flex items-center gap-1 font-medium">
             <span className="font-bold text-neutral-900">{approvedQuotes.length} orders</span> confirmed
           </div>
-        </div>
+        </motion.div>
 
         {/* Card 4 */}
-        <div className="bg-white p-5 rounded-3xl border border-neutral-200/80 shadow-xs space-y-3">
-          <div className="flex items-center justify-between text-neutral-500">
-            <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">Win Conversion</span>
-            <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-800 flex items-center justify-center">
-              <Sparkles className="w-4 h-4" />
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.2 }}
+          whileHover={{ y: -3, scale: 1.01 }}
+          className="bg-gradient-to-b from-white via-white to-neutral-50/60 p-4.5 rounded-2xl border border-neutral-200/80 shadow-2xs hover:shadow-md hover:border-purple-200 transition-all duration-300 space-y-2 relative overflow-hidden group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 font-mono">Win Conversion</span>
+            <div className="w-8 h-8 rounded-xl bg-purple-50/80 border border-purple-100 text-purple-600 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
+              <Sparkles className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <div className="text-xl font-bold font-serif-luxury text-neutral-950 tracking-tight">
             {conversionRate}%
           </div>
-          <div className="text-[11px] text-neutral-500 flex items-center gap-1 font-medium">
+          <div className="text-[10px] text-neutral-500 flex items-center gap-1 font-medium">
             Across architects & builders
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Visual Charts: Pipeline Distribution & Recent Quotations */}
@@ -227,18 +280,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                   <th className="py-2.5">Client / Party</th>
                   <th className="py-2.5">Date</th>
                   <th className="py-2.5 text-right">Grand Total</th>
-                  <th className="py-2.5 text-center">Status</th>
                   <th className="py-2.5 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100">
                 {quotations.slice(0, 6).map(quote => {
-                  const statusBadges: Record<string, string> = {
-                    DRAFT: 'bg-neutral-100 text-neutral-700',
-                    SENT: 'bg-blue-50 text-blue-800 border-blue-200',
-                    APPROVED: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-                    REJECTED: 'bg-rose-50 text-rose-800 border-rose-200',
-                    EXPIRED: 'bg-red-50 text-red-800 border-red-200'
+                  const formatDateDDMMYYYY = (dateStr?: string) => {
+                    if (!dateStr) return '';
+                    const cleanStr = dateStr.split('T')[0];
+                    const parts = cleanStr.split('-');
+                    if (parts.length === 3 && parts[0].length === 4) {
+                      return `${parts[2]}-${parts[1]}-${parts[0]}`;
+                    }
+                    return dateStr;
                   };
 
                   return (
@@ -250,14 +304,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                         <div className="font-bold text-neutral-900">{quote.party_name}</div>
                         <div className="text-[11px] text-neutral-500">{quote.company_name || quote.mobile}</div>
                       </td>
-                      <td className="py-3 text-neutral-500">{quote.quotation_date}</td>
+                      <td className="py-3 text-neutral-500 font-mono">{formatDateDDMMYYYY(quote.quotation_date)}</td>
                       <td className="py-3 text-right font-bold text-neutral-900">
                         ₹{Number(quote.grand_total).toLocaleString('en-IN')}
-                      </td>
-                      <td className="py-3 text-center">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusBadges[quote.status] || 'bg-neutral-100'}`}>
-                          {quote.status}
-                        </span>
                       </td>
                       <td className="py-3 text-right">
                         <button
@@ -278,17 +327,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
         {/* Right Column: Status Distribution & Quick Catalog (4 cols) */}
         <div className="lg:col-span-4 space-y-6">
-          {/* Status Breakdown Chart */}
+          {/* Category MIS Chart */}
           <div className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-neutral-900 uppercase tracking-wide">
-              Pipeline by Status
-            </h3>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-neutral-900 uppercase tracking-wide">
+                  Category MIS
+                </h3>
+                <p className="text-[11px] text-neutral-500">
+                  Quotations breakdown by category
+                </p>
+              </div>
+              <span className="text-[10px] font-mono font-bold bg-red-50 text-red-600 px-2 py-0.5 rounded-md">
+                MIS Report
+              </span>
+            </div>
+
             <div className="h-44 flex items-center justify-center">
-              {pieData.length > 0 ? (
+              {categoryPieData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={pieData}
+                      data={categoryPieData}
                       dataKey="value"
                       nameKey="name"
                       cx="50%"
@@ -297,23 +357,31 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                       outerRadius={65}
                       paddingAngle={4}
                     >
-                      {pieData.map((entry, index) => (
+                      {categoryPieData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip formatter={(value: any, name: any, props: any) => [`${props.payload.count} Quotation(s)`, props.payload.name]} />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="text-xs text-neutral-400">No data available</div>
+                <div className="text-xs text-neutral-400">No category data available</div>
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-neutral-100 text-xs">
-              {pieData.map((item, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: item.color }} />
-                  <span className="text-neutral-600">{item.name}: <strong>{item.value}</strong></span>
+            <div className="space-y-2 pt-2 border-t border-neutral-100 text-xs max-h-48 overflow-y-auto pr-1">
+              {categoryPieData.map((item, idx) => (
+                <div key={idx} className="flex items-center justify-between p-2 rounded-xl bg-neutral-50/80 hover:bg-neutral-100/80 transition-colors">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: item.color }} />
+                    <span className="text-neutral-800 font-semibold text-[11px] truncate">{item.name}</span>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-neutral-900 font-bold text-xs">{item.count} Quote{item.count !== 1 ? 's' : ''}</span>
+                    {item.amount > 0 && (
+                      <span className="text-[10px] text-neutral-500 block font-mono">₹{item.amount.toLocaleString('en-IN')}</span>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

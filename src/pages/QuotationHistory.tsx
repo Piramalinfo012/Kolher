@@ -224,7 +224,11 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
                       </div>
                     </td>
                     <td className="p-4 text-neutral-600">
-                      <div>{quote.quotation_date}</div>
+                      <div className="font-mono">{(() => {
+                        if (!quote.quotation_date) return '';
+                        const parts = quote.quotation_date.split('T')[0].split('-');
+                        return parts.length === 3 && parts[0].length === 4 ? `${parts[2]}-${parts[1]}-${parts[0]}` : quote.quotation_date;
+                      })()}</div>
                       <div className="text-[10px] text-neutral-400">Valid: {quote.validity}</div>
                     </td>
                     <td className="p-4 text-center">

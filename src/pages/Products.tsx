@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Package,
   Plus,
@@ -12,7 +12,10 @@ import {
   CheckCircle2,
   X,
   ExternalLink,
-  Tag
+  Tag,
+  ChevronLeft,
+  ChevronRight,
+  FolderPlus
 } from 'lucide-react';
 import { Product, ProductStatus, SparePart } from '../types';
 import { api } from '../services/api';
@@ -141,12 +144,16 @@ export const Products: React.FC = () => {
 
   const confirmDelete = async () => {
     if (!productToDelete) return;
+    const targetId = productToDelete.product_id;
+    const targetName = productToDelete.product_name;
     try {
-      await api.deleteProduct(productToDelete.product_id);
-      success('Product Deleted', `${productToDelete.product_name} removed.`);
-      loadProducts();
+      setProducts(prev => prev.filter(p => p.product_id !== targetId));
+      await api.deleteProduct(targetId);
+      success('Product Deleted', `${targetName} removed successfully.`);
+      await loadProducts();
     } catch (err: any) {
       error('Delete Failed', err.message);
+      loadProducts();
     } finally {
       setProductToDelete(null);
     }
@@ -192,7 +199,7 @@ export const Products: React.FC = () => {
     }
   };
 
-  const categories = [
+  const DEFAULT_CATEGORIES = [
     'ALL',
     'Wash Basin Mixers',
     'Tall Basin Mixers',
@@ -202,6 +209,84 @@ export const Products: React.FC = () => {
     'Bath Spouts',
     'Accessories'
   ];
+
+  const [customCategories, setCustomCategories] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('kolher_custom_categories');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
+  const [newCategoryInput, setNewCategoryInput] = useState('');
+
+  const categories = useMemo(() => {
+    const list = [...DEFAULT_CATEGORIES];
+    customCategories.forEach(c => {
+      if (!list.includes(c)) list.push(c);
+    });
+    products.forEach(p => {
+      if (p.category && !list.includes(p.category)) {
+        list.push(p.category);
+      }
+    });
+    return list;
+  }, [customCategories, products]);
+
+  const handleCreateCategory = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const trimmed = newCategoryInput.trim();
+    if (!trimmed) return;
+    if (!categories.includes(trimmed)) {
+      const updated = [...customCategories, trimmed];
+      setCustomCategories(updated);
+      localStorage.setItem('kolher_custom_categories', JSON.stringify(updated));
+      success('Category Created', `New category "${trimmed}" added successfully.`);
+    }
+    setCategoryFilter(trimmed);
+    setNewCategoryInput('');
+    setShowAddCategoryModal(false);
+  };
+
+  // Drag to Scroll Logic for Category Bar
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!categoryScrollRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - categoryScrollRef.current.offsetLeft);
+    setScrollLeft(categoryScrollRef.current.scrollLeft);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !categoryScrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - categoryScrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.8;
+    categoryScrollRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const scrollCategoryBar = (direction: 'left' | 'right') => {
+    if (!categoryScrollRef.current) return;
+    const amount = 280;
+    categoryScrollRef.current.scrollBy({
+      left: direction === 'left' ? -amount : amount,
+      behavior: 'smooth'
+    });
+  };
 
   const filteredProducts = products.filter(p => {
     const matchesSearch =
@@ -239,117 +324,172 @@ export const Products: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white/90 backdrop-blur-xl p-4 rounded-3xl border border-neutral-200/80 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-5 sticky top-20 z-20">
-        <div className="relative w-full lg:w-96">
+      <div className="bg-white/90 backdrop-blur-xl p-4 rounded-3xl border border-neutral-200/80 shadow-md shadow-neutral-900/5 flex flex-col xl:flex-row items-center justify-between gap-4 sticky top-20 z-20">
+        <div className="relative w-full xl:w-80 shrink-0">
           <Search className="w-4 h-4 text-neutral-400 absolute left-4 top-3.5" />
           <input
             type="text"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            placeholder="Search by product name, model code, or spec..."
-            className="w-full pl-11 pr-4 py-3 text-xs rounded-2xl border border-neutral-200 bg-neutral-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all shadow-inner"
+            placeholder="Search products, model code, spec..."
+            className="w-full pl-11 pr-4 py-2.5 text-xs rounded-2xl border border-neutral-200 bg-neutral-50/80 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all shadow-inner font-medium"
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 scroll-smooth">
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setCategoryFilter(cat)}
-              className={`px-4 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wide whitespace-nowrap transition-all duration-300 border cursor-pointer ${
-                categoryFilter === cat
-                  ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-600/30 scale-105'
-                  : 'bg-white border-neutral-200 text-neutral-500 hover:border-red-300 hover:text-red-600 hover:bg-red-50'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* Scrollable Drag Category Bar */}
+        <div className="relative flex items-center gap-1.5 w-full xl:w-auto overflow-hidden group">
+          <button
+            type="button"
+            onClick={() => scrollCategoryBar('left')}
+            className="hidden sm:flex shrink-0 p-2 rounded-xl bg-white border border-neutral-200 text-neutral-600 hover:text-red-600 hover:border-red-200 hover:bg-red-50 shadow-xs transition-all cursor-pointer z-10"
+            title="Scroll Left"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+          </button>
+
+          <div
+            ref={categoryScrollRef}
+            onMouseDown={handleMouseDown}
+            onMouseLeave={handleMouseLeave}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            className="flex items-center gap-2 overflow-x-auto py-1 px-1 scroll-smooth select-none cursor-grab active:cursor-grabbing w-full [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {categories.map(cat => {
+              const isActive = categoryFilter === cat;
+              const count = cat === 'ALL'
+                ? products.length
+                : products.filter(p => p.category === cat).length;
+
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => {
+                    if (!isDragging) setCategoryFilter(cat);
+                  }}
+                  className={`px-3.5 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-300 border flex items-center gap-1.5 shrink-0 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-red-600 to-red-700 border-red-600 text-white shadow-md shadow-red-600/30 scale-[1.03]'
+                      : 'bg-white border-neutral-200/80 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900 hover:bg-neutral-50 shadow-2xs'
+                  }`}
+                >
+                  <span>{cat}</span>
+                  <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-neutral-100 text-neutral-500'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+
+            {canManageProducts && (
+              <button
+                type="button"
+                onClick={() => setShowAddCategoryModal(true)}
+                className="px-3.5 py-2 rounded-full text-[11px] font-bold uppercase tracking-wide whitespace-nowrap bg-neutral-950 hover:bg-neutral-800 text-white flex items-center gap-1.5 shrink-0 transition-all shadow-xs cursor-pointer hover:scale-105"
+                title="Add New Category"
+              >
+                <Plus className="w-3.5 h-3.5 text-red-400" />
+                <span>Add Category</span>
+              </button>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => scrollCategoryBar('right')}
+            className="hidden sm:flex shrink-0 p-2 rounded-xl bg-white border border-neutral-200 text-neutral-600 hover:text-red-600 hover:border-red-200 hover:bg-red-50 shadow-xs transition-all cursor-pointer z-10"
+            title="Scroll Right"
+          >
+            <ChevronRight className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-6">
         {filteredProducts.map(p => (
           <div
             key={p.product_id}
-            className="group relative bg-white rounded-[2rem] border border-neutral-100 overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-red-900/5 hover:-translate-y-1 transition-all duration-500 flex flex-col justify-between"
+            className="group relative bg-white rounded-2xl border border-neutral-200/80 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-red-950/10 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
           >
             <div>
-              {/* Product Visual Container */}
-              <div className="relative w-full h-64 bg-gradient-to-b from-neutral-50 to-neutral-100 p-6 flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              {/* Product Visual Container - Enlarged Image View */}
+              <div className="relative w-full h-56 bg-gradient-to-b from-neutral-50/80 via-neutral-50 to-neutral-100/60 p-2.5 flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 <img
                   src={p.main_image_url}
                   alt={p.product_name}
-                  className="max-h-full max-w-full object-contain group-hover:scale-110 drop-shadow-xl transition-transform duration-700 ease-out"
+                  className="max-h-full max-w-full object-contain group-hover:scale-110 drop-shadow-md transition-transform duration-500 ease-out"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute top-4 left-4 flex flex-col gap-2">
-                  <span className="text-[10px] font-mono font-bold bg-white/90 backdrop-blur-md text-neutral-900 px-2.5 py-1 rounded-lg shadow-sm border border-neutral-200/50">
+                <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
+                  <span className="text-[9px] font-mono font-bold bg-white/90 backdrop-blur-md text-neutral-900 px-2 py-0.5 rounded shadow-xs border border-neutral-200/60">
                     {p.model_number}
                   </span>
                   {p.has_customization && (
-                    <span className="text-[10px] font-bold bg-red-600/90 backdrop-blur-md text-white px-2.5 py-1 rounded-lg shadow-sm flex items-center gap-1.5 w-fit">
-                      <Sparkles className="w-3 h-3" /> Bespoke
+                    <span className="text-[8px] font-bold bg-red-600/90 backdrop-blur-md text-white px-1.5 py-0.5 rounded shadow-xs flex items-center gap-1 w-fit">
+                      <Sparkles className="w-2.5 h-2.5" /> Bespoke
                     </span>
                   )}
                 </div>
-                <span className={`absolute top-4 right-4 text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-sm backdrop-blur-md ${
+                <span className={`absolute top-2.5 right-2.5 text-[8px] font-bold px-2 py-0.5 rounded shadow-xs backdrop-blur-md z-10 ${
                   p.status === 'ACTIVE' ? 'bg-emerald-500/90 text-white' : 'bg-neutral-500/90 text-white'
                 }`}>
                   {p.status}
                 </span>
               </div>
 
-              {/* Info Body */}
-              <div className="p-6 space-y-3 relative bg-white">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-red-600 bg-red-50 px-2.5 py-1 rounded-md inline-block">
+              {/* Info Body - Refined Compact Typography */}
+              <div className="p-3.5 space-y-1.5 relative bg-white">
+                <span className="text-[8px] font-bold uppercase tracking-widest text-red-600 bg-red-50/80 px-2 py-0.5 rounded inline-block">
                   {p.category}
                 </span>
-                <h3 className="font-serif-luxury font-bold text-xl text-neutral-900 leading-tight group-hover:text-red-600 transition-colors">
+                <h3 className="font-serif-luxury font-bold text-sm text-neutral-900 leading-snug group-hover:text-red-600 transition-colors line-clamp-1">
                   {p.product_name}
                 </h3>
-                <p className="text-xs text-neutral-500 line-clamp-2 leading-relaxed">
+                <p className="text-[10px] text-neutral-500 line-clamp-2 leading-relaxed">
                   {p.description}
                 </p>
 
-                <div className="pt-4 mt-2 border-t border-neutral-100 flex items-center gap-4 text-[11px] text-neutral-500">
-                  <div className="flex items-center gap-1.5"><Tag className="w-3.5 h-3.5 text-neutral-400"/> HSN: <strong className="text-neutral-800">{p.hsn_code}</strong></div>
-                  <div className="w-px h-3 bg-neutral-200"></div>
+                <div className="pt-2 mt-1 border-t border-neutral-100 flex items-center gap-2.5 text-[9px] text-neutral-500">
+                  <div className="flex items-center gap-1"><Tag className="w-2.5 h-2.5 text-neutral-400"/> HSN: <strong className="text-neutral-800">{p.hsn_code}</strong></div>
+                  <div className="w-px h-2.5 bg-neutral-200"></div>
                   <div>GST: <strong className="text-neutral-800">{p.gst_percentage}%</strong></div>
                 </div>
               </div>
             </div>
 
             {/* Bottom Actions */}
-            <div className="px-6 pb-6 pt-2 flex items-center justify-between bg-white">
+            <div className="px-3.5 pb-3.5 pt-1 flex items-center justify-between bg-white border-t border-neutral-50">
               <div>
-                <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">Base Price</span>
-                <div className="text-xl font-bold font-serif-luxury text-neutral-950 mt-0.5">
+                <span className="text-[8px] font-bold tracking-wider text-neutral-400 uppercase block">Base Price</span>
+                <div className="text-sm font-bold font-serif-luxury text-neutral-950 mt-0.5">
                   ₹{Number(p.base_price).toLocaleString('en-IN')}
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <button
                   type="button"
                   onClick={() => setTestCustomizerProduct(p)}
-                  className="px-4 py-2 rounded-xl bg-neutral-950 hover:bg-red-600 text-white text-xs font-bold flex items-center gap-2 transition-colors cursor-pointer shadow-md shadow-neutral-900/20"
+                  className="px-2.5 py-1 rounded-md bg-neutral-950 hover:bg-red-600 text-white text-[10px] font-bold flex items-center gap-1 transition-colors cursor-pointer shadow-xs"
                   title="Test Bespoke Configurator"
                 >
-                  <Sliders className="w-3.5 h-3.5" />
-                  <span className="hidden xl:inline">Configure</span>
+                  <Sliders className="w-2.5 h-2.5" />
+                  <span className="hidden sm:inline">Configure</span>
                 </button>
 
                 {canManageProducts && (
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(p)}
-                    className="p-2 rounded-xl text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 transition-colors border border-transparent hover:border-neutral-200 cursor-pointer"
+                    className="p-1 rounded-md text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 transition-colors border border-transparent hover:border-neutral-200 cursor-pointer"
                     title="Edit Product"
                   >
-                    <Edit className="w-4 h-4" />
+                    <Edit className="w-3 h-3" />
                   </button>
                 )}
 
@@ -357,10 +497,10 @@ export const Products: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setProductToDelete(p)}
-                    className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-red-500 transition-colors border border-transparent hover:border-red-500 cursor-pointer"
+                    className="p-1 rounded-md text-neutral-400 hover:text-white hover:bg-red-500 transition-colors border border-transparent hover:border-red-500 cursor-pointer"
                     title="Delete Product"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3 h-3" />
                   </button>
                 )}
               </div>
@@ -625,6 +765,59 @@ export const Products: React.FC = () => {
           confirmText="Delete Product"
           isDanger
         />
+      )}
+      {/* Add New Category Modal */}
+      {showAddCategoryModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/80 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full border border-neutral-200 overflow-hidden">
+            <div className="px-6 py-4 bg-neutral-900 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FolderPlus className="w-5 h-5 text-red-500" />
+                <h3 className="font-bold text-base font-serif-luxury">Create New Category</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddCategoryModal(false)}
+                className="text-neutral-400 hover:text-white p-1 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateCategory} className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
+                  Category Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  autoFocus
+                  value={newCategoryInput}
+                  onChange={e => setNewCategoryInput(e.target.value)}
+                  placeholder="e.g. Smart Toilets, Sensor Faucets, Rain Showers..."
+                  className="w-full p-3 text-xs rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddCategoryModal(false)}
+                  className="px-4 py-2 rounded-xl border border-neutral-200 text-neutral-600 text-xs font-semibold hover:bg-neutral-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-md shadow-red-600/20 cursor-pointer"
+                >
+                  Save Category
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -610,21 +610,35 @@ class ApiService {
     const index = products.findIndex(p => p.product_id === productId);
     if (index === -1) return false;
 
+    const targetProduct = products[index];
+
     const sb = supabaseService.getClient();
     if (sb) {
       try {
-        await sb.from('products').update({ status: 'INACTIVE', updated_at: new Date().toISOString() }).eq('product_id', productId);
+        await sb.from('product_spare_parts').delete().eq('product_id', productId);
+        const { error } = await sb.from('products').delete().eq('product_id', productId);
+        if (error) {
+          console.warn('Supabase hard delete error, trying soft delete status update:', error);
+          await sb.from('products').update({ status: 'INACTIVE', updated_at: new Date().toISOString() }).eq('product_id', productId);
+        }
       } catch (e) {
         console.warn('Supabase deleteProduct error:', e);
       }
     }
 
-    // Soft delete preferred
-    products[index].status = 'INACTIVE';
-    products[index].updated_at = new Date().toISOString().replace('T', ' ').slice(0, 19);
-    localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(products));
+    const updatedProducts = products.filter(p => p.product_id !== productId);
+    localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(updatedProducts));
 
-    this.logActivity('DELETE_PRODUCT', 'PRODUCTS', productId, `Marked product ${products[index].product_name} as INACTIVE`);
+    try {
+      const customsMapStr = localStorage.getItem(STORAGE_KEYS.DYNAMIC_CUSTOMS);
+      if (customsMapStr) {
+        const customsMap = JSON.parse(customsMapStr);
+        delete customsMap[productId];
+        localStorage.setItem(STORAGE_KEYS.DYNAMIC_CUSTOMS, JSON.stringify(customsMap));
+      }
+    } catch (e) {}
+
+    this.logActivity('DELETE_PRODUCT', 'PRODUCTS', productId, `Deleted product ${targetProduct.product_name}`);
     return true;
   }
 
