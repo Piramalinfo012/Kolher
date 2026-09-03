@@ -32,9 +32,14 @@ class SupabaseService {
   }
 
   private loadConfig(): SupabaseConfig {
-    const saved = localStorage.getItem(SUPABASE_STORAGE_KEY);
-    const envUrl = this.cleanUrl((import.meta as any).env?.VITE_SUPABASE_URL || '');
-    const envKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
+    const saved = typeof localStorage !== 'undefined' ? localStorage.getItem(SUPABASE_STORAGE_KEY) : null;
+    const metaEnvUrl = (import.meta as any).env?.VITE_SUPABASE_URL;
+    const procEnvUrl = typeof process !== 'undefined' ? process.env?.VITE_SUPABASE_URL : '';
+    const envUrl = this.cleanUrl(metaEnvUrl || procEnvUrl || '');
+
+    const metaEnvKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY;
+    const procEnvKey = typeof process !== 'undefined' ? process.env?.VITE_SUPABASE_ANON_KEY : '';
+    const envKey = metaEnvKey || procEnvKey || '';
 
     const url = envUrl || (saved ? this.cleanUrl(JSON.parse(saved).supabaseUrl || '') : '');
     const key = envKey || (saved ? JSON.parse(saved).supabaseAnonKey || '' : '');

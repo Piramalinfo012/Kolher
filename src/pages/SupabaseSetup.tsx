@@ -24,8 +24,8 @@ import { SupabaseTableStatus } from '../types';
 import { useToast } from '../context/ToastContext';
 
 const SQL_SCHEMA_CONTENT = `-- ==============================================================================
--- FIMA INDIA B2B SANITARYWARE CONFIGURATOR & QUOTATION MANAGEMENT SYSTEM
--- SUPABASE POSTGRESQL DATABASE SCHEMA
+-- FIMA / KOHLER INDIA B2B SANITARYWARE CONFIGURATOR & QUOTATION MANAGEMENT SYSTEM
+-- SUPABASE POSTGRESQL DATABASE SCHEMA & MIGRATION SCRIPT
 -- ==============================================================================
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -83,9 +83,24 @@ CREATE TABLE IF NOT EXISTS products (
     status TEXT NOT NULL DEFAULT 'ACTIVE',
     customizable TEXT NOT NULL DEFAULT 'YES',
     image_mode TEXT DEFAULT 'COMBINATION_IMAGE',
+    custom_parts JSONB DEFAULT '[]'::jsonb,
+    combo_images JSONB DEFAULT '{}'::jsonb,
     created_at TEXT NOT NULL DEFAULT NOW()::TEXT,
     updated_at TEXT NOT NULL DEFAULT NOW()::TEXT,
     created_by TEXT
+);
+
+-- 3B. PRODUCT SPARE PARTS TABLE
+CREATE TABLE IF NOT EXISTS product_spare_parts (
+    part_id TEXT PRIMARY KEY,
+    product_id TEXT REFERENCES products(product_id) ON DELETE CASCADE,
+    part_name TEXT NOT NULL,
+    part_model TEXT,
+    price NUMERIC NOT NULL DEFAULT 0,
+    image_url TEXT,
+    status TEXT NOT NULL DEFAULT 'ACTIVE',
+    created_at TEXT NOT NULL DEFAULT NOW()::TEXT,
+    updated_at TEXT NOT NULL DEFAULT NOW()::TEXT
 );
 
 -- 4. FINISHES MASTER TABLE
@@ -137,10 +152,12 @@ CREATE TABLE IF NOT EXISTS combinations (
 CREATE TABLE IF NOT EXISTS product_assets (
     asset_id TEXT PRIMARY KEY,
     product_id TEXT REFERENCES products(product_id) ON DELETE CASCADE,
-    layer_name TEXT NOT NULL,
-    file_id TEXT,
+    asset_name TEXT,
+    asset_type TEXT DEFAULT 'PRODUCT',
+    drive_file_id TEXT,
     drive_url TEXT,
     direct_url TEXT,
+    layer_type TEXT DEFAULT 'NONE',
     z_index NUMERIC DEFAULT 1,
     status TEXT NOT NULL DEFAULT 'Active',
     created_at TEXT NOT NULL DEFAULT NOW()::TEXT
@@ -159,6 +176,8 @@ CREATE TABLE IF NOT EXISTS customers (
     shipping_address TEXT,
     city TEXT,
     state TEXT DEFAULT 'Maharashtra',
+    sales_person TEXT,
+    notes TEXT,
     status TEXT NOT NULL DEFAULT 'Active',
     created_at TEXT NOT NULL DEFAULT NOW()::TEXT,
     updated_at TEXT NOT NULL DEFAULT NOW()::TEXT
@@ -246,10 +265,24 @@ CREATE TABLE IF NOT EXISTS activity_logs (
     ip_address TEXT
 );
 
+-- SAFE MIGRATION FOR MISSING COLUMNS
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS sales_person TEXT;
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS notes TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS custom_parts JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS combo_images JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS created_by TEXT;
+ALTER TABLE product_assets ADD COLUMN IF NOT EXISTS direct_url TEXT;
+ALTER TABLE product_assets ADD COLUMN IF NOT EXISTS z_index NUMERIC DEFAULT 1;
+ALTER TABLE quotations ADD COLUMN IF NOT EXISTS sections JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE quotations ADD COLUMN IF NOT EXISTS items JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE quotations ADD COLUMN IF NOT EXISTS whatsapp_status TEXT DEFAULT 'NOT_SENT';
+ALTER TABLE quotation_items ADD COLUMN IF NOT EXISTS customization_json JSONB DEFAULT '{}'::jsonb;
+
 -- ROW LEVEL SECURITY POLICIES
 ALTER TABLE company_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE app_users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE product_spare_parts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE finishes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE handles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE combinations ENABLE ROW LEVEL SECURITY;
@@ -259,9 +292,23 @@ ALTER TABLE quotations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE quotation_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE activity_logs ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Allow public read-write for company_settings" ON company_settings;
+DROP POLICY IF EXISTS "Allow public read-write for app_users" ON app_users;
+DROP POLICY IF EXISTS "Allow public read-write for products" ON products;
+DROP POLICY IF EXISTS "Allow public read-write for product_spare_parts" ON product_spare_parts;
+DROP POLICY IF EXISTS "Allow public read-write for finishes" ON finishes;
+DROP POLICY IF EXISTS "Allow public read-write for handles" ON handles;
+DROP POLICY IF EXISTS "Allow public read-write for combinations" ON combinations;
+DROP POLICY IF EXISTS "Allow public read-write for product_assets" ON product_assets;
+DROP POLICY IF EXISTS "Allow public read-write for customers" ON customers;
+DROP POLICY IF EXISTS "Allow public read-write for quotations" ON quotations;
+DROP POLICY IF EXISTS "Allow public read-write for quotation_items" ON quotation_items;
+DROP POLICY IF EXISTS "Allow public read-write for activity_logs" ON activity_logs;
+
 CREATE POLICY "Allow public read-write for company_settings" ON company_settings FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow public read-write for app_users" ON app_users FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow public read-write for products" ON products FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow public read-write for product_spare_parts" ON product_spare_parts FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow public read-write for finishes" ON finishes FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow public read-write for handles" ON handles FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow public read-write for combinations" ON combinations FOR ALL USING (true) WITH CHECK (true);

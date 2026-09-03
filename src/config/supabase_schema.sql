@@ -1,6 +1,6 @@
 -- ==============================================================================
--- KOHLER INDIA B2B SANITARYWARE CONFIGURATOR & QUOTATION MANAGEMENT SYSTEM
--- SUPABASE POSTGRESQL DATABASE SCHEMA
+-- FIMA / KOHLER INDIA B2B SANITARYWARE CONFIGURATOR & QUOTATION MANAGEMENT SYSTEM
+-- SUPABASE POSTGRESQL DATABASE SCHEMA & MIGRATION SCRIPT
 -- ==============================================================================
 
 -- 1. Enable UUID Extension (Optional, for auto-generating IDs if needed)
@@ -9,7 +9,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 2. COMPANY SETTINGS TABLE
 CREATE TABLE IF NOT EXISTS company_settings (
     id TEXT PRIMARY KEY DEFAULT 'current',
-    company_name TEXT NOT NULL DEFAULT 'KOHLER INDIA CORPORATION PVT. LTD.',
+    company_name TEXT NOT NULL DEFAULT 'FIMA INDIA CORPORATION PVT. LTD.',
     logo_drive_url TEXT,
     address TEXT,
     phone TEXT,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS company_settings (
     account_number TEXT,
     ifsc TEXT,
     branch TEXT,
-    quotation_prefix TEXT DEFAULT 'KOHLER',
+    quotation_prefix TEXT DEFAULT 'FIMA',
     financial_year TEXT DEFAULT '26-27',
     starting_number INTEGER DEFAULT 1,
     default_gst NUMERIC DEFAULT 18,
@@ -152,6 +152,8 @@ CREATE TABLE IF NOT EXISTS customers (
     shipping_address TEXT,
     city TEXT,
     state TEXT DEFAULT 'Maharashtra',
+    sales_person TEXT,
+    notes TEXT,
     status TEXT NOT NULL DEFAULT 'Active',
     created_at TEXT NOT NULL DEFAULT NOW()::TEXT,
     updated_at TEXT NOT NULL DEFAULT NOW()::TEXT
@@ -240,12 +242,33 @@ CREATE TABLE IF NOT EXISTS activity_logs (
 );
 
 -- ==============================================================================
+-- SAFE MIGRATION / ADD MISSING COLUMNS IF TABLES ALREADY EXISTED PREVIOUSLY
+-- ==============================================================================
+
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS sales_person TEXT;
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS notes TEXT;
+
+ALTER TABLE products ADD COLUMN IF NOT EXISTS custom_parts JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS combo_images JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS created_by TEXT;
+
+ALTER TABLE product_assets ADD COLUMN IF NOT EXISTS direct_url TEXT;
+ALTER TABLE product_assets ADD COLUMN IF NOT EXISTS z_index NUMERIC DEFAULT 1;
+
+ALTER TABLE quotations ADD COLUMN IF NOT EXISTS sections JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE quotations ADD COLUMN IF NOT EXISTS items JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE quotations ADD COLUMN IF NOT EXISTS whatsapp_status TEXT DEFAULT 'NOT_SENT';
+
+ALTER TABLE quotation_items ADD COLUMN IF NOT EXISTS customization_json JSONB DEFAULT '{}'::jsonb;
+
+-- ==============================================================================
 -- ENABLE ROW LEVEL SECURITY & OPEN PERMISSIVE POLICIES FOR WEB CLIENT ACCESS
 -- ==============================================================================
 
 ALTER TABLE company_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE app_users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE product_spare_parts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE finishes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE handles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE combinations ENABLE ROW LEVEL SECURITY;
@@ -255,10 +278,23 @@ ALTER TABLE quotations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE quotation_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE activity_logs ENABLE ROW LEVEL SECURITY;
 
--- Anonymous and Authenticated read/write policies for B2B portal
+DROP POLICY IF EXISTS "Allow public read-write for company_settings" ON company_settings;
+DROP POLICY IF EXISTS "Allow public read-write for app_users" ON app_users;
+DROP POLICY IF EXISTS "Allow public read-write for products" ON products;
+DROP POLICY IF EXISTS "Allow public read-write for product_spare_parts" ON product_spare_parts;
+DROP POLICY IF EXISTS "Allow public read-write for finishes" ON finishes;
+DROP POLICY IF EXISTS "Allow public read-write for handles" ON handles;
+DROP POLICY IF EXISTS "Allow public read-write for combinations" ON combinations;
+DROP POLICY IF EXISTS "Allow public read-write for product_assets" ON product_assets;
+DROP POLICY IF EXISTS "Allow public read-write for customers" ON customers;
+DROP POLICY IF EXISTS "Allow public read-write for quotations" ON quotations;
+DROP POLICY IF EXISTS "Allow public read-write for quotation_items" ON quotation_items;
+DROP POLICY IF EXISTS "Allow public read-write for activity_logs" ON activity_logs;
+
 CREATE POLICY "Allow public read-write for company_settings" ON company_settings FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow public read-write for app_users" ON app_users FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow public read-write for products" ON products FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow public read-write for product_spare_parts" ON product_spare_parts FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow public read-write for finishes" ON finishes FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow public read-write for handles" ON handles FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow public read-write for combinations" ON combinations FOR ALL USING (true) WITH CHECK (true);

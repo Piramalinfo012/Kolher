@@ -527,8 +527,13 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
     const finalPartyName =
       clientToName.trim() ||
       selectedCustomer?.party_name ||
-      customers.find(c => c.customer_id === selectedCustomerId)?.party_name ||
-      'VALUED CLIENT';
+      customers.find(c => c.customer_id === selectedCustomerId)?.party_name;
+
+    if (!finalPartyName) {
+      warning('Client Name Required', 'Please enter or select a Client / Party Name before saving the quotation.');
+      return;
+    }
+
     if (cartItems.length === 0) {
       warning('Quotation is Empty', 'Please add at least one product into a section before generating.');
       return;

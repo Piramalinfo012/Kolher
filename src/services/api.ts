@@ -357,7 +357,7 @@ class ApiService {
     const currentUser = this.getCurrentUser();
     const logs: ActivityLog[] = JSON.parse(localStorage.getItem(STORAGE_KEYS.LOGS) || '[]');
     const newLog: ActivityLog = {
-      log_id: `LOG${('0000' + (logs.length + 1)).slice(-4)}`,
+      log_id: `LOG_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
       user_id: currentUser.user_id,
       user_name: currentUser.name,
       action,
@@ -1166,6 +1166,18 @@ class ApiService {
       try {
         const { data, error } = await sb.from('customers').select('*').order('created_at', { ascending: false });
         if (!error && data) {
+          if (data.length === 0) {
+            const cleanInit = INITIAL_CUSTOMERS.map(c => {
+              const { sales_person, notes, ...rest } = c as any;
+              return rest;
+            });
+            await sb.from('customers').upsert(cleanInit);
+            const { data: seeded } = await sb.from('customers').select('*').order('created_at', { ascending: false });
+            if (seeded && seeded.length > 0) {
+              localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(seeded));
+              return seeded;
+            }
+          }
           localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(data));
           return data;
         }
@@ -1180,6 +1192,21 @@ class ApiService {
 
   public async createCustomer(customerData: Partial<Customer>): Promise<Customer> {
     const customers = await this.getCustomers();
+    
+    // Deduplication check: if party_name or mobile already exists, update existing record instead of adding duplicate
+    const cleanMobile = customerData.mobile ? customerData.mobile.replace(/\D/g, '') : '';
+    const cleanParty = customerData.party_name ? customerData.party_name.trim().toLowerCase() : '';
+
+    const existing = customers.find(c => {
+      const cMobile = c.mobile ? c.mobile.replace(/\D/g, '') : '';
+      const cParty = c.party_name ? c.party_name.trim().toLowerCase() : '';
+      return (cleanMobile && cMobile && cleanMobile.length >= 7 && cleanMobile === cMobile) || (cleanParty && cParty && cleanParty === cParty);
+    });
+
+    if (existing && !customerData.customer_id) {
+      return this.updateCustomer(existing.customer_id, customerData);
+    }
+
     const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
     const currentUser = this.getCurrentUser();
     const newCustomer: Customer = {
@@ -1204,7 +1231,13 @@ class ApiService {
     const sb = supabaseService.getClient();
     if (sb) {
       try {
-        await sb.from('customers').insert(newCustomer);
+        const { sales_person, notes, ...dbCustomer } = newCustomer as any;
+        const { error } = await sb.from('customers').insert(dbCustomer);
+        if (error) {
+          console.warn('Supabase createCustomer insert warning (trying full insert):', error.message);
+          const { error: error2 } = await sb.from('customers').insert(newCustomer);
+          if (error2) console.error('Supabase createCustomer error:', error2.message);
+        }
       } catch (e) {
         console.warn('Supabase createCustomer error:', e);
       }
@@ -1236,7 +1269,12 @@ class ApiService {
     const sb = supabaseService.getClient();
     if (sb) {
       try {
-        await sb.from('customers').update(updated).eq('customer_id', customerId);
+        const { sales_person, notes, ...dbUpdates } = updated as any;
+        const { error } = await sb.from('customers').update(dbUpdates).eq('customer_id', customerId);
+        if (error) {
+          const { error: error2 } = await sb.from('customers').update(updated).eq('customer_id', customerId);
+          if (error2) console.error('Supabase updateCustomer error:', error2.message);
+        }
       } catch (e) {
         console.warn('Supabase updateCustomer error:', e);
       }
