@@ -306,9 +306,6 @@ export const Products: React.FC = () => {
           <h1 className="text-3xl font-bold font-serif-luxury text-white tracking-tight">
             Products Master Catalog
           </h1>
-          <p className="text-sm text-neutral-400 mt-2 max-w-xl leading-relaxed">
-            FIMA India Luxury Bath & Sanitaryware Catalog with Vibrant® PVD finishes, customizable handles, and HSN compliance.
-          </p>
         </div>
 
         {canManageProducts && (

@@ -141,9 +141,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             <h1 className="text-2xl sm:text-3xl font-bold font-serif-luxury text-white">
               Welcome back, {currentUser.name}
             </h1>
-            <p className="text-xs sm:text-sm text-neutral-400 mt-1 max-w-2xl leading-relaxed">
-              Real-time synchronization with FIMA Google Sheets database, luxury product visual configurator, and automated A4 quotation dispatcher.
-            </p>
           </div>
 
           {isSales && (
