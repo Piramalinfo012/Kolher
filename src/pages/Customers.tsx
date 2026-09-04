@@ -240,12 +240,12 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-neutral-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
         <div>
-          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-900 dark:text-white">
             Customers & Architectural Accounts Master
           </h1>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
             Directory of Architects, Interior Designers, Real Estate Developers, and Luxury Homeowners
           </p>
         </div>
@@ -253,21 +253,21 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
         <div className="flex items-center gap-2.5">
           <button
             onClick={handleExportCustomersExcel}
-            className="px-4 py-2.5 rounded-xl border border-emerald-600/60 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl border border-emerald-600/60 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-900 dark:text-emerald-300 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             title="Download Customer Master Data in Excel / CSV format"
             id="btn-export-customers-excel"
           >
-            <FileSpreadsheet className="w-4 h-4 text-emerald-700" />
+            <FileSpreadsheet className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
             <span>Download Customer Excel</span>
           </button>
 
           {canManageCustomers && (
             <button
               onClick={handleOpenCreate}
-              className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
               id="btn-add-customer"
             >
-              <Plus className="w-4 h-4 text-red-400" />
+              <Plus className="w-4 h-4 text-white" />
               <span>Add Customer</span>
             </button>
           )}
@@ -275,26 +275,26 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
       </div>
 
       {/* Search & View Mode Switcher */}
-      <div className="bg-white p-4 rounded-3xl border border-neutral-200/80 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="bg-white dark:bg-neutral-900 p-4 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="relative w-full sm:w-96">
-          <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-neutral-500 dark:text-neutral-400 absolute left-3.5 top-3" />
           <input
             type="text"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search by party, firm, phone, or GSTIN..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 focus:bg-white dark:focus:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
 
-        <div className="flex items-center gap-1 bg-neutral-100 p-1 rounded-2xl border border-neutral-200/80 shrink-0">
+        <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-2xl border border-neutral-200 dark:border-neutral-700 shrink-0">
           <button
             type="button"
             onClick={() => setViewMode('GRID')}
             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               viewMode === 'GRID'
-                ? 'bg-white text-neutral-950 shadow-xs border border-neutral-200'
-                : 'text-neutral-500 hover:text-neutral-900'
+                ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-xs border border-neutral-200 dark:border-neutral-600'
+                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
             }`}
             title="Grid View"
             id="btn-cust-view-grid"
@@ -307,8 +307,8 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
             onClick={() => setViewMode('LIST')}
             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               viewMode === 'LIST'
-                ? 'bg-white text-neutral-950 shadow-xs border border-neutral-200'
-                : 'text-neutral-500 hover:text-neutral-900'
+                ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-xs border border-neutral-200 dark:border-neutral-600'
+                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
             }`}
             title="List Table View"
             id="btn-cust-view-list"
@@ -329,57 +329,57 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
             return (
               <div
                 key={cust.customer_id}
-                className="bg-white rounded-3xl border border-neutral-200/80 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
               >
                 <div className="space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-red-50 text-red-800 flex items-center justify-center font-bold text-sm">
+                      <div className="w-9 h-9 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-400 flex items-center justify-center font-bold text-sm">
                         <Building2 className="w-4 h-4" />
                       </div>
                       <div>
                         <h3 
                           onClick={() => setSelectedCustomerForHistory(cust)}
-                          className="font-bold text-sm text-neutral-900 leading-snug cursor-pointer hover:text-red-600 hover:underline transition-colors"
+                          className="font-bold text-sm text-neutral-900 dark:text-white leading-snug cursor-pointer hover:text-red-600 dark:hover:text-red-400 hover:underline transition-colors"
                           title="Click to view quotation history"
                         >
                           {cust.party_name}
                         </h3>
                         {cust.company_name && (
-                          <div className="text-[11px] text-neutral-500 font-medium truncate max-w-[180px]">
+                          <div className="text-[11px] text-neutral-500 dark:text-neutral-400 font-medium truncate max-w-[180px]">
                             {cust.company_name}
                           </div>
                         )}
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-1 shrink-0">
-                      <span className="font-mono text-[10px] font-bold text-red-900 bg-red-50 border border-red-200/80 px-2 py-0.5 rounded-md">
+                      <span className="font-mono text-[10px] font-bold text-red-900 dark:text-red-300 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 px-2 py-0.5 rounded-md">
                         {cust.customer_id}
                       </span>
                       <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
-                        cust.status === 'Active' ? 'bg-emerald-100 text-emerald-800' : 'bg-neutral-200 text-neutral-600'
+                        cust.status === 'Active' ? 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
                       }`}>
                         {cust.status}
                       </span>
                     </div>
                   </div>
 
-                  <div className="space-y-1.5 text-xs text-neutral-600 pt-2 border-t border-neutral-100">
+                  <div className="space-y-1.5 text-xs text-neutral-600 dark:text-neutral-300 pt-2 border-t border-neutral-100 dark:border-neutral-800">
                     <div className="flex items-center gap-2">
-                      <Phone className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+                      <Phone className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400 shrink-0" />
                       <span>{cust.mobile || '-'}</span>
                     </div>
                     <div className="flex items-center gap-2 truncate">
-                      <Mail className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+                      <Mail className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400 shrink-0" />
                       <span className="truncate">{cust.email || '-'}</span>
                     </div>
                     {cust.gstin && (
                       <div className="flex items-center gap-2 text-[11px]">
-                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                        <span className="font-mono text-emerald-900 font-semibold">{cust.gstin}</span>
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                        <span className="font-mono text-emerald-900 dark:text-emerald-300 font-semibold">{cust.gstin}</span>
                       </div>
                     )}
-                    <div className="flex items-start gap-2 text-[11px] text-neutral-500 line-clamp-1">
+                    <div className="flex items-start gap-2 text-[11px] text-neutral-500 dark:text-neutral-400 line-clamp-1">
                       <MapPin className="w-3.5 h-3.5 text-neutral-400 shrink-0 mt-0.5" />
                       <span className="truncate">{cust.billing_address || `${cust.city}, ${cust.state}`}</span>
                     </div>
@@ -387,19 +387,19 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
 
                   <div 
                     onClick={() => setSelectedCustomerForHistory(cust)}
-                    className="bg-neutral-50 hover:bg-red-50/50 p-2.5 rounded-xl border border-neutral-200 flex items-center justify-between text-xs cursor-pointer transition-colors"
+                    className="bg-neutral-50 dark:bg-neutral-800/60 hover:bg-red-50/50 dark:hover:bg-red-950/30 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 flex items-center justify-between text-xs cursor-pointer transition-colors"
                     title="Click to view customer quotation history"
                   >
-                    <span className="text-neutral-500">Quotations: <strong>{custQuotes.length}</strong></span>
-                    <span className="font-bold text-neutral-900">Total: ₹{totalSpent.toLocaleString('en-IN')}</span>
+                    <span className="text-neutral-600 dark:text-neutral-400">Quotations: <strong className="text-neutral-900 dark:text-white">{custQuotes.length}</strong></span>
+                    <span className="font-bold text-neutral-900 dark:text-white">Total: ₹{totalSpent.toLocaleString('en-IN')}</span>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-neutral-100 flex items-center justify-between">
+                <div className="mt-4 pt-3 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
                   {isSales ? (
                     <button
                       onClick={() => handleCreateQuotationForCustomer(cust)}
-                      className="text-xs font-bold text-red-800 hover:text-red-900 flex items-center gap-1 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
+                      className="text-xs font-bold text-red-700 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 flex items-center gap-1 bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/40 px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>New Quote</span>
@@ -410,7 +410,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                     {canManageCustomers && (
                       <button
                         onClick={() => handleOpenEdit(cust)}
-                        className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 cursor-pointer"
+                        className="p-1.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
                         title="Edit Customer"
                       >
                         <Edit className="w-3.5 h-3.5" />
@@ -419,7 +419,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                     {(canDeleteRecords || canManageCustomers) && (
                       <button
                         onClick={() => setCustomerToDelete(cust)}
-                        className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 cursor-pointer"
+                        className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer"
                         title="Delete Customer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -432,16 +432,16 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
           })}
 
           {filtered.length === 0 && (
-            <div className="col-span-full bg-white p-8 rounded-3xl border border-neutral-200 text-center text-neutral-400 text-xs">
+            <div className="col-span-full bg-white dark:bg-neutral-900 p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 text-center text-neutral-500 dark:text-neutral-400 text-xs">
               No customer records found matching your search.
             </div>
           )}
         </div>
       ) : (
-        <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
+        <div className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left">
-              <thead className="bg-neutral-900 text-white uppercase text-[10px] font-mono tracking-wider">
+              <thead className="text-[10px] text-neutral-600 dark:text-neutral-400 uppercase font-mono bg-neutral-50 dark:bg-neutral-800/60 border-b border-neutral-200 dark:border-neutral-800">
                 <tr>
                   <th className="p-4">Customer ID</th>
                   <th className="p-4">Party / Client Name</th>
@@ -454,52 +454,52 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                   <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-100">
+              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
                 {filtered.map(cust => {
                   const custQuotes = getCustomerQuotations(cust, quotations, customers);
                   const totalSpent = custQuotes.reduce((sum, q) => sum + (Number(q.grand_total) || 0), 0);
 
                   return (
-                    <tr key={cust.customer_id} className="hover:bg-neutral-50/70 transition-colors">
-                      <td className="p-4 font-mono font-bold text-red-900 text-xs">
-                        <span className="bg-red-50 border border-red-200 px-2 py-0.5 rounded-md">
+                    <tr key={cust.customer_id} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors">
+                      <td className="p-4 font-mono font-bold text-red-900 dark:text-red-300 text-xs">
+                        <span className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 px-2 py-0.5 rounded-md">
                           {cust.customer_id}
                         </span>
                       </td>
-                      <td className="p-4 font-bold text-neutral-950 text-xs">
+                      <td className="p-4 font-bold text-neutral-900 dark:text-white text-xs">
                         <div 
                           onClick={() => setSelectedCustomerForHistory(cust)}
-                          className="cursor-pointer hover:text-red-600 hover:underline transition-colors"
+                          className="cursor-pointer hover:text-red-600 dark:hover:text-red-400 hover:underline transition-colors"
                           title="Click to view quotation history"
                         >
                           {cust.party_name}
                         </div>
                         {cust.contact_person && (
-                          <div className="text-[11px] font-normal text-neutral-500">Contact: {cust.contact_person}</div>
+                          <div className="text-[11px] font-normal text-neutral-500 dark:text-neutral-400">Contact: {cust.contact_person}</div>
                         )}
                       </td>
-                      <td className="p-4 text-neutral-700 font-medium">
+                      <td className="p-4 text-neutral-700 dark:text-neutral-300 font-medium">
                         {cust.company_name || '—'}
                       </td>
-                      <td className="p-4 text-neutral-600">
+                      <td className="p-4 text-neutral-600 dark:text-neutral-400">
                         <div className="font-mono">{cust.mobile || '—'}</div>
-                        <div className="text-[10px] text-neutral-400">{cust.email || ''}</div>
+                        <div className="text-[10px] text-neutral-500 dark:text-neutral-400">{cust.email || ''}</div>
                       </td>
-                      <td className="p-4 text-neutral-600">
+                      <td className="p-4 text-neutral-600 dark:text-neutral-400">
                         <div>{cust.city ? `${cust.city}, ${cust.state}` : '—'}</div>
-                        {cust.gstin && <div className="text-[10px] text-neutral-400 font-mono">GST: {cust.gstin}</div>}
+                        {cust.gstin && <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-mono">GST: {cust.gstin}</div>}
                       </td>
                       <td className="p-4 text-center">
-                        <span className="font-bold font-mono bg-neutral-100 text-neutral-700 px-2.5 py-0.5 rounded-md text-xs">
+                        <span className="font-bold font-mono bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 px-2.5 py-0.5 rounded-md text-xs">
                           {custQuotes.length}
                         </span>
                       </td>
-                      <td className="p-4 text-right font-serif-luxury font-bold text-neutral-950 text-sm">
+                      <td className="p-4 text-right font-serif-luxury font-bold text-neutral-900 dark:text-white text-sm">
                         ₹{totalSpent.toLocaleString('en-IN')}
                       </td>
                       <td className="p-4 text-center">
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          cust.status === 'Active' ? 'bg-emerald-100 text-emerald-800' : 'bg-neutral-200 text-neutral-600'
+                          cust.status === 'Active' ? 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
                         }`}>
                           {cust.status}
                         </span>
@@ -509,7 +509,7 @@ export const Customers: React.FC<CustomersProps> = ({ onNavigate }) => {
                           <button
                             type="button"
                             onClick={() => handleCreateQuotationForCustomer(cust)}
-                            className="px-2.5 py-1 text-[11px] font-bold text-red-900 bg-red-50 hover:bg-red-100 rounded-lg border border-red-200 transition-colors cursor-pointer"
+                            className="px-2.5 py-1 text-[11px] font-bold text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg border border-red-200 dark:border-red-800 transition-colors cursor-pointer"
                             title="New Quotation for this Client"
                           >
                             + New Quote

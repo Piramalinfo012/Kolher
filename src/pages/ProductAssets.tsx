@@ -133,12 +133,12 @@ export const ProductAssets: React.FC = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-neutral-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs">
         <div>
-          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950 dark:text-white">
             Product Multi-Layer Assets Master
           </h1>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
             Manage transparent PNG overlays for real-time body, handle insert, and spout compositing
           </p>
         </div>
@@ -146,7 +146,7 @@ export const ProductAssets: React.FC = () => {
         {canManageProducts && (
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-neutral-950 dark:bg-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-700 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             id="btn-add-asset"
           >
             <Plus className="w-4 h-4 text-red-400" />
@@ -156,7 +156,7 @@ export const ProductAssets: React.FC = () => {
       </div>
 
       {/* Filter and Search */}
-      <div className="bg-white p-4 rounded-3xl border border-neutral-200/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white dark:bg-neutral-900 p-4 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="relative w-full md:w-96">
           <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-3" />
           <input
@@ -164,19 +164,19 @@ export const ProductAssets: React.FC = () => {
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search assets by layer name or product..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800 text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
           {['ALL', 'BASE_BODY', 'HANDLE_OVERLAY', 'SPOUT_OVERLAY', 'SHADOW_MAP'].map(lt => (
             <button
               key={lt}
               onClick={() => setLayerFilter(lt)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                 layerFilter === lt
-                  ? 'bg-neutral-900 text-red-300 shadow-xs'
-                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                  ? 'bg-neutral-900 dark:bg-neutral-800 text-red-300 shadow-xs'
+                  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
               }`}
             >
               {lt.replace('_', ' ')}
@@ -193,10 +193,10 @@ export const ProductAssets: React.FC = () => {
           return (
             <div
               key={asset.asset_id}
-              className="bg-white rounded-3xl border border-neutral-200/80 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+              className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
             >
               <div>
-                <div className="w-full h-40 bg-neutral-900/90 relative overflow-hidden flex items-center justify-center p-3 border-b border-neutral-100">
+                <div className="w-full h-40 bg-neutral-900/90 dark:bg-neutral-800/80 relative overflow-hidden flex items-center justify-center p-3 border-b border-neutral-100 dark:border-neutral-800">
                   <img
                     src={asset.image_url}
                     alt={asset.asset_name}
@@ -212,16 +212,16 @@ export const ProductAssets: React.FC = () => {
                 </div>
 
                 <div className="p-4 space-y-1">
-                  <h3 className="font-bold text-sm text-neutral-900 leading-snug">
+                  <h3 className="font-bold text-sm text-neutral-900 dark:text-white leading-snug">
                     {asset.asset_name}
                   </h3>
-                  <div className="text-[11px] text-neutral-500 truncate">
+                  <div className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">
                     Product: {prod?.product_name || 'Generic Layer'}
                   </div>
                 </div>
               </div>
 
-              <div className="px-4 pb-4 pt-2 border-t border-neutral-100 flex items-center justify-between">
+              <div className="px-4 pb-4 pt-2 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
                 <span className="text-[10px] font-mono text-neutral-400">
                   {asset.is_transparent ? 'Transparent PNG' : 'Solid Layer'}
                 </span>
@@ -230,7 +230,7 @@ export const ProductAssets: React.FC = () => {
                   {canManageProducts && (
                     <button
                       onClick={() => handleOpenEdit(asset)}
-                      className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100"
+                      className="p-1.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
                       title="Edit Asset"
                     >
                       <Edit className="w-3.5 h-3.5" />
@@ -239,7 +239,7 @@ export const ProductAssets: React.FC = () => {
                   {canDeleteRecords && (
                     <button
                       onClick={() => setAssetToDelete(asset)}
-                      className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50"
+                      className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30"
                       title="Delete Asset"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -255,7 +255,7 @@ export const ProductAssets: React.FC = () => {
       {/* Add / Edit Asset Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/80 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full border border-neutral-200 overflow-hidden">
+          <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-2xl max-w-lg w-full border border-neutral-200 dark:border-neutral-800 overflow-hidden">
             <div className="px-6 py-4 bg-neutral-900 text-white flex items-center justify-between">
               <h3 className="font-bold text-sm">
                 {editingAsset ? 'Edit Layer Asset' : 'Add New Layer Asset'}
@@ -270,7 +270,7 @@ export const ProductAssets: React.FC = () => {
 
             <form onSubmit={handleSave} className="p-6 space-y-4 text-xs">
               <div>
-                <label className="block font-bold text-neutral-700 uppercase mb-1">
+                <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                   Asset Layer Name *
                 </label>
                 <input
@@ -279,19 +279,19 @@ export const ProductAssets: React.FC = () => {
                   placeholder="e.g. FIMA Components Tall Mixer Body (Moderne Brass)"
                   value={formData.asset_name || ''}
                   onChange={e => setFormData({ ...formData, asset_name: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold focus:outline-none focus:border-red-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
+                  <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                     Associated Product
                   </label>
                   <select
                     value={formData.product_id}
                     onChange={e => setFormData({ ...formData, product_id: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
                   >
                     {products.map(p => (
                       <option key={p.product_id} value={p.product_id}>
@@ -302,13 +302,13 @@ export const ProductAssets: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
+                  <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                     Layer Type
                   </label>
                   <select
                     value={formData.layer_type || 'BASE_BODY'}
                     onChange={e => setFormData({ ...formData, layer_type: e.target.value as any })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
                   >
                     <option value="BASE_BODY">BASE_BODY</option>
                     <option value="HANDLE_OVERLAY">HANDLE_OVERLAY</option>
@@ -319,7 +319,7 @@ export const ProductAssets: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-neutral-700 uppercase mb-1">
+                <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                   Layer Image URL *
                 </label>
                 <div className="flex gap-2">
@@ -328,12 +328,12 @@ export const ProductAssets: React.FC = () => {
                     required
                     value={formData.image_url || ''}
                     onChange={e => setFormData({ ...formData, image_url: e.target.value })}
-                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 font-mono text-[11px] focus:outline-none focus:border-red-500"
+                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono text-[11px] focus:outline-none focus:border-red-500"
                   />
                   <button
                     type="button"
                     onClick={() => setShowUploadModal(true)}
-                    className="px-3 py-2 bg-neutral-100 hover:bg-neutral-200 rounded-xl font-semibold text-neutral-700 flex items-center gap-1 shrink-0"
+                    className="px-3 py-2 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-xl font-semibold text-neutral-700 dark:text-neutral-200 flex items-center gap-1 shrink-0"
                   >
                     <Upload className="w-3.5 h-3.5" /> Upload
                   </button>
@@ -342,7 +342,7 @@ export const ProductAssets: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
+                  <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                     Z-Index (Order)
                   </label>
                   <input
@@ -351,7 +351,7 @@ export const ProductAssets: React.FC = () => {
                     max={10}
                     value={formData.z_index || 1}
                     onChange={e => setFormData({ ...formData, z_index: Number(e.target.value) })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-bold focus:outline-none focus:border-red-500"
                   />
                 </div>
 
@@ -363,22 +363,22 @@ export const ProductAssets: React.FC = () => {
                       onChange={e => setFormData({ ...formData, is_transparent: e.target.checked })}
                       className="rounded text-red-600 focus:ring-red-500"
                     />
-                    <span className="font-bold text-neutral-800">Transparent PNG</span>
+                    <span className="font-bold text-neutral-800 dark:text-neutral-200">Transparent PNG</span>
                   </label>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-neutral-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-800">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl border border-neutral-200 text-neutral-700"
+                  className="px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold"
+                  className="px-5 py-2 rounded-xl bg-neutral-900 dark:bg-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-700 text-white font-bold"
                 >
                   Save Asset
                 </button>

@@ -115,19 +115,19 @@ export const PriceManagement: React.FC = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-neutral-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs">
         <div>
-          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950 dark:text-white">
             Price Matrix & Bulk Markup Management
           </h1>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
             Centrally adjust base products, PVD coating premiums, and marble handle surcharges
           </p>
         </div>
 
         <button
           onClick={loadData}
-          className="p-2.5 rounded-xl border border-neutral-200 text-neutral-600 hover:text-neutral-950 hover:bg-neutral-50"
+          className="p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
         </button>
@@ -201,19 +201,19 @@ export const PriceManagement: React.FC = () => {
       </div>
 
       {/* Tabbed Interactive Pricing Tables */}
-      <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs p-6 space-y-6">
-        <h3 className="text-sm font-bold text-neutral-900 uppercase tracking-wide">
+      <div className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs p-6 space-y-6">
+        <h3 className="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wide">
           Direct Line-Item Price Editor
         </h3>
 
         {/* Products Table */}
         <div className="space-y-3">
-          <div className="text-xs font-bold text-neutral-500 uppercase flex items-center gap-1.5">
-            <Package className="w-4 h-4 text-red-600" /> Products Master Base Prices
+          <div className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase flex items-center gap-1.5">
+            <Package className="w-4 h-4 text-red-600 dark:text-red-400" /> Products Master Base Prices
           </div>
-          <div className="overflow-x-auto border border-neutral-200 rounded-2xl">
+          <div className="overflow-x-auto border border-neutral-200 dark:border-neutral-800 rounded-2xl">
             <table className="w-full text-xs text-left">
-              <thead className="bg-neutral-50 text-neutral-600 font-mono text-[10px] uppercase">
+              <thead className="bg-neutral-50 dark:bg-neutral-800/60 text-neutral-600 dark:text-neutral-300 font-mono text-[10px] uppercase">
                 <tr>
                   <th className="p-3">Model</th>
                   <th className="p-3">Product Name</th>
@@ -222,13 +222,13 @@ export const PriceManagement: React.FC = () => {
                   <th className="p-3 text-right">Edit Rate (INR)</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-100">
+              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
                 {products.map(p => (
-                  <tr key={p.product_id} className="hover:bg-neutral-50/60">
-                    <td className="p-3 font-mono font-bold text-neutral-900">{p.model_number}</td>
-                    <td className="p-3 font-semibold text-neutral-900">{p.product_name}</td>
-                    <td className="p-3 text-neutral-500">{p.category}</td>
-                    <td className="p-3 text-right font-bold text-neutral-900">
+                  <tr key={p.product_id} className="hover:bg-neutral-50/60 dark:hover:bg-neutral-800/40">
+                    <td className="p-3 font-mono font-bold text-neutral-900 dark:text-white">{p.model_number}</td>
+                    <td className="p-3 font-semibold text-neutral-900 dark:text-white">{p.product_name}</td>
+                    <td className="p-3 text-neutral-500 dark:text-neutral-400">{p.category}</td>
+                    <td className="p-3 text-right font-bold text-neutral-900 dark:text-white">
                       ₹{Number(p.base_price).toLocaleString('en-IN')}
                     </td>
                     <td className="p-3 text-right">
@@ -236,7 +236,7 @@ export const PriceManagement: React.FC = () => {
                         type="number"
                         defaultValue={p.base_price}
                         onBlur={e => handleQuickInlineUpdate('PRODUCT', p.product_id, Number(e.target.value))}
-                        className="w-28 p-1.5 rounded-lg border border-neutral-300 text-right font-bold text-xs focus:outline-none focus:border-red-500"
+                        className="w-28 p-1.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-right font-bold text-xs focus:outline-none focus:border-red-500"
                       />
                     </td>
                   </tr>
@@ -248,12 +248,12 @@ export const PriceManagement: React.FC = () => {
 
         {/* Finishes Table */}
         <div className="space-y-3 pt-4">
-          <div className="text-xs font-bold text-neutral-500 uppercase flex items-center gap-1.5">
-            <Palette className="w-4 h-4 text-red-600" /> Architectural Finish Surcharges
+          <div className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase flex items-center gap-1.5">
+            <Palette className="w-4 h-4 text-red-600 dark:text-red-400" /> Architectural Finish Surcharges
           </div>
-          <div className="overflow-x-auto border border-neutral-200 rounded-2xl">
+          <div className="overflow-x-auto border border-neutral-200 dark:border-neutral-800 rounded-2xl">
             <table className="w-full text-xs text-left">
-              <thead className="bg-neutral-50 text-neutral-600 font-mono text-[10px] uppercase">
+              <thead className="bg-neutral-50 dark:bg-neutral-800/60 text-neutral-600 dark:text-neutral-300 font-mono text-[10px] uppercase">
                 <tr>
                   <th className="p-3">Code</th>
                   <th className="p-3">Finish Name</th>
@@ -262,13 +262,13 @@ export const PriceManagement: React.FC = () => {
                   <th className="p-3 text-right">Edit Surcharge (INR)</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-100">
+              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
                 {finishes.map(f => (
-                  <tr key={f.finish_id} className="hover:bg-neutral-50/60">
-                    <td className="p-3 font-mono font-bold text-neutral-900">{f.finish_code}</td>
-                    <td className="p-3 font-semibold text-neutral-900">{f.finish_name}</td>
-                    <td className="p-3 text-neutral-500">{f.finish_type}</td>
-                    <td className="p-3 text-right font-bold text-neutral-900">
+                  <tr key={f.finish_id} className="hover:bg-neutral-50/60 dark:hover:bg-neutral-800/40">
+                    <td className="p-3 font-mono font-bold text-neutral-900 dark:text-white">{f.finish_code}</td>
+                    <td className="p-3 font-semibold text-neutral-900 dark:text-white">{f.finish_name}</td>
+                    <td className="p-3 text-neutral-500 dark:text-neutral-400">{f.finish_type}</td>
+                    <td className="p-3 text-right font-bold text-neutral-900 dark:text-white">
                       ₹{Number(f.additional_price).toLocaleString('en-IN')}
                     </td>
                     <td className="p-3 text-right">
@@ -276,7 +276,7 @@ export const PriceManagement: React.FC = () => {
                         type="number"
                         defaultValue={f.additional_price}
                         onBlur={e => handleQuickInlineUpdate('FINISH', f.finish_id, Number(e.target.value))}
-                        className="w-28 p-1.5 rounded-lg border border-neutral-300 text-right font-bold text-xs focus:outline-none focus:border-red-500"
+                        className="w-28 p-1.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-right font-bold text-xs focus:outline-none focus:border-red-500"
                       />
                     </td>
                   </tr>

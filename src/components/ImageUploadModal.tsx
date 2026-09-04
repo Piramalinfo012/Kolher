@@ -78,22 +78,22 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-neutral-200 overflow-hidden"
+          className="bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl max-w-lg w-full border border-neutral-200 dark:border-neutral-800 overflow-hidden"
           id="image-upload-modal"
         >
-          <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100 dark:border-neutral-800">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-red-50 text-red-700 flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-400 flex items-center justify-center font-bold">
                 <ImageIcon className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-neutral-900">{title}</h3>
-                <p className="text-xs text-neutral-500">Target Folder: Google Drive / {folderName}</p>
+                <h3 className="text-base font-bold text-neutral-900 dark:text-white">{title}</h3>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">Target Folder: Google Drive / {folderName}</p>
               </div>
             </div>
             <button
               onClick={handleClose}
-              className="text-neutral-400 hover:text-neutral-700 transition-colors p-1"
+              className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-white transition-colors p-1"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
@@ -109,8 +109,8 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                 onClick={() => fileInputRef.current?.click()}
                 className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all ${
                   isDragging
-                    ? 'border-red-500 bg-red-50/50'
-                    : 'border-neutral-200 hover:border-red-400 hover:bg-neutral-50/80'
+                    ? 'border-red-500 bg-red-50/50 dark:bg-red-950/30'
+                    : 'border-neutral-200 dark:border-neutral-700 hover:border-red-400 hover:bg-neutral-50/80 dark:hover:bg-neutral-800/80'
                 }`}
               >
                 <input
@@ -120,22 +120,22 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                   className="hidden"
                   onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])}
                 />
-                <div className="w-14 h-14 rounded-2xl bg-red-100/60 text-red-800 flex items-center justify-center mx-auto mb-3">
+                <div className="w-14 h-14 rounded-2xl bg-red-100/60 dark:bg-red-950/80 text-red-800 dark:text-red-300 flex items-center justify-center mx-auto mb-3">
                   <UploadCloud className="w-7 h-7" />
                 </div>
-                <h4 className="text-sm font-semibold text-neutral-900">
+                <h4 className="text-sm font-semibold text-neutral-900 dark:text-white">
                   Click to upload or drag & drop
                 </h4>
-                <p className="text-xs text-neutral-500 mt-1">
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
                   Supports PNG (transparent layers supported), JPG, WEBP up to 10MB
                 </p>
-                <span className="inline-block mt-4 px-3 py-1.5 rounded-lg bg-white border border-neutral-200 text-xs font-medium text-neutral-700 shadow-xs">
+                <span className="inline-block mt-4 px-3 py-1.5 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-200 shadow-xs">
                   Browse Files
                 </span>
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="relative rounded-xl border border-neutral-200 overflow-hidden bg-neutral-900 flex items-center justify-center min-h-[200px] max-h-[260px]">
+                <div className="relative rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-900 flex items-center justify-center min-h-[200px] max-h-[260px]">
                   <img
                     src={previewUrl}
                     alt="Preview"
@@ -150,7 +150,7 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                   </button>
                 </div>
                 {selectedFile && (
-                  <div className="flex items-center justify-between text-xs text-neutral-600 bg-neutral-50 p-2.5 rounded-lg border border-neutral-200">
+                  <div className="flex items-center justify-between text-xs text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-700">
                     <span className="font-medium truncate max-w-[280px]">{selectedFile.name}</span>
                     <span>{(selectedFile.size / 1024).toFixed(1)} KB</span>
                   </div>
@@ -162,7 +162,7 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               <button
                 onClick={handleClose}
                 type="button"
-                className="px-4 py-2.5 rounded-xl border border-neutral-200 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
+                className="px-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
               >
                 Cancel
               </button>
@@ -170,7 +170,7 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                 onClick={handleUpload}
                 disabled={!selectedFile || uploading}
                 type="button"
-                className="px-5 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold text-white shadow-sm flex items-center gap-2 transition-all"
+                className="px-5 py-2.5 rounded-xl bg-neutral-900 dark:bg-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold text-white shadow-sm flex items-center gap-2 transition-all"
                 id="btn-upload-submit"
               >
                 {uploading ? (

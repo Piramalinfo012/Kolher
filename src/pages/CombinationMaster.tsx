@@ -135,12 +135,12 @@ export const CombinationMaster: React.FC = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-neutral-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs">
         <div>
-          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950 dark:text-white">
             Studio Combination Master
           </h1>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
             Map specific [Product + Finish + Handle] trios to pre-rendered, high-fidelity luxury photographs
           </p>
         </div>
@@ -148,7 +148,7 @@ export const CombinationMaster: React.FC = () => {
         {canManageProducts && (
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-neutral-950 dark:bg-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-700 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             id="btn-add-combination"
           >
             <Plus className="w-4 h-4 text-red-400" />
@@ -158,7 +158,7 @@ export const CombinationMaster: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="bg-white p-4 rounded-3xl border border-neutral-200/80 shadow-xs flex items-center justify-between">
+      <div className="bg-white dark:bg-neutral-900 p-4 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 shadow-xs flex items-center justify-between">
         <div className="relative w-full sm:w-96">
           <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-3" />
           <input
@@ -166,7 +166,7 @@ export const CombinationMaster: React.FC = () => {
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search combination by product name, finish, or marble..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800 text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
       </div>
@@ -181,10 +181,10 @@ export const CombinationMaster: React.FC = () => {
           return (
             <div
               key={combo.combination_id}
-              className="bg-white rounded-3xl border border-neutral-200/80 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+              className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200/80 dark:border-neutral-800 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
             >
               <div>
-                <div className="w-full h-48 bg-neutral-900/5 relative overflow-hidden flex items-center justify-center p-3 border-b border-neutral-100">
+                <div className="w-full h-48 bg-neutral-900/5 dark:bg-neutral-800/40 relative overflow-hidden flex items-center justify-center p-3 border-b border-neutral-100 dark:border-neutral-800">
                   <img
                     src={combo.combination_image_url || prod?.main_image_url}
                     alt={prod?.product_name}
@@ -198,31 +198,31 @@ export const CombinationMaster: React.FC = () => {
 
                 <div className="p-5 space-y-3">
                   <div>
-                    <span className="text-[10px] font-mono font-bold text-red-800 bg-red-50 px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-mono font-bold text-red-800 dark:text-red-400 bg-red-50 dark:bg-red-950/50 px-2 py-0.5 rounded">
                       {prod?.model_number || 'MODEL'}
                     </span>
-                    <h3 className="font-bold text-sm text-neutral-950 mt-1 leading-snug">
+                    <h3 className="font-bold text-sm text-neutral-950 dark:text-white mt-1 leading-snug">
                       {prod?.product_name || 'Sanitaryware Unit'}
                     </h3>
                   </div>
 
-                  <div className="space-y-1.5 pt-2 border-t border-neutral-100 text-xs">
+                  <div className="space-y-1.5 pt-2 border-t border-neutral-100 dark:border-neutral-800 text-xs">
                     <div className="flex items-center justify-between">
-                      <span className="text-neutral-500">Finish:</span>
-                      <span className="font-semibold text-neutral-900">{fin?.finish_name || '-'}</span>
+                      <span className="text-neutral-500 dark:text-neutral-400">Finish:</span>
+                      <span className="font-semibold text-neutral-900 dark:text-neutral-200">{fin?.finish_name || '-'}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-neutral-500">Handle / Knob:</span>
-                      <span className="font-semibold text-neutral-900">{hnd?.handle_name || '-'}</span>
+                      <span className="text-neutral-500 dark:text-neutral-400">Handle / Knob:</span>
+                      <span className="font-semibold text-neutral-900 dark:text-neutral-200">{hnd?.handle_name || '-'}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="px-5 pb-5 pt-2 border-t border-neutral-100 flex items-center justify-between">
+              <div className="px-5 pb-5 pt-2 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
                 <div>
                   <span className="text-[9px] font-mono text-neutral-400 uppercase">Combo Surcharge</span>
-                  <div className="text-sm font-bold text-neutral-900">
+                  <div className="text-sm font-bold text-neutral-900 dark:text-white">
                     {combo.additional_price > 0 ? `+ ₹${Number(combo.additional_price).toLocaleString('en-IN')}` : '₹0 (Standard)'}
                   </div>
                 </div>
@@ -231,7 +231,7 @@ export const CombinationMaster: React.FC = () => {
                   {canManageProducts && (
                     <button
                       onClick={() => handleOpenEdit(combo)}
-                      className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100"
+                      className="p-1.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
                       title="Edit Mapping"
                     >
                       <Edit className="w-3.5 h-3.5" />
@@ -240,7 +240,7 @@ export const CombinationMaster: React.FC = () => {
                   {canDeleteRecords && (
                     <button
                       onClick={() => setComboToDelete(combo)}
-                      className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50"
+                      className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30"
                       title="Delete Mapping"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -256,7 +256,7 @@ export const CombinationMaster: React.FC = () => {
       {/* Add / Edit Combo Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/80 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full border border-neutral-200 overflow-hidden">
+          <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-2xl max-w-lg w-full border border-neutral-200 dark:border-neutral-800 overflow-hidden">
             <div className="px-6 py-4 bg-neutral-900 text-white flex items-center justify-between">
               <h3 className="font-bold text-sm">
                 {editingCombo ? 'Edit Combination Mapping' : 'Map Product + Finish + Handle'}
@@ -271,14 +271,14 @@ export const CombinationMaster: React.FC = () => {
 
             <form onSubmit={handleSave} className="p-6 space-y-4 text-xs">
               <div>
-                <label className="block font-bold text-neutral-700 uppercase mb-1">
+                <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                   Select Product *
                 </label>
                 <select
                   required
                   value={formData.product_id}
                   onChange={e => setFormData({ ...formData, product_id: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold focus:outline-none focus:border-red-500"
                 >
                   {products.map(p => (
                     <option key={p.product_id} value={p.product_id}>
@@ -290,14 +290,14 @@ export const CombinationMaster: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
+                  <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                     Select Finish *
                   </label>
                   <select
                     required
                     value={formData.finish_id}
                     onChange={e => setFormData({ ...formData, finish_id: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
                   >
                     {finishes.map(f => (
                       <option key={f.finish_id} value={f.finish_id}>
@@ -308,14 +308,14 @@ export const CombinationMaster: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
+                  <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                     Select Handle / Knob *
                   </label>
                   <select
                     required
                     value={formData.handle_id}
                     onChange={e => setFormData({ ...formData, handle_id: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
                   >
                     {handles.map(h => (
                       <option key={h.handle_id} value={h.handle_id}>
@@ -327,7 +327,7 @@ export const CombinationMaster: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-neutral-700 uppercase mb-1">
+                <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                   High-Res Pre-Rendered Combination Image URL
                 </label>
                 <div className="flex gap-2">
@@ -335,12 +335,12 @@ export const CombinationMaster: React.FC = () => {
                     type="text"
                     value={formData.combination_image_url || ''}
                     onChange={e => setFormData({ ...formData, combination_image_url: e.target.value })}
-                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 font-mono text-[11px] focus:outline-none focus:border-red-500"
+                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono text-[11px] focus:outline-none focus:border-red-500"
                   />
                   <button
                     type="button"
                     onClick={() => setShowUploadModal(true)}
-                    className="px-3 py-2 bg-neutral-100 hover:bg-neutral-200 rounded-xl font-semibold text-neutral-700 flex items-center gap-1 shrink-0"
+                    className="px-3 py-2 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-xl font-semibold text-neutral-700 dark:text-neutral-200 flex items-center gap-1 shrink-0"
                   >
                     <Upload className="w-3.5 h-3.5" /> Upload
                   </button>
@@ -349,7 +349,7 @@ export const CombinationMaster: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
+                  <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                     Combination Surcharge (₹)
                   </label>
                   <input
@@ -357,18 +357,18 @@ export const CombinationMaster: React.FC = () => {
                     min={0}
                     value={formData.additional_price || 0}
                     onChange={e => setFormData({ ...formData, additional_price: Number(e.target.value) })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-bold focus:outline-none focus:border-red-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
+                  <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                     Status
                   </label>
                   <select
                     value={formData.status || 'Active'}
                     onChange={e => setFormData({ ...formData, status: e.target.value as any })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
                   >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -376,17 +376,17 @@ export const CombinationMaster: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-neutral-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-800">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl border border-neutral-200 text-neutral-700"
+                  className="px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold"
+                  className="px-5 py-2 rounded-xl bg-neutral-900 dark:bg-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-700 text-white font-bold"
                 >
                   Save Combination
                 </button>

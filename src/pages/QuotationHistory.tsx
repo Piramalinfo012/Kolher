@@ -123,12 +123,12 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-neutral-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
         <div>
-          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-900 dark:text-white">
             Quotation Management History
           </h1>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
             Track, duplicate, share via email, print A4 PDFs, and manage lifecycle of all client proposals
           </p>
         </div>
@@ -136,7 +136,7 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
         <div className="flex items-center gap-3">
           <button
             onClick={loadData}
-            className="p-2.5 rounded-xl border border-neutral-200 text-neutral-600 hover:text-neutral-950 hover:bg-neutral-50 transition-colors"
+            className="p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
             title="Refresh list"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -145,10 +145,10 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
           {isSales && (
             <button
               onClick={() => onNavigate('new-quotation')}
-              className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
               id="btn-new-quote-history"
             >
-              <Plus className="w-4 h-4 text-red-400" />
+              <Plus className="w-4 h-4 text-white" />
               <span>Create Quotation</span>
             </button>
           )}
@@ -156,28 +156,28 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white p-4 rounded-3xl border border-neutral-200/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white dark:bg-neutral-900 p-4 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="relative w-full md:w-96">
-          <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-neutral-500 dark:text-neutral-400 absolute left-3.5 top-3" />
           <input
             type="text"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search by quote #, client name, mobile or email..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 focus:bg-white dark:focus:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
 
         <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
-          <span className="text-xs font-bold text-neutral-400 uppercase font-mono mr-1">Status:</span>
+          <span className="text-xs font-bold text-neutral-600 dark:text-neutral-400 uppercase font-mono mr-1">Status:</span>
           {['ALL', 'DRAFT', 'SENT', 'APPROVED', 'REJECTED', 'EXPIRED'].map(st => (
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 statusFilter === st
-                  ? 'bg-neutral-900 text-red-300 shadow-xs'
-                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                  ? 'bg-red-600 text-white shadow-xs font-bold'
+                  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
               }`}
             >
               {st}
@@ -186,44 +186,44 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
         </div>
       </div>
 
-      {/* Main Quotations Table */}
-      <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
+      {/* Table Container */}
+      <div className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className="bg-neutral-900 text-white uppercase text-[10px] font-mono tracking-wider">
+            <thead className="text-[10px] text-neutral-600 dark:text-neutral-400 uppercase font-mono bg-neutral-50 dark:bg-neutral-800/60 border-b border-neutral-200 dark:border-neutral-800">
               <tr>
-                <th className="p-4">Quotation #</th>
-                <th className="p-4">Client / Company</th>
-                <th className="p-4">Date & Validity</th>
+                <th className="p-4">Quotation No</th>
+                <th className="p-4">Client / Party</th>
+                <th className="p-4">Date</th>
                 <th className="p-4 text-center">Items</th>
-                <th className="p-4 text-right">Taxable</th>
+                <th className="p-4 text-right">Subtotal</th>
                 <th className="p-4 text-right">Grand Total</th>
                 <th className="p-4 text-center">Status</th>
                 <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
               {filteredQuotes.map(quote => {
                 const statusStyles: Record<string, string> = {
-                  DRAFT: 'bg-neutral-100 text-neutral-700 border-neutral-300',
-                  SENT: 'bg-blue-50 text-blue-800 border-blue-200',
-                  APPROVED: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-                  REJECTED: 'bg-rose-50 text-rose-800 border-rose-200',
-                  EXPIRED: 'bg-red-50 text-red-800 border-red-200'
+                  DRAFT: 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-700',
+                  SENT: 'bg-blue-50 dark:bg-blue-950/50 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+                  APPROVED: 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+                  REJECTED: 'bg-rose-50 dark:bg-rose-950/50 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800',
+                  EXPIRED: 'bg-red-50 dark:bg-red-950/50 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800'
                 };
 
                 return (
-                  <tr key={quote.quotation_id} className="hover:bg-neutral-50/70 transition-colors">
-                    <td className="p-4 font-mono font-bold text-neutral-950">
+                  <tr key={quote.quotation_id} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors">
+                    <td className="p-4 font-mono font-bold text-neutral-900 dark:text-white">
                       {quote.quotation_number}
                     </td>
                     <td className="p-4">
-                      <div className="font-bold text-neutral-900">{quote.party_name}</div>
-                      <div className="text-[11px] text-neutral-500">
+                      <div className="font-bold text-neutral-900 dark:text-white">{quote.party_name}</div>
+                      <div className="text-[11px] text-neutral-500 dark:text-neutral-400">
                         {quote.company_name ? `${quote.company_name} • ` : ''}{quote.mobile}
                       </div>
                     </td>
-                    <td className="p-4 text-neutral-600">
+                    <td className="p-4 text-neutral-600 dark:text-neutral-400">
                       <div className="font-mono font-medium">{(() => {
                         const dateVal = quote.quotation_date || quote.created_at;
                         if (!dateVal) return '';
@@ -237,24 +237,24 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
                           const parts = updateVal.split('-');
                           const formattedUpdate = parts.length === 3 && parts[0].length === 4 ? `${parts[2]}-${parts[1]}-${parts[0]}` : updateVal;
                           return (
-                            <div className="text-[10px] font-mono text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded w-fit border border-amber-200 mt-1">
+                            <div className="text-[10px] font-mono text-amber-700 dark:text-amber-300 font-semibold bg-amber-50 dark:bg-amber-950/50 px-1.5 py-0.5 rounded w-fit border border-amber-200 dark:border-amber-800 mt-1">
                               Edited: {formattedUpdate}
                             </div>
                           );
                         }
                         return null;
                       })()}
-                      <div className="text-[10px] text-neutral-400 mt-0.5">Valid: {quote.validity}</div>
+                      <div className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5">Valid: {quote.validity}</div>
                     </td>
                     <td className="p-4 text-center">
-                      <span className="font-bold bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded-md font-mono">
+                      <span className="font-bold bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 px-2 py-0.5 rounded-md font-mono">
                         {quote.items?.length || 0}
                       </span>
                     </td>
-                    <td className="p-4 text-right text-neutral-600">
+                    <td className="p-4 text-right text-neutral-600 dark:text-neutral-400">
                       ₹{Number(quote.taxable_amount || quote.subtotal).toLocaleString('en-IN')}
                     </td>
-                    <td className="p-4 text-right font-bold text-neutral-950 font-serif-luxury text-sm">
+                    <td className="p-4 text-right font-bold text-neutral-900 dark:text-white font-serif-luxury text-sm">
                       ₹{Number(quote.grand_total).toLocaleString('en-IN')}
                     </td>
                     <td className="p-4 text-center">
@@ -263,18 +263,18 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
                         onChange={e => handleStatusUpdate(quote.quotation_id, e.target.value as QuotationStatus)}
                         className={`text-[10px] font-bold px-2 py-1 rounded-lg border appearance-none cursor-pointer text-center focus:outline-none ${statusStyles[quote.status]}`}
                       >
-                        <option value="DRAFT">DRAFT</option>
-                        <option value="SENT">SENT</option>
-                        <option value="APPROVED">APPROVED</option>
-                        <option value="REJECTED">REJECTED</option>
-                        <option value="EXPIRED">EXPIRED</option>
+                        <option value="DRAFT" className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white">DRAFT</option>
+                        <option value="SENT" className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white">SENT</option>
+                        <option value="APPROVED" className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white">APPROVED</option>
+                        <option value="REJECTED" className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white">REJECTED</option>
+                        <option value="EXPIRED" className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white">EXPIRED</option>
                       </select>
                     </td>
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => setPreviewQuote(quote)}
-                          className="p-1.5 rounded-lg text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 transition-colors"
+                          className="p-1.5 rounded-lg text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
                           title="View & Share Quotation"
                         >
                           <Eye className="w-4 h-4" />
@@ -282,28 +282,28 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
                         <button
                           onClick={() => handleDownloadPdf(quote)}
                           disabled={downloadingId === quote.quotation_id}
-                          className="p-1.5 rounded-lg text-red-700 hover:text-red-950 hover:bg-red-50 transition-colors disabled:opacity-50"
+                          className="p-1.5 rounded-lg text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors disabled:opacity-50 cursor-pointer"
                           title="Download PDF directly"
                         >
                           <Download className={`w-4 h-4 ${downloadingId === quote.quotation_id ? 'animate-bounce' : ''}`} />
                         </button>
                         <button
                           onClick={() => onNavigate('new-quotation', quote.quotation_id)}
-                          className="p-1.5 rounded-lg text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 transition-colors"
+                          className="p-1.5 rounded-lg text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
                           title="Edit Quotation"
                         >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDuplicate(quote)}
-                          className="p-1.5 rounded-lg text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 transition-colors"
+                          className="p-1.5 rounded-lg text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
                           title="Duplicate as New Quotation"
                         >
                           <Copy className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setQuoteToDelete(quote)}
-                          className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 transition-colors"
+                          className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
                           title="Delete Quotation"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -316,7 +316,7 @@ export const QuotationHistory: React.FC<QuotationHistoryProps> = ({ onNavigate }
 
               {filteredQuotes.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="p-8 text-center text-neutral-400 text-xs">
+                  <td colSpan={8} className="p-8 text-center text-neutral-500 dark:text-neutral-400 text-xs">
                     No quotations found matching your search criteria.
                   </td>
                 </tr>

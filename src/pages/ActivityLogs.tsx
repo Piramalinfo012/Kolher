@@ -63,34 +63,34 @@ export const ActivityLogs: React.FC = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-neutral-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
         <div>
-          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-900 dark:text-white">
             System Security & Audit Activity Logs
           </h1>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
             Immutable log trail of quotations created, edits, PDF generations, and catalog updates
           </p>
         </div>
 
         <button
           onClick={loadLogs}
-          className="p-2.5 rounded-xl border border-neutral-200 text-neutral-600 hover:text-neutral-950 hover:bg-neutral-50 cursor-pointer"
+          className="p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800 cursor-pointer transition-colors"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
       {/* Filter and Search */}
-      <div className="bg-white p-4 rounded-3xl border border-neutral-200/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white dark:bg-neutral-900 p-4 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="relative w-full md:w-96">
-          <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-neutral-500 dark:text-neutral-400 absolute left-3.5 top-3" />
           <input
             type="text"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search by user email, quote number, or event details..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
 
@@ -99,10 +99,10 @@ export const ActivityLogs: React.FC = () => {
             <button
               key={act}
               onClick={() => setActionFilter(act)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 actionFilter === act
-                  ? 'bg-neutral-900 text-red-300 shadow-xs'
-                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                  ? 'bg-red-600 text-white shadow-xs font-bold'
+                  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
               }`}
             >
               {act.replace('_', ' ')}
@@ -112,10 +112,10 @@ export const ActivityLogs: React.FC = () => {
       </div>
 
       {/* Logs Table */}
-      <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className="bg-neutral-900 text-white uppercase text-[10px] font-mono tracking-wider">
+            <thead className="text-[10px] text-neutral-600 dark:text-neutral-400 uppercase font-mono bg-neutral-50 dark:bg-neutral-800/60 border-b border-neutral-200 dark:border-neutral-800">
               <tr>
                 <th className="p-4">Timestamp</th>
                 <th className="p-4">User</th>
@@ -124,10 +124,10 @@ export const ActivityLogs: React.FC = () => {
                 <th className="p-4">Audit Details</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
               {filtered.map(log => (
-                <tr key={log.log_id} className="hover:bg-neutral-50/60">
-                  <td className="p-4 text-neutral-500 font-mono text-[11px] whitespace-nowrap flex items-center gap-1.5">
+                <tr key={log.log_id} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors">
+                  <td className="p-4 text-neutral-600 dark:text-neutral-400 font-mono text-[11px] whitespace-nowrap flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5 text-neutral-400" />
                     {new Date(log.timestamp).toLocaleString('en-IN', {
                       day: '2-digit',
@@ -138,25 +138,25 @@ export const ActivityLogs: React.FC = () => {
                       second: '2-digit'
                     })}
                   </td>
-                  <td className="p-4 font-semibold text-neutral-900 font-mono text-[11px]">
+                  <td className="p-4 font-semibold text-neutral-900 dark:text-white font-mono text-[11px]">
                     {log.user_email}
                   </td>
                   <td className="p-4">
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-800 border border-neutral-200">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700">
                       {log.action}
                     </span>
                   </td>
-                  <td className="p-4 font-mono font-bold text-neutral-900 text-[11px]">
+                  <td className="p-4 font-mono font-bold text-neutral-900 dark:text-white text-[11px]">
                     {log.entity_id || '-'}
                   </td>
-                  <td className="p-4 text-neutral-600 leading-relaxed max-w-md">
+                  <td className="p-4 text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-md">
                     {log.details}
                   </td>
                 </tr>
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-neutral-400">
+                  <td colSpan={5} className="p-8 text-center text-neutral-500 dark:text-neutral-400">
                     No activity logs match your filter criteria.
                   </td>
                 </tr>

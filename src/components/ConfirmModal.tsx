@@ -32,21 +32,21 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-neutral-200 overflow-hidden"
+          className="bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl max-w-md w-full border border-neutral-200 dark:border-neutral-800 overflow-hidden"
           id="confirm-modal-box"
         >
           <div className="p-6">
             <div className="flex items-start gap-4">
-              <div className={`p-3 rounded-xl shrink-0 ${isDanger ? 'bg-rose-50 text-rose-600' : 'bg-red-50 text-red-600'}`}>
+              <div className={`p-3 rounded-xl shrink-0 ${isDanger ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400' : 'bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400'}`}>
                 <AlertTriangle className="w-6 h-6" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-bold text-neutral-900">{title}</h3>
-                <p className="text-sm text-neutral-600 mt-1 leading-relaxed">{message}</p>
+                <h3 className="text-lg font-bold text-neutral-900 dark:text-white">{title}</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-300 mt-1 leading-relaxed">{message}</p>
               </div>
               <button
                 onClick={onClose}
-                className="text-neutral-400 hover:text-neutral-700 transition-colors p-1"
+                className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-white transition-colors p-1"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
@@ -57,7 +57,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
               <button
                 onClick={onClose}
                 type="button"
-                className="px-4 py-2.5 rounded-xl border border-neutral-200 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
+                className="px-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                 id="btn-cancel-modal"
               >
                 {cancelText}
@@ -71,7 +71,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
                 className={`px-5 py-2.5 rounded-xl text-sm font-semibold text-white shadow-sm transition-all ${
                   isDanger
                     ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-900/10'
-                    : 'bg-neutral-900 hover:bg-neutral-800 shadow-neutral-900/10'
+                    : 'bg-neutral-900 dark:bg-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-700 shadow-neutral-900/10'
                 }`}
                 id="btn-confirm-action"
               >

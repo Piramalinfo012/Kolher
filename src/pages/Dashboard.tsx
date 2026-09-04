@@ -167,19 +167,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.05 }}
           whileHover={{ y: -3, scale: 1.01 }}
-          className="bg-gradient-to-b from-white via-white to-neutral-50/60 p-4.5 rounded-2xl border border-neutral-200/80 shadow-2xs hover:shadow-md hover:border-red-200 transition-all duration-300 space-y-2 relative overflow-hidden group"
+          className="bg-white dark:bg-neutral-900 p-4.5 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-2xs hover:shadow-md hover:border-red-300 dark:hover:border-red-700/50 transition-all duration-300 space-y-2 relative overflow-hidden group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 font-mono">Total Quotations</span>
-            <div className="w-8 h-8 rounded-xl bg-red-50/80 border border-red-100 text-red-600 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 font-mono">Total Quotations</span>
+            <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-100 dark:border-red-800/40 text-red-600 dark:text-red-400 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
               <FileText className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-xl font-bold font-serif-luxury text-neutral-950 tracking-tight">
+          <div className="text-xl font-bold font-serif-luxury text-neutral-950 dark:text-white tracking-tight">
             {totalQuotations}
           </div>
-          <div className="text-[10px] text-neutral-500 flex items-center gap-1 font-medium">
-            <span className="text-emerald-600 font-bold">100% active</span> across sales desk
+          <div className="text-[10px] text-neutral-600 dark:text-neutral-400 flex items-center gap-1 font-medium">
+            <span className="text-emerald-600 dark:text-emerald-400 font-bold">100% active</span> across sales desk
           </div>
         </motion.div>
 
@@ -189,19 +189,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.1 }}
           whileHover={{ y: -3, scale: 1.01 }}
-          className="bg-gradient-to-b from-white via-white to-neutral-50/60 p-4.5 rounded-2xl border border-neutral-200/80 shadow-2xs hover:shadow-md hover:border-emerald-200 transition-all duration-300 space-y-2 relative overflow-hidden group"
+          className="bg-white dark:bg-neutral-900 p-4.5 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-2xs hover:shadow-md hover:border-emerald-300 dark:hover:border-emerald-700/50 transition-all duration-300 space-y-2 relative overflow-hidden group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 font-mono">Pipeline Value</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50/80 border border-emerald-100 text-emerald-600 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 font-mono">Pipeline Value</span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-800/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
               <DollarSign className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-xl font-bold font-serif-luxury text-neutral-950 tracking-tight">
+          <div className="text-xl font-bold font-serif-luxury text-neutral-950 dark:text-white tracking-tight">
             ₹{totalPipelineRevenue.toLocaleString('en-IN')}
           </div>
-          <div className="text-[10px] text-neutral-500 flex items-center gap-1 font-medium">
-            <TrendingUp className="w-3 h-3 text-emerald-600" />
+          <div className="text-[10px] text-neutral-600 dark:text-neutral-400 flex items-center gap-1 font-medium">
+            <TrendingUp className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
             <span>Active quotation proposals</span>
           </div>
         </motion.div>
@@ -212,19 +212,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.15 }}
           whileHover={{ y: -3, scale: 1.01 }}
-          className="bg-gradient-to-b from-white via-white to-neutral-50/60 p-4.5 rounded-2xl border border-neutral-200/80 shadow-2xs hover:shadow-md hover:border-blue-200 transition-all duration-300 space-y-2 relative overflow-hidden group"
+          className="bg-white dark:bg-neutral-900 p-4.5 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-2xs hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700/50 transition-all duration-300 space-y-2 relative overflow-hidden group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 font-mono">Approved Orders</span>
-            <div className="w-8 h-8 rounded-xl bg-blue-50/80 border border-blue-100 text-blue-600 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 font-mono">Approved Orders</span>
+            <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-800/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
               <CheckCircle2 className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-xl font-bold font-serif-luxury text-neutral-950 tracking-tight">
+          <div className="text-xl font-bold font-serif-luxury text-neutral-950 dark:text-white tracking-tight">
             ₹{approvedRevenue.toLocaleString('en-IN')}
           </div>
-          <div className="text-[10px] text-neutral-500 flex items-center gap-1 font-medium">
-            <span className="font-bold text-neutral-900">{approvedQuotes.length} orders</span> confirmed
+          <div className="text-[10px] text-neutral-600 dark:text-neutral-400 flex items-center gap-1 font-medium">
+            <span className="font-bold text-neutral-900 dark:text-neutral-200">{approvedQuotes.length} orders</span> confirmed
           </div>
         </motion.div>
 
@@ -234,18 +234,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.2 }}
           whileHover={{ y: -3, scale: 1.01 }}
-          className="bg-gradient-to-b from-white via-white to-neutral-50/60 p-4.5 rounded-2xl border border-neutral-200/80 shadow-2xs hover:shadow-md hover:border-purple-200 transition-all duration-300 space-y-2 relative overflow-hidden group"
+          className="bg-white dark:bg-neutral-900 p-4.5 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-2xs hover:shadow-md hover:border-purple-300 dark:hover:border-purple-700/50 transition-all duration-300 space-y-2 relative overflow-hidden group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 font-mono">Win Conversion</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50/80 border border-purple-100 text-purple-600 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 font-mono">Win Conversion</span>
+            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-800/40 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
               <Sparkles className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-xl font-bold font-serif-luxury text-neutral-950 tracking-tight">
+          <div className="text-xl font-bold font-serif-luxury text-neutral-950 dark:text-white tracking-tight">
             {conversionRate}%
           </div>
-          <div className="text-[10px] text-neutral-500 flex items-center gap-1 font-medium">
+          <div className="text-[10px] text-neutral-600 dark:text-neutral-400 flex items-center gap-1 font-medium">
             Across architects & builders
           </div>
         </motion.div>
@@ -254,19 +254,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       {/* Visual Charts: Pipeline Distribution & Recent Quotations */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Recent Quotations Table (8 cols) */}
-        <div className="lg:col-span-8 bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
+        <div className="lg:col-span-8 bg-white dark:bg-neutral-900 rounded-3xl p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-neutral-900 uppercase tracking-wide">
+              <h3 className="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wide">
                 Recent Quotations
               </h3>
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs text-neutral-500 dark:text-neutral-400">
                 Latest customer proposals and status updates
               </p>
             </div>
             <button
               onClick={() => onNavigate('quotation-history')}
-              className="text-xs font-bold text-red-800 hover:text-red-900 flex items-center gap-1"
+              className="text-xs font-bold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 flex items-center gap-1 cursor-pointer"
             >
               View All ({quotations.length}) <ChevronRight className="w-4 h-4" />
             </button>
@@ -274,7 +274,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left">
-              <thead className="text-[10px] text-neutral-400 uppercase font-mono border-b border-neutral-100">
+              <thead className="text-[10px] text-neutral-600 dark:text-neutral-400 uppercase font-mono border-b border-neutral-200 dark:border-neutral-800">
                 <tr>
                   <th className="py-2.5">Quotation No</th>
                   <th className="py-2.5">Client / Party</th>
@@ -283,7 +283,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                   <th className="py-2.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-100">
+              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
                 {quotations.slice(0, 6).map(quote => {
                   const formatDateDDMMYYYY = (dateStr?: string) => {
                     if (!dateStr) return '';
@@ -296,22 +296,22 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                   };
 
                   return (
-                    <tr key={quote.quotation_id} className="hover:bg-neutral-50/60 transition-colors">
-                      <td className="py-3 font-mono font-bold text-neutral-900">
+                    <tr key={quote.quotation_id} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors">
+                      <td className="py-3 font-mono font-bold text-neutral-900 dark:text-white">
                         {quote.quotation_number}
                       </td>
                       <td className="py-3">
-                        <div className="font-bold text-neutral-900">{quote.party_name}</div>
-                        <div className="text-[11px] text-neutral-500">{quote.company_name || quote.mobile}</div>
+                        <div className="font-bold text-neutral-900 dark:text-white">{quote.party_name}</div>
+                        <div className="text-[11px] text-neutral-500 dark:text-neutral-400">{quote.company_name || quote.mobile}</div>
                       </td>
-                      <td className="py-3 text-neutral-500 font-mono">{formatDateDDMMYYYY(quote.quotation_date)}</td>
-                      <td className="py-3 text-right font-bold text-neutral-900">
+                      <td className="py-3 text-neutral-600 dark:text-neutral-400 font-mono">{formatDateDDMMYYYY(quote.quotation_date)}</td>
+                      <td className="py-3 text-right font-bold text-neutral-900 dark:text-white">
                         ₹{Number(quote.grand_total).toLocaleString('en-IN')}
                       </td>
                       <td className="py-3 text-right">
                         <button
                           onClick={() => setPreviewQuote(quote)}
-                          className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 transition-colors"
+                          className="p-1.5 rounded-lg text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
                           title="View Quotation"
                         >
                           <Eye className="w-4 h-4" />
@@ -328,20 +328,21 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         {/* Right Column: Status Distribution & Quick Catalog (4 cols) */}
         <div className="lg:col-span-4 space-y-6">
           {/* Category MIS Chart */}
-          <div className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
+          <div className="bg-white dark:bg-neutral-900 rounded-3xl p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-neutral-900 uppercase tracking-wide">
+                <h3 className="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wide">
                   Category MIS
                 </h3>
-                <p className="text-[11px] text-neutral-500">
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
                   Quotations breakdown by category
                 </p>
               </div>
-              <span className="text-[10px] font-mono font-bold bg-red-50 text-red-600 px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-mono font-bold bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 px-2 py-0.5 rounded-md border border-red-200 dark:border-red-800/40">
                 MIS Report
               </span>
             </div>
+
 
             <div className="h-44 flex items-center justify-center">
               {categoryPieData.length > 0 ? (
@@ -365,21 +366,21 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="text-xs text-neutral-400">No category data available</div>
+                <div className="text-xs text-neutral-500 dark:text-neutral-400">No category data available</div>
               )}
             </div>
 
-            <div className="space-y-2 pt-2 border-t border-neutral-100 text-xs max-h-48 overflow-y-auto pr-1">
+            <div className="space-y-2 pt-2 border-t border-neutral-100 dark:border-neutral-800 text-xs max-h-48 overflow-y-auto pr-1">
               {categoryPieData.map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between p-2 rounded-xl bg-neutral-50/80 hover:bg-neutral-100/80 transition-colors">
+                <div key={idx} className="flex items-center justify-between p-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: item.color }} />
-                    <span className="text-neutral-800 font-semibold text-[11px] truncate">{item.name}</span>
+                    <span className="text-neutral-800 dark:text-neutral-200 font-semibold text-[11px] truncate">{item.name}</span>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-neutral-900 font-bold text-xs">{item.count} Quote{item.count !== 1 ? 's' : ''}</span>
+                    <span className="text-neutral-900 dark:text-white font-bold text-xs">{item.count} Quote{item.count !== 1 ? 's' : ''}</span>
                     {item.amount > 0 && (
-                      <span className="text-[10px] text-neutral-500 block font-mono">₹{item.amount.toLocaleString('en-IN')}</span>
+                      <span className="text-[10px] text-neutral-500 dark:text-neutral-400 block font-mono">₹{item.amount.toLocaleString('en-IN')}</span>
                     )}
                   </div>
                 </div>
@@ -388,9 +389,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </div>
 
           {/* Quick Access to Catalog */}
-          <div className="bg-neutral-900 text-white rounded-3xl p-6 shadow-md space-y-3">
+          <div className="bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900 text-white rounded-3xl p-6 shadow-md border border-neutral-800 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-red-400 font-bold uppercase">
+              <span className="text-xs font-mono text-red-400 font-bold uppercase tracking-wider">
                 Catalog Fast Access
               </span>
               <Package className="w-4 h-4 text-neutral-400" />
@@ -403,7 +404,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             </p>
             <button
               onClick={() => onNavigate('products')}
-              className="w-full mt-2 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-red-300 text-xs font-bold transition-colors cursor-pointer"
+              className="w-full mt-2 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-red-300 text-xs font-bold transition-colors cursor-pointer border border-neutral-700"
             >
               Browse Catalog Master →
             </button>

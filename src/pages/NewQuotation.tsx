@@ -729,17 +729,16 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
           </button>
         </div>
       </div>
-
       {/* CLIENT DETAILS CARD */}
-      <div className="bg-white rounded-2xl p-6 border border-neutral-200/90 shadow-xs space-y-4">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-bold text-neutral-900 uppercase tracking-wider font-mono">
+          <h3 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider font-mono">
             CLIENT DETAILS
           </h3>
           <button
             type="button"
             onClick={() => setShowNewCustomerForm(!showNewCustomerForm)}
-            className="text-xs font-semibold text-[#8d5b28] hover:text-[#704419] flex items-center gap-1 cursor-pointer"
+            className="text-xs font-semibold text-[#8d5b28] dark:text-amber-400 hover:text-[#704419] dark:hover:text-amber-300 flex items-center gap-1 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             {showNewCustomerForm ? 'Cancel Customer Form' : '+ Register New Customer'}
@@ -748,8 +747,8 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
 
         {/* Quick Add Form Drawer */}
         {showNewCustomerForm && (
-          <form onSubmit={handleQuickCreateCustomer} className="p-4 bg-[#faf6f0] rounded-xl border border-[#e8dac7] space-y-3">
-            <div className="text-xs font-bold text-neutral-900 uppercase font-mono">New Customer Master Entry</div>
+          <form onSubmit={handleQuickCreateCustomer} className="p-4 bg-[#faf6f0] dark:bg-neutral-800/80 rounded-xl border border-[#e8dac7] dark:border-neutral-700 space-y-3">
+            <div className="text-xs font-bold text-neutral-900 dark:text-white uppercase font-mono">New Customer Master Entry</div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <input
                 type="text"
@@ -757,28 +756,28 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
                 placeholder="Party / Client Name *"
                 value={newCustParty}
                 onChange={e => setNewCustParty(e.target.value)}
-                className="p-2.5 text-xs bg-white rounded-lg border border-neutral-300 focus:outline-none focus:border-[#9A6A38]"
+                className="p-2.5 text-xs bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white rounded-lg border border-neutral-300 dark:border-neutral-700 focus:outline-none focus:border-[#9A6A38]"
               />
               <input
                 type="text"
                 placeholder="Company / Firm Name"
                 value={newCustCompany}
                 onChange={e => setNewCustCompany(e.target.value)}
-                className="p-2.5 text-xs bg-white rounded-lg border border-neutral-300 focus:outline-none focus:border-[#9A6A38]"
+                className="p-2.5 text-xs bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white rounded-lg border border-neutral-300 dark:border-neutral-700 focus:outline-none focus:border-[#9A6A38]"
               />
               <input
                 type="text"
                 placeholder="Mobile (+91 98200 12345)"
                 value={newCustMobile}
                 onChange={e => setNewCustMobile(e.target.value)}
-                className="p-2.5 text-xs bg-white rounded-lg border border-neutral-300 focus:outline-none focus:border-[#9A6A38]"
+                className="p-2.5 text-xs bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white rounded-lg border border-neutral-300 dark:border-neutral-700 focus:outline-none focus:border-[#9A6A38]"
               />
             </div>
-            <div className="flex justify-end gap-2 pt-1">
+            <div className="flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setShowNewCustomerForm(false)}
-                className="px-3 py-1.5 text-xs text-neutral-600 rounded-lg hover:bg-neutral-200"
+                className="px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700"
               >
                 Cancel
               </button>
@@ -795,7 +794,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
           {/* Client Name Input with Auto-Suggest */}
           <div className="md:col-span-8 relative">
-            <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wide mb-1.5 font-mono">
+            <label className="block text-[11px] font-bold text-neutral-600 dark:text-neutral-400 uppercase tracking-wide mb-1.5 font-mono">
               CLIENT / TO NAME
             </label>
             <div className="relative">
@@ -808,12 +807,12 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
                 }}
                 onFocus={() => setShowClientDropdown(true)}
                 placeholder="e.g. VIPUL SIR"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-sm font-medium text-neutral-900 focus:outline-none focus:ring-2 focus:ring-[#9A6A38]/30 focus:border-[#9A6A38] bg-white"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 text-sm font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9A6A38]/30 focus:border-[#9A6A38] bg-white dark:bg-neutral-800 placeholder-neutral-400"
                 id="input-client-to-name"
               />
               {selectedCustomer && (
                 <div className="absolute right-3 top-2.5 flex items-center gap-1.5">
-                  <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">
+                  <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold px-1.5 py-0.5 rounded">
                     Verified Master
                   </span>
                 </div>
@@ -822,18 +821,18 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
 
             {/* Client Suggestion Dropdown */}
             {showClientDropdown && clientToName && filteredCustomers.length > 0 && (
-              <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-neutral-200 rounded-xl shadow-lg z-30 max-h-48 overflow-y-auto divide-y divide-neutral-100">
+              <div className="absolute left-0 right-0 top-full mt-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-lg z-30 max-h-48 overflow-y-auto divide-y divide-neutral-100 dark:divide-neutral-800">
                 {filteredCustomers.map(c => (
                   <div
                     key={c.customer_id}
                     onMouseDown={() => handleSelectCustomer(c)}
-                    className="p-2.5 hover:bg-[#faf6f0] cursor-pointer text-xs flex items-center justify-between transition-colors"
+                    className="p-2.5 hover:bg-[#faf6f0] dark:hover:bg-neutral-800 cursor-pointer text-xs flex items-center justify-between transition-colors"
                   >
                     <div>
-                      <div className="font-bold text-neutral-900">{c.party_name}</div>
-                      <div className="text-[11px] text-neutral-500">{c.contact_person} • {c.mobile} • {c.city}</div>
+                      <div className="font-bold text-neutral-900 dark:text-white">{c.party_name}</div>
+                      <div className="text-[11px] text-neutral-500 dark:text-neutral-400">{c.contact_person} • {c.mobile} • {c.city}</div>
                     </div>
-                    <span className="text-[11px] font-semibold text-[#8d5b28]">Select →</span>
+                    <span className="text-[11px] font-semibold text-[#8d5b28] dark:text-amber-400">Select →</span>
                   </div>
                 ))}
               </div>
@@ -842,14 +841,14 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
 
           {/* Quotation Date */}
           <div className="md:col-span-4">
-            <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wide mb-1.5 font-mono">
+            <label className="block text-[11px] font-bold text-neutral-600 dark:text-neutral-400 uppercase tracking-wide mb-1.5 font-mono">
               QUOTATION DATE
             </label>
             <input
               type="date"
               value={quotationDate}
               onChange={e => setQuotationDate(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-sm font-medium text-neutral-900 focus:outline-none focus:ring-2 focus:ring-[#9A6A38]/30 focus:border-[#9A6A38] bg-white"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 text-sm font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9A6A38]/30 focus:border-[#9A6A38] bg-white dark:bg-neutral-800"
               id="input-quotation-date"
             />
           </div>
@@ -857,13 +856,13 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
       </div>
 
       {/* SECTIONS CONTAINER */}
-      <div className="bg-white rounded-2xl p-6 border border-neutral-200/90 shadow-xs space-y-6">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs space-y-6">
         <div>
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-neutral-900 uppercase tracking-wider font-mono">
+            <h3 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider font-mono">
               SECTIONS
             </h3>
-            <span className="text-xs font-mono text-neutral-400">
+            <span className="text-xs font-mono text-neutral-500 dark:text-neutral-400">
               {sections.length} Active Section{sections.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -881,7 +880,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
                 }
               }}
               placeholder="e.g. Kids Washroom, Master Washroom, Kitchen..."
-              className="flex-1 px-4 py-2.5 rounded-xl border border-neutral-300 text-sm placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#9A6A38]/30 focus:border-[#9A6A38] bg-white"
+              className="flex-1 px-4 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#9A6A38]/30 focus:border-[#9A6A38] bg-white dark:bg-neutral-800"
               id="input-add-section"
             />
             <button
@@ -897,7 +896,7 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
 
           {/* Quick Preset Section Chips */}
           <div className="flex flex-wrap items-center gap-1.5 mt-2.5 pt-1">
-            <span className="text-[11px] text-neutral-400 font-medium">Quick add:</span>
+            <span className="text-[11px] text-neutral-500 dark:text-neutral-400 font-medium">Quick add:</span>
             {COMMON_SECTIONS.map(name => {
               const alreadyExists = sections.some(s => s.name.toUpperCase() === name.toUpperCase());
               return (
@@ -908,8 +907,8 @@ export const NewQuotation: React.FC<NewQuotationProps> = ({ onNavigate, editQuot
                   disabled={alreadyExists}
                   className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
                     alreadyExists
-                      ? 'bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed'
-                      : 'bg-[#faf6f0] hover:bg-[#f2e6d6] text-[#704419] border-[#e0cfb8] hover:border-[#9A6A38]'
+                      ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 border-neutral-200 dark:border-neutral-700 cursor-not-allowed'
+                      : 'bg-[#faf6f0] dark:bg-amber-950/30 hover:bg-[#f2e6d6] dark:hover:bg-amber-900/40 text-[#704419] dark:text-amber-300 border-[#e0cfb8] dark:border-amber-800 hover:border-[#9A6A38]'
                   }`}
                 >
                   + {name}

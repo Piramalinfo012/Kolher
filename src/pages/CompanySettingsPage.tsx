@@ -74,12 +74,12 @@ export const CompanySettingsPage: React.FC = () => {
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-neutral-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
         <div>
-          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-900 dark:text-white">
             Company Profile & Quotation Master Settings
           </h1>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
             Configure legal entity details, bank remittance coordinates, GST parameters, and standard commercial terms
           </p>
         </div>
@@ -88,10 +88,10 @@ export const CompanySettingsPage: React.FC = () => {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-5 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
             id="btn-save-settings"
           >
-            <Save className="w-4 h-4 text-red-400" />
+            <Save className="w-4 h-4 text-white" />
             <span>{saving ? 'Saving...' : 'Save Settings'}</span>
           </button>
         )}
@@ -99,229 +99,229 @@ export const CompanySettingsPage: React.FC = () => {
 
       <form onSubmit={handleSave} className="space-y-8">
         {/* Section 1: Legal Entity Profile */}
-        <div className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 text-xs font-bold text-neutral-900 uppercase">
-            <Building2 className="w-4 h-4 text-red-600" />
+        <div className="bg-white dark:bg-neutral-900 rounded-3xl p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 text-xs font-bold text-neutral-900 dark:text-white uppercase">
+            <Building2 className="w-4 h-4 text-red-600 dark:text-red-400" />
             1. Legal Entity & Brand Details
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Company Legal Name</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Company Legal Name</label>
               <input
                 type="text"
                 value={settings.company_name}
                 onChange={e => setSettings({ ...settings, company_name: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Brand Tagline</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Brand Tagline</label>
               <input
                 type="text"
                 value={settings.tagline || ''}
                 onChange={e => setSettings({ ...settings, tagline: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Registered Address</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Registered Address</label>
               <input
                 type="text"
                 value={settings.address}
                 onChange={e => setSettings({ ...settings, address: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Telephone / Hotline</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Telephone / Hotline</label>
               <input
                 type="text"
                 value={settings.phone}
                 onChange={e => setSettings({ ...settings, phone: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Commercial Sales Email</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Commercial Sales Email</label>
               <input
                 type="email"
                 value={settings.email}
                 onChange={e => setSettings({ ...settings, email: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">GSTIN Number</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">GSTIN Number</label>
               <input
                 type="text"
                 value={settings.gstin}
                 onChange={e => setSettings({ ...settings, gstin: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono font-bold focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">PAN Number</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">PAN Number</label>
               <input
                 type="text"
                 value={settings.pan}
                 onChange={e => setSettings({ ...settings, pan: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono font-bold focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
         </div>
 
         {/* Section 2: Bank Remittance Coordinates */}
-        <div className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 text-xs font-bold text-neutral-900 uppercase">
-            <CreditCard className="w-4 h-4 text-red-600" />
+        <div className="bg-white dark:bg-neutral-900 rounded-3xl p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 text-xs font-bold text-neutral-900 dark:text-white uppercase">
+            <CreditCard className="w-4 h-4 text-red-600 dark:text-red-400" />
             2. Bank Remittance & Electronic Settlement Coordinates
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Bank Name</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Bank Name</label>
               <input
                 type="text"
                 value={settings.bank_name}
                 onChange={e => setSettings({ ...settings, bank_name: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Account Number</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Account Number</label>
               <input
                 type="text"
                 value={settings.account_number}
                 onChange={e => setSettings({ ...settings, account_number: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono font-bold focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">IFSC Code</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">IFSC Code</label>
               <input
                 type="text"
                 value={settings.ifsc}
                 onChange={e => setSettings({ ...settings, ifsc: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono font-bold focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Branch Name</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Branch Name</label>
               <input
                 type="text"
                 value={settings.branch}
                 onChange={e => setSettings({ ...settings, branch: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
         </div>
 
         {/* Section 3: Quotation Format & Standard Terms */}
-        <div className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 text-xs font-bold text-neutral-900 uppercase">
-            <FileText className="w-4 h-4 text-red-600" />
+        <div className="bg-white dark:bg-neutral-900 rounded-3xl p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 text-xs font-bold text-neutral-900 dark:text-white uppercase">
+            <FileText className="w-4 h-4 text-red-600 dark:text-red-400" />
             3. Quotation Numbering Rules & Default Terms
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Quotation Prefix</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Quotation Prefix</label>
               <input
                 type="text"
                 value={settings.quotation_prefix}
                 onChange={e => setSettings({ ...settings, quotation_prefix: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono font-bold focus:outline-none focus:border-red-500"
               />
-              <p className="text-[10px] text-neutral-400 mt-1">Example: PIR/QT/</p>
+              <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1">Example: PIR/QT/</p>
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Financial Year</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Financial Year</label>
               <input
                 type="text"
                 value={settings.financial_year}
                 onChange={e => setSettings({ ...settings, financial_year: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono font-bold focus:outline-none focus:border-red-500"
               />
-              <p className="text-[10px] text-neutral-400 mt-1">Example: 26-27</p>
+              <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1">Example: 26-27</p>
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Default GST Rate (%)</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Default GST Rate (%)</label>
               <input
                 type="number"
                 value={settings.default_gst}
                 onChange={e => setSettings({ ...settings, default_gst: Number(e.target.value) })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-bold focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs pt-2">
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Default Validity</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Default Validity</label>
               <input
                 type="text"
                 value={settings.default_validity}
                 onChange={e => setSettings({ ...settings, default_validity: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Default Payment Terms</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Default Payment Terms</label>
               <input
                 type="text"
                 value={settings.default_payment_terms}
                 onChange={e => setSettings({ ...settings, default_payment_terms: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-neutral-700 uppercase mb-1">Default Delivery Terms</label>
+              <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">Default Delivery Terms</label>
               <input
                 type="text"
                 value={settings.default_delivery_terms}
                 onChange={e => setSettings({ ...settings, default_delivery_terms: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
 
           <div className="pt-2 text-xs">
-            <label className="block font-bold text-neutral-700 uppercase mb-1">
+            <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
               Authorized Signatory Designation
             </label>
             <input
               type="text"
               value={settings.authorized_signatory}
               onChange={e => setSettings({ ...settings, authorized_signatory: e.target.value })}
-              className="w-full sm:w-80 p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
+              className="w-full sm:w-80 p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold focus:outline-none focus:border-red-500"
             />
           </div>
 
           <div className="pt-2 text-xs">
-            <label className="block font-bold text-neutral-700 uppercase mb-1">
+            <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
               Standard Quotation Terms & Conditions (Appears on A4 PDF)
             </label>
             <textarea
               rows={4}
               value={settings.terms_conditions}
               onChange={e => setSettings({ ...settings, terms_conditions: e.target.value })}
-              className="w-full p-3 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500 leading-relaxed font-sans text-xs"
+              className="w-full p-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500 leading-relaxed font-sans text-xs"
             />
           </div>
         </div>

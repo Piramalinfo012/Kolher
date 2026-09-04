@@ -128,12 +128,12 @@ export const UserManagement: React.FC = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-neutral-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
         <div>
-          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950">
+          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-900 dark:text-white">
             User Access & Role-Based Permissions (RBAC)
           </h1>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
             Manage sales representatives, commercial managers, and administrative governance
           </p>
         </div>
@@ -141,24 +141,24 @@ export const UserManagement: React.FC = () => {
         {isSuperAdmin && (
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             id="btn-add-user"
           >
-            <Plus className="w-4 h-4 text-red-400" />
+            <Plus className="w-4 h-4 text-white" />
             <span>Add New User</span>
           </button>
         )}
       </div>
 
       {/* Role Permission Matrix Card */}
-      <div className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs space-y-4">
-        <h3 className="text-sm font-bold text-neutral-900 uppercase tracking-wide">
+      <div className="bg-white dark:bg-neutral-900 rounded-3xl p-6 border border-neutral-200 dark:border-neutral-800 shadow-xs space-y-4">
+        <h3 className="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wide">
           Role Permission Privilege Matrix
         </h3>
 
-        <div className="overflow-x-auto border border-neutral-200 rounded-2xl">
+        <div className="overflow-x-auto border border-neutral-200 dark:border-neutral-800 rounded-2xl">
           <table className="w-full text-xs text-left">
-            <thead className="bg-neutral-50 text-neutral-600 font-mono text-[10px] uppercase">
+            <thead className="bg-neutral-50 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-400 font-mono text-[10px] uppercase border-b border-neutral-200 dark:border-neutral-800">
               <tr>
                 <th className="p-3">Role Level</th>
                 <th className="p-3 text-center">Configure & Create Quotes</th>
@@ -167,34 +167,34 @@ export const UserManagement: React.FC = () => {
                 <th className="p-3 text-center">Permanent Deletions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
               <tr>
-                <td className="p-3 font-bold text-red-900">SUPER ADMIN</td>
-                <td className="p-3 text-center text-emerald-600 font-bold">✓ Full</td>
-                <td className="p-3 text-center text-emerald-600 font-bold">✓ Full</td>
-                <td className="p-3 text-center text-emerald-600 font-bold">✓ Full</td>
-                <td className="p-3 text-center text-emerald-600 font-bold">✓ Authorized</td>
+                <td className="p-3 font-bold text-red-700 dark:text-red-400">SUPER ADMIN</td>
+                <td className="p-3 text-center text-emerald-600 dark:text-emerald-400 font-bold">✓ Full</td>
+                <td className="p-3 text-center text-emerald-600 dark:text-emerald-400 font-bold">✓ Full</td>
+                <td className="p-3 text-center text-emerald-600 dark:text-emerald-400 font-bold">✓ Full</td>
+                <td className="p-3 text-center text-emerald-600 dark:text-emerald-400 font-bold">✓ Authorized</td>
               </tr>
               <tr>
-                <td className="p-3 font-bold text-blue-900">ADMIN</td>
-                <td className="p-3 text-center text-emerald-600 font-bold">✓ Full</td>
-                <td className="p-3 text-center text-emerald-600 font-bold">✓ Full</td>
-                <td className="p-3 text-center text-emerald-600 font-bold">✓ Full</td>
-                <td className="p-3 text-center text-rose-500 font-bold">✗ Restricted</td>
+                <td className="p-3 font-bold text-blue-700 dark:text-blue-400">ADMIN</td>
+                <td className="p-3 text-center text-emerald-600 dark:text-emerald-400 font-bold">✓ Full</td>
+                <td className="p-3 text-center text-emerald-600 dark:text-emerald-400 font-bold">✓ Full</td>
+                <td className="p-3 text-center text-emerald-600 dark:text-emerald-400 font-bold">✓ Full</td>
+                <td className="p-3 text-center text-rose-500 dark:text-rose-400 font-bold">Restricted</td>
               </tr>
               <tr>
-                <td className="p-3 font-bold text-emerald-900">SALES EXECUTIVE</td>
-                <td className="p-3 text-center text-emerald-600 font-bold">✓ Full</td>
-                <td className="p-3 text-center text-neutral-400">Read Only</td>
-                <td className="p-3 text-center text-rose-500 font-bold">✗ Restricted</td>
-                <td className="p-3 text-center text-rose-500 font-bold">✗ Restricted</td>
+                <td className="p-3 font-bold text-emerald-700 dark:text-emerald-400">SALES EXECUTIVE</td>
+                <td className="p-3 text-center text-emerald-600 dark:text-emerald-400 font-bold">✓ Full</td>
+                <td className="p-3 text-center text-neutral-500 dark:text-neutral-400">Read Only</td>
+                <td className="p-3 text-center text-rose-500 dark:text-rose-400 font-bold">Restricted</td>
+                <td className="p-3 text-center text-rose-500 dark:text-rose-400 font-bold">Restricted</td>
               </tr>
               <tr>
-                <td className="p-3 font-bold text-neutral-700">VIEWER</td>
-                <td className="p-3 text-center text-neutral-400">Read Only</td>
-                <td className="p-3 text-center text-neutral-400">Read Only</td>
-                <td className="p-3 text-center text-rose-500 font-bold">✗ Restricted</td>
-                <td className="p-3 text-center text-rose-500 font-bold">✗ Restricted</td>
+                <td className="p-3 font-bold text-neutral-700 dark:text-neutral-300">VIEWER</td>
+                <td className="p-3 text-center text-neutral-500 dark:text-neutral-400">Read Only</td>
+                <td className="p-3 text-center text-neutral-500 dark:text-neutral-400">Read Only</td>
+                <td className="p-3 text-center text-rose-500 dark:text-rose-400 font-bold">Restricted</td>
+                <td className="p-3 text-center text-rose-500 dark:text-rose-400 font-bold">Restricted</td>
               </tr>
             </tbody>
           </table>
@@ -202,23 +202,23 @@ export const UserManagement: React.FC = () => {
       </div>
 
       {/* Users Table */}
-      <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
-        <div className="p-4 border-b border-neutral-100 flex items-center justify-between">
+      <div className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs overflow-hidden">
+        <div className="p-4 border-b border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
           <div className="relative w-full sm:w-80">
-            <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-3" />
+            <Search className="w-4 h-4 text-neutral-500 dark:text-neutral-400 absolute left-3.5 top-3" />
             <input
               type="text"
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               placeholder="Search users by name or email..."
-              className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+              className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
             />
           </div>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className="bg-neutral-900 text-white uppercase text-[10px] font-mono tracking-wider">
+            <thead className="text-[10px] text-neutral-600 dark:text-neutral-400 uppercase font-mono bg-neutral-50 dark:bg-neutral-800/60 border-b border-neutral-200 dark:border-neutral-800">
               <tr>
                 <th className="p-4">User</th>
                 <th className="p-4">Email</th>
@@ -227,21 +227,21 @@ export const UserManagement: React.FC = () => {
                 <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
               {filtered.map(u => (
-                <tr key={u.user_id} className="hover:bg-neutral-50/60">
-                  <td className="p-4 font-bold text-neutral-950 flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-neutral-900 text-red-300 flex items-center justify-center font-bold text-xs">
+                <tr key={u.user_id} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors">
+                  <td className="p-4 font-bold text-neutral-900 dark:text-white flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-700 text-red-400 dark:text-red-300 flex items-center justify-center font-bold text-xs">
                       {u.name.charAt(0)}
                     </div>
                     <div>
                       <div>{u.name}</div>
                       {u.user_id === currentUser.user_id && (
-                        <span className="text-[10px] text-emerald-600 font-bold">You (Active Session)</span>
+                        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">You (Active Session)</span>
                       )}
                     </div>
                   </td>
-                  <td className="p-4 text-neutral-600 font-mono text-[11px]">{u.email}</td>
+                  <td className="p-4 text-neutral-600 dark:text-neutral-400 font-mono text-[11px]">{u.email}</td>
                   <td className="p-4">
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${roleColors[u.role]}`}>
                       {u.role.replace('_', ' ')}
@@ -249,7 +249,7 @@ export const UserManagement: React.FC = () => {
                   </td>
                   <td className="p-4 text-center">
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                      u.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-800' : 'bg-neutral-100 text-neutral-600'
+                      u.status === 'ACTIVE' ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300' : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
                     }`}>
                       {u.status}
                     </span>
@@ -260,7 +260,7 @@ export const UserManagement: React.FC = () => {
                         <>
                           <button
                             onClick={() => handleOpenEdit(u)}
-                            className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100"
+                            className="p-1.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
                             title="Edit User"
                           >
                             <Edit className="w-3.5 h-3.5" />
@@ -268,7 +268,7 @@ export const UserManagement: React.FC = () => {
                           {u.user_id !== currentUser.user_id && (
                             <button
                               onClick={() => setUserToDelete(u)}
-                              className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50"
+                              className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer"
                               title="Delete User"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -288,14 +288,14 @@ export const UserManagement: React.FC = () => {
       {/* Add / Edit User Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/80 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full border border-neutral-200 overflow-hidden">
+          <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-2xl max-w-md w-full border border-neutral-200 dark:border-neutral-800 overflow-hidden">
             <div className="px-6 py-4 bg-neutral-900 text-white flex items-center justify-between">
               <h3 className="font-bold text-sm">
                 {editingUser ? 'Edit User Credentials & Role' : 'Add New System User'}
               </h3>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-neutral-400 hover:text-white p-1"
+                className="text-neutral-400 hover:text-white p-1 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -303,7 +303,7 @@ export const UserManagement: React.FC = () => {
 
             <form onSubmit={handleSave} className="p-6 space-y-4 text-xs">
               <div>
-                <label className="block font-bold text-neutral-700 uppercase mb-1">
+                <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                   Full Name *
                 </label>
                 <input
@@ -311,12 +311,12 @@ export const UserManagement: React.FC = () => {
                   required
                   value={formData.name || ''}
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold focus:outline-none focus:border-red-500"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-neutral-700 uppercase mb-1">
+                <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                   Email Address *
                 </label>
                 <input

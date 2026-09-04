@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { Navbar } from './components/Navbar';
@@ -80,7 +81,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-900/5 flex flex-col font-sans text-neutral-900 selection:bg-red-500 selection:text-neutral-950">
+    <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 flex flex-col font-sans text-neutral-900 dark:text-neutral-100 selection:bg-red-500 selection:text-neutral-950 transition-colors duration-300">
       {/* Top Navigation */}
       <Navbar
         onToggleSidebar={() => setSidebarOpen(prev => !prev)}
@@ -106,11 +107,14 @@ function AppContent() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <ToastProvider>
-        <AppContent />
-      </ToastProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
+
 

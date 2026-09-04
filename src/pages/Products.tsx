@@ -413,11 +413,11 @@ export const Products: React.FC = () => {
         {filteredProducts.map(p => (
           <div
             key={p.product_id}
-            className="group relative bg-white rounded-2xl border border-neutral-200/80 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-red-950/10 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+            className="group relative bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
           >
             <div>
               {/* Product Visual Container - Enlarged Image View */}
-              <div className="relative w-full h-56 bg-gradient-to-b from-neutral-50/80 via-neutral-50 to-neutral-100/60 p-2.5 flex items-center justify-center overflow-hidden">
+              <div className="relative w-full h-56 bg-gradient-to-b from-neutral-50 via-neutral-100/80 to-neutral-100 dark:from-neutral-800 dark:via-neutral-800/80 dark:to-neutral-900 p-2.5 flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 <img
                   src={p.main_image_url}
@@ -426,7 +426,7 @@ export const Products: React.FC = () => {
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
-                  <span className="text-[9px] font-mono font-bold bg-white/90 backdrop-blur-md text-neutral-900 px-2 py-0.5 rounded shadow-xs border border-neutral-200/60">
+                  <span className="text-[9px] font-mono font-bold bg-white/90 dark:bg-neutral-800/90 backdrop-blur-md text-neutral-900 dark:text-neutral-100 px-2 py-0.5 rounded shadow-xs border border-neutral-200/60 dark:border-neutral-700">
                     {p.model_number}
                   </span>
                   {p.has_customization && (
@@ -443,30 +443,30 @@ export const Products: React.FC = () => {
               </div>
 
               {/* Info Body - Refined Compact Typography */}
-              <div className="p-3.5 space-y-1.5 relative bg-white">
-                <span className="text-[8px] font-bold uppercase tracking-widest text-red-600 bg-red-50/80 px-2 py-0.5 rounded inline-block">
+              <div className="p-3.5 space-y-1.5 relative bg-white dark:bg-neutral-900">
+                <span className="text-[8px] font-bold uppercase tracking-widest text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 px-2 py-0.5 rounded inline-block">
                   {p.category}
                 </span>
-                <h3 className="font-serif-luxury font-bold text-sm text-neutral-900 leading-snug group-hover:text-red-600 transition-colors line-clamp-1">
+                <h3 className="font-serif-luxury font-bold text-sm text-neutral-900 dark:text-white leading-snug group-hover:text-red-600 dark:hover:text-red-400 transition-colors line-clamp-1">
                   {p.product_name}
                 </h3>
-                <p className="text-[10px] text-neutral-500 line-clamp-2 leading-relaxed">
+                <p className="text-[10px] text-neutral-600 dark:text-neutral-400 line-clamp-2 leading-relaxed">
                   {p.description}
                 </p>
 
-                <div className="pt-2 mt-1 border-t border-neutral-100 flex items-center gap-2.5 text-[9px] text-neutral-500">
-                  <div className="flex items-center gap-1"><Tag className="w-2.5 h-2.5 text-neutral-400"/> HSN: <strong className="text-neutral-800">{p.hsn_code}</strong></div>
-                  <div className="w-px h-2.5 bg-neutral-200"></div>
-                  <div>GST: <strong className="text-neutral-800">{p.gst_percentage}%</strong></div>
+                <div className="pt-2 mt-1 border-t border-neutral-100 dark:border-neutral-800 flex items-center gap-2.5 text-[9px] text-neutral-500 dark:text-neutral-400">
+                  <div className="flex items-center gap-1"><Tag className="w-2.5 h-2.5 text-neutral-400"/> HSN: <strong className="text-neutral-800 dark:text-neutral-200">{p.hsn_code}</strong></div>
+                  <div className="w-px h-2.5 bg-neutral-200 dark:bg-neutral-700"></div>
+                  <div>GST: <strong className="text-neutral-800 dark:text-neutral-200">{p.gst_percentage}%</strong></div>
                 </div>
               </div>
             </div>
 
             {/* Bottom Actions */}
-            <div className="px-3.5 pb-3.5 pt-1 flex items-center justify-between bg-white border-t border-neutral-50">
+            <div className="px-3.5 pb-3.5 pt-1 flex items-center justify-between bg-white dark:bg-neutral-900 border-t border-neutral-100 dark:border-neutral-800">
               <div>
-                <span className="text-[8px] font-bold tracking-wider text-neutral-400 uppercase block">Base Price</span>
-                <div className="text-sm font-bold font-serif-luxury text-neutral-950 mt-0.5">
+                <span className="text-[8px] font-bold tracking-wider text-neutral-600 dark:text-neutral-400 uppercase block">Base Price</span>
+                <div className="text-sm font-bold font-serif-luxury text-neutral-900 dark:text-white mt-0.5">
                   ₹{Number(p.base_price).toLocaleString('en-IN')}
                 </div>
               </div>

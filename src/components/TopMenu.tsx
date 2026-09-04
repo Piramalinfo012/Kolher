@@ -84,11 +84,11 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
   };
 
   return (
-    <div className="bg-neutral-950 border-b border-neutral-800 shadow-md relative z-20">
+    <div className="bg-white dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800/80 shadow-xs relative z-20 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-1 h-12" ref={dropdownRef}>
+        <div className="hidden lg:flex items-center gap-1.5 h-12" ref={dropdownRef}>
           {navSections.map((section) => {
             const visibleItems = section.items.filter(i => i.visible);
             if (visibleItems.length === 0) return null;
@@ -102,10 +102,10 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[13px] font-semibold transition-all duration-300 ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 cursor-pointer ${
                     isActive 
-                      ? 'bg-red-600/10 text-red-400 border border-red-500/30' 
-                      : 'text-neutral-400 hover:text-white hover:bg-neutral-800'
+                      ? 'bg-red-50 dark:bg-red-600/15 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 shadow-2xs' 
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/80'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -122,10 +122,10 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
               <div key={section.id} className="relative">
                 <button
                   onClick={() => setActiveDropdown(isDropdownOpen ? null : section.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[13px] font-semibold transition-all duration-300 ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 cursor-pointer ${
                     sectionActive || isDropdownOpen
-                      ? 'bg-neutral-800 text-white' 
-                      : 'text-neutral-400 hover:text-white hover:bg-neutral-800'
+                      ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700' 
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/80'
                   }`}
                 >
                   {section.title}
@@ -134,7 +134,7 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
 
                 {/* Dropdown Menu */}
                 {isDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-64 bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-xl overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-200 z-50">
                     {visibleItems.map(item => {
                       const Icon = item.icon;
                       const isActive = currentPage === item.id;
@@ -142,13 +142,13 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
                         <button
                           key={item.id}
                           onClick={() => handleNavClick(item.id)}
-                          className={`w-full flex items-center gap-3 px-4 py-2.5 text-xs font-medium transition-colors text-left ${
+                          className={`w-full flex items-center gap-3 px-4 py-2.5 text-xs font-medium transition-colors text-left cursor-pointer ${
                             isActive
-                              ? 'bg-red-600/10 text-red-400 border-l-2 border-red-500'
-                              : 'text-neutral-300 hover:bg-neutral-800 hover:text-white border-l-2 border-transparent'
+                              ? 'bg-red-50 dark:bg-red-600/10 text-red-600 dark:text-red-400 border-l-2 border-red-600 dark:border-red-500 font-semibold'
+                              : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white border-l-2 border-transparent'
                           }`}
                         >
-                          <Icon className={`w-4 h-4 ${isActive ? 'text-red-400' : 'text-neutral-500'}`} />
+                          <Icon className={`w-4 h-4 ${isActive ? 'text-red-600 dark:text-red-400' : 'text-neutral-400 dark:text-neutral-500'}`} />
                           {item.label}
                         </button>
                       );
@@ -162,10 +162,10 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
 
         {/* Mobile Navigation Toggle */}
         <div className="flex lg:hidden items-center justify-between h-12">
-          <div className="text-xs font-bold text-neutral-400 tracking-wider">MENU</div>
+          <div className="text-xs font-bold text-neutral-500 dark:text-neutral-400 tracking-wider">MENU</div>
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+            className="p-1.5 rounded-lg text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -174,7 +174,7 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
 
       {/* Mobile Drawer */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-neutral-950 border-b border-neutral-800 shadow-2xl animate-in slide-in-from-top-2">
+        <div className="lg:hidden absolute top-full left-0 w-full bg-white dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 shadow-2xl animate-in slide-in-from-top-2 z-50">
           <div className="px-4 py-4 space-y-6 max-h-[70vh] overflow-y-auto">
             {navSections.map((section, sIdx) => {
               const visibleItems = section.items.filter(i => i.visible);
@@ -182,7 +182,7 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
 
               return (
                 <div key={sIdx} className="space-y-2">
-                  <div className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider font-mono">
+                  <div className="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-mono">
                     {section.title}
                   </div>
                   <div className="space-y-1">
@@ -194,13 +194,13 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
                         <button
                           key={item.id}
                           onClick={() => handleNavClick(item.id)}
-                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-left ${
+                          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-left cursor-pointer ${
                             isActive
-                              ? 'bg-red-500/15 text-red-300 border border-red-500/30'
-                              : 'text-neutral-400 hover:text-white hover:bg-neutral-800'
+                              ? 'bg-red-50 dark:bg-red-500/15 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-500/30'
+                              : 'text-neutral-700 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
                           }`}
                         >
-                          <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-red-400' : 'text-neutral-500'}`} />
+                          <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-red-600 dark:text-red-400' : 'text-neutral-400 dark:text-neutral-500'}`} />
                           {item.label}
                         </button>
                       );
@@ -214,4 +214,5 @@ export const TopMenu: React.FC<TopMenuProps> = ({ currentPage, onNavigate }) => 
       )}
     </div>
   );
+
 };

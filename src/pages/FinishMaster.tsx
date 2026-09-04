@@ -121,38 +121,38 @@ export const FinishMaster: React.FC = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-neutral-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
         <div>
-          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-950">
-            Architectural Finish Master
+          <h1 className="text-2xl font-bold font-serif-luxury text-neutral-900 dark:text-white">
+            Vibrant® PVD Finish & Coating Master
           </h1>
-          <p className="text-xs text-neutral-500">
-            Define metallic coatings (PVD Brushed Gold, Black Chrome, Copper, Stainless Inox) and surcharge pricing
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
+            Manage bespoke surface coatings, price surcharges, and visual texture rendering presets
           </p>
         </div>
 
         {canManageProducts && (
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-800 text-red-300 hover:text-red-200 text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-xs flex items-center gap-2 transition-all cursor-pointer"
             id="btn-add-finish"
           >
-            <Plus className="w-4 h-4 text-red-400" />
+            <Plus className="w-4 h-4 text-white" />
             <span>Add Finish</span>
           </button>
         )}
       </div>
 
       {/* Search */}
-      <div className="bg-white p-4 rounded-3xl border border-neutral-200/80 shadow-xs flex items-center justify-between">
+      <div className="bg-white dark:bg-neutral-900 p-4 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xs flex items-center justify-between">
         <div className="relative w-full sm:w-96">
-          <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-neutral-500 dark:text-neutral-400 absolute left-3.5 top-3" />
           <input
             type="text"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search finishes by name, code or coating type..."
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
           />
         </div>
       </div>
@@ -162,12 +162,12 @@ export const FinishMaster: React.FC = () => {
         {filtered.map(f => (
           <div
             key={f.finish_id}
-            className="bg-white rounded-3xl border border-neutral-200/80 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+            className="bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
           >
             <div>
               {/* Visual Texture Swatch Box */}
               <div
-                className="w-full h-24 rounded-2xl border border-neutral-200 relative overflow-hidden shadow-inner flex items-center justify-center mb-4"
+                className="w-full h-24 rounded-2xl border border-neutral-200 dark:border-neutral-700 relative overflow-hidden shadow-inner flex items-center justify-center mb-4"
                 style={{ background: f.texture_css || f.color_hex || '#C5A880' }}
               >
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/20 pointer-events-none" />
@@ -178,25 +178,25 @@ export const FinishMaster: React.FC = () => {
 
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                     {f.finish_type}
                   </span>
                   <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                    f.status === 'Active' ? 'bg-emerald-100 text-emerald-800' : 'bg-neutral-200 text-neutral-600'
+                    f.status === 'Active' ? 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
                   }`}>
                     {f.status}
                   </span>
                 </div>
-                <h3 className="font-bold text-sm text-neutral-900 leading-snug">
+                <h3 className="font-bold text-sm text-neutral-900 dark:text-white leading-snug">
                   {f.finish_name}
                 </h3>
               </div>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-neutral-100 flex items-center justify-between">
+            <div className="mt-4 pt-3 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
               <div>
-                <span className="text-[9px] font-mono text-neutral-400 uppercase">Surcharge</span>
-                <div className="text-sm font-bold text-neutral-900">
+                <span className="text-[9px] font-mono text-neutral-600 dark:text-neutral-400 uppercase">Surcharge</span>
+                <div className="text-sm font-bold text-neutral-900 dark:text-white">
                   {f.additional_price > 0 ? `+ ₹${Number(f.additional_price).toLocaleString('en-IN')}` : 'Included (₹0)'}
                 </div>
               </div>
@@ -205,7 +205,7 @@ export const FinishMaster: React.FC = () => {
                 {canManageProducts && (
                   <button
                     onClick={() => handleOpenEdit(f)}
-                    className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100"
+                    className="p-1.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
                     title="Edit Finish"
                   >
                     <Edit className="w-3.5 h-3.5" />
@@ -214,7 +214,7 @@ export const FinishMaster: React.FC = () => {
                 {canDeleteRecords && (
                   <button
                     onClick={() => setFinishToDelete(f)}
-                    className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50"
+                    className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer"
                     title="Delete Finish"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -229,14 +229,14 @@ export const FinishMaster: React.FC = () => {
       {/* Finish Add / Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/80 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full border border-neutral-200 overflow-hidden">
+          <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-2xl max-w-lg w-full border border-neutral-200 dark:border-neutral-800 overflow-hidden">
             <div className="px-6 py-4 bg-neutral-900 text-white flex items-center justify-between">
               <h3 className="font-bold text-sm">
                 {editingFinish ? 'Edit Architectural Finish' : 'Add New Finish Specification'}
               </h3>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-neutral-400 hover:text-white p-1"
+                className="text-neutral-400 hover:text-white p-1 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -245,7 +245,7 @@ export const FinishMaster: React.FC = () => {
             <form onSubmit={handleSave} className="p-6 space-y-4 text-xs">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
+                  <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                     Finish Name *
                   </label>
                   <input
@@ -254,12 +254,12 @@ export const FinishMaster: React.FC = () => {
                     placeholder="e.g. ORO SPAZZOLATO"
                     value={formData.finish_name || ''}
                     onChange={e => setFormData({ ...formData, finish_name: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-semibold focus:outline-none focus:border-red-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
+                  <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                     Finish Code *
                   </label>
                   <input
@@ -268,14 +268,14 @@ export const FinishMaster: React.FC = () => {
                     placeholder="e.g. OS"
                     value={formData.finish_code || ''}
                     onChange={e => setFormData({ ...formData, finish_code: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono font-bold focus:outline-none focus:border-red-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono font-bold focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
+                  <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                     Coating Type
                   </label>
                   <input
@@ -283,12 +283,12 @@ export const FinishMaster: React.FC = () => {
                     placeholder="PVD Vapor Deposition"
                     value={formData.finish_type || ''}
                     onChange={e => setFormData({ ...formData, finish_type: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-red-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:border-red-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-neutral-700 uppercase mb-1">
+                  <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                     Additional Price (₹)
                   </label>
                   <input
@@ -296,13 +296,13 @@ export const FinishMaster: React.FC = () => {
                     min={0}
                     value={formData.additional_price || 0}
                     onChange={e => setFormData({ ...formData, additional_price: Number(e.target.value) })}
-                    className="w-full p-2.5 rounded-xl border border-neutral-300 font-bold focus:outline-none focus:border-red-500"
+                    className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-bold focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-bold text-neutral-700 uppercase mb-1">
+                <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                   Color HEX Code
                 </label>
                 <div className="flex items-center gap-2">
@@ -310,19 +310,19 @@ export const FinishMaster: React.FC = () => {
                     type="color"
                     value={formData.color_hex || '#C5A880'}
                     onChange={e => setFormData({ ...formData, color_hex: e.target.value })}
-                    className="w-10 h-10 rounded-xl border border-neutral-300 p-1 cursor-pointer"
+                    className="w-10 h-10 rounded-xl border border-neutral-300 dark:border-neutral-700 p-1 cursor-pointer bg-white dark:bg-neutral-800"
                   />
                   <input
                     type="text"
                     value={formData.color_hex || '#C5A880'}
                     onChange={e => setFormData({ ...formData, color_hex: e.target.value })}
-                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 font-mono focus:outline-none focus:border-red-500"
+                    className="flex-1 p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-bold text-neutral-700 uppercase mb-1">
+                <label className="block font-bold text-neutral-700 dark:text-neutral-300 uppercase mb-1">
                   CSS Texture Gradient / Style
                 </label>
                 <input
@@ -330,21 +330,21 @@ export const FinishMaster: React.FC = () => {
                   placeholder="linear-gradient(135deg, #e6d5b8 0%, #c5a880 50%, #9a7b4f 100%)"
                   value={formData.texture_css || ''}
                   onChange={e => setFormData({ ...formData, texture_css: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-neutral-300 font-mono text-[11px] focus:outline-none focus:border-red-500"
+                  className="w-full p-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono text-[11px] focus:outline-none focus:border-red-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-neutral-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-800">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl border border-neutral-200 text-neutral-700"
+                  className="px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold"
+                  className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold cursor-pointer"
                 >
                   Save Finish
                 </button>
